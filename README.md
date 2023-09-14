@@ -27,7 +27,7 @@ build a web server in Python, but not Stata; You can run Python in AWS SageMmake
 Additionally, even for devout Stata users, there is utility in being able to run Stata commands through a Python stack for
 comparison purposes.
 
-## How `pdexplorer` fulfills the Zen of Python (compared to pandas)
+## How `pdexplorer` fulfills the [Zen of Python](https://peps.python.org/pep-0020/) (relative to pandas)
 
 | PASS                                                                  | FAIL                                                      |
 | --------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -46,26 +46,6 @@ comparison purposes.
   even when they differ from Stata.
 - There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
   `pdexplorer` is just the Python data stack.
-
-## References
-
-- https://aeturrell.github.io/coding-for-economists/coming-from-stata.html
-- https://www.stata.com/manuals13/u27.pdf
-- https://www.stata.com/manuals13/u11.pdf
-
-## DELETEME
-
-- DataFrame singleton
-- concise language for data wrangling
-- easy export to excel
-- smf/patsy syntax best for regressions
-- plots using Stata data table meta data e.g., variable labels
-
-General form of Stata command:
-
-```
-command(varlist, expression, if, in, weight, options, by)
-```
 
 ## Syntax summary
 
@@ -108,4 +88,8 @@ becomes
 labeldata("label")
 ```
 
-> test commit
+## References
+
+- https://aeturrell.github.io/coding-for-economists/coming-from-stata.html
+- https://www.stata.com/manuals13/u27.pdf
+- https://www.stata.com/manuals13/u11.pdf
