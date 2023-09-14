@@ -13,6 +13,20 @@
 - Employing two types of column names: Variable name are concise and used for programming. Variable labels are verbose
   and used for presentation.
 
+## Installation
+
+`pdexplorer` is available on [PyPI](https://pypi.org/project/pdexplorer/). Run `pip` to install:
+
+```
+pip install pdexplorer
+```
+
+Then import the `pdexplorer` commands with
+
+```python
+from pdexplorer import *
+```
+
 ## My Story
 
 I used Stata for 7 years for both data exploration and programming. After that, I used Python/pandas for 3 years and
