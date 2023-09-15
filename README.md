@@ -27,6 +27,36 @@ Then import the `pdexplorer` commands with
 from pdexplorer import *
 ```
 
+## Examples
+
+### Load Stata dataset and perform exploratory data analysis
+
+```python
+webuse('auto')
+browse()
+```
+
+See https://www.stata.com/manuals/dwebuse.pdf
+
+### Summarize Data by Subgroups
+
+```python
+webuse('auto')
+with by('foreign'):
+    summarize('mpg weight')
+```
+
+See https://www.stata.com/manuals/rsummarize.pdf
+
+### Ordinary Least Squares (OLS) Regression
+
+```python
+webuse('auto')
+regress('mpg weight foreign')
+```
+
+See https://www.stata.com/manuals/rregress.pdf
+
 ## My Story
 
 I used Stata for 7 years for both data exploration and programming. After that, I used Python/pandas for 3 years and
