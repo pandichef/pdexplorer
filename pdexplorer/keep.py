@@ -30,7 +30,7 @@ def keep(commandarg: str) -> None:
             parsed_commandarg["in"] is None and parsed_commandarg["if"] is None
         ), "drop takes either a varlist or in/if, but not both"
         varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
-        current.df = _keep(current.df, varlist)
+        current.df = _keep(current._df, varlist)
     elif parsed_commandarg["in"] or parsed_commandarg["if"]:
         assert (
             parsed_commandarg["anything"] is None
@@ -42,5 +42,5 @@ def keep(commandarg: str) -> None:
     else:
         raise Exception("drop: Missing Arguments")
 
-    current.df.reset_index(inplace=True, drop=True)
-    _print(current.df)
+    current._df.reset_index(inplace=True, drop=True)
+    _print(current._df)

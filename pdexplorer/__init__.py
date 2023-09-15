@@ -38,13 +38,14 @@ from .quietly import quietly
 from .collapse import collapse
 from .egen import egen
 from .reshape import reshapelong, reshapewide
-from .profile import profile
+from .profile import ydata_profile
 from .sort import sort
 from .by import by
 from .ai.flan_t5_base import flan_t5_base
 from .ai.generate_split import generate_split
 from .ai.nnlinear import nnlinear
 from ._print_horizontal_line import print_horizontal_line
+from .cf import cf
 
 # from .dataset import Dataset
 # from .dataset import current

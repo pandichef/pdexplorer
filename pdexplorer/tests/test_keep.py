@@ -15,7 +15,7 @@ def test_keep_columns():
     # singleton.df = sm.datasets.get_rdataset("Duncan", "carData").data
     with quietly():
         webuse("auto", use_local=True)
-    assert len(current.df.columns) == 12  # type: ignore
+    assert len(current._df.columns) == 12  # type: ignore
     with quietly():
         keep("mak*")  # keep any column that starts with "mak"
-    assert len(current.df.columns) == 1  # type: ignore
+    assert len(current._df.columns) == 1  # type: ignore

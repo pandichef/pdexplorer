@@ -5,9 +5,22 @@ import subprocess
 import os
 from .dataset import current
 from typing import Optional
+import dtale
 
 
-def browse(
+def browse():
+    # df = current.df
+    if current.dtale_browser:
+        current.dtale_browser.kill()
+    new_dtale_browser = dtale.show(current.df_labeled, name="currentdf")
+    if current.dtale_browser is None:
+        new_dtale_browser.open_browser()
+    current.dtale_browser = new_dtale_browser
+    # current.dtale_browser = dtale.show(current.df_labeled, name="currentdf")
+    # current.dtale_browser.open_browser()
+
+
+def browse_in_excel(
     path: Optional[str] = None,
     limit: Optional[int] = None,
     run: bool = True,

@@ -6,11 +6,29 @@ import tempfile
 from .use import _use
 from .keep import _keep
 from .search import search_iterable
+import sweetviz as sv
 
 
-def profile(varlist=None, compare_to=None):
-    # This isn't a Stata command, but it should have been
-    # Also see cf
+def sweetviz_profile(varlist=None, compare_to=None):
+    if varlist:
+        columns_to_keep = search_iterable(current.df.columns, varlist)
+    else:
+        columns_to_keep = list(current.df.columns)
+
+    if compare_to is not None:
+        # https://www.stata.com/manuals/dcf.pdf
+        master_df = _keep(current.df, columns_to_keep)
+        using_df = _keep(_use(compare_to)[0], columns_to_keep)
+        report = sv.compare(master_df, using_df)
+    else:
+        report = sv.analyze(current.df)
+    report.show_html()
+
+
+def ydata_profile(varlist=None, compare_to=None):
+    # This primarily used for the cf command since dtale doesn't apparently
+    # support comparisons directly
+    # Note: this isn't a Stata command, but it should have been
     if varlist:
         columns_to_keep = search_iterable(current.df.columns, varlist)
     else:

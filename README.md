@@ -43,7 +43,7 @@ comparison purposes.
 
 ## How `pdexplorer` fulfills the [Zen of Python](https://peps.python.org/pep-0020/) (relative to pandas)
 
-| PASS                                                                  | FAIL                                                      |
+| YES                                                                   | NO                                                        |
 | --------------------------------------------------------------------- | --------------------------------------------------------- |
 | Beautiful is better than ugly.                                        | Explicit is better than implicit.                         |
 | Simple is better than complex.                                        | In the face of ambiguity, refuse the temptation to guess. |
@@ -101,6 +101,15 @@ becomes
 ```python
 labeldata("label")
 ```
+
+## Dependencies
+
+| `pdexplorer` command | package dependency                                                                                                                                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| cf                   | [ydata-profiling](https://github.com/ydataai/ydata-profiling) or [sweetviz](https://github.com/fbdesignpro/sweetviz)                                                       |
+| browse               | [dtale](https://github.com/man-group/dtale)                                                                                                                                |
+| regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) |
+| scatter              | [seaborn](https://github.com/mwaskom/seaborn)                                                                                                                              |
 
 ## References
 

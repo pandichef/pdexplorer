@@ -13,8 +13,8 @@ def drop(commandarg: str) -> None:
         assert (
             parsed_commandarg["in"] is None and parsed_commandarg["if"] is None
         ), "drop takes either a varlist or in/if, but not both"
-        varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
-        current.df.drop(labels=varlist, axis=1, inplace=True)
+        varlist = search_iterable(current._df.columns, parsed_commandarg["anything"])
+        current._df.drop(labels=varlist, axis=1, inplace=True)
     elif parsed_commandarg["in"] or parsed_commandarg["if"]:
         assert (
             parsed_commandarg["anything"] is None
@@ -27,5 +27,5 @@ def drop(commandarg: str) -> None:
     else:
         raise Exception("drop: Missing Arguments")
 
-    current.df.reset_index(inplace=True, drop=True)
-    _print(current.df)
+    current._df.reset_index(inplace=True, drop=True)
+    _print(current._df)

@@ -3,6 +3,8 @@ from copy import copy
 from .search import search_iterable
 import torch
 from torch.utils.data import Dataset, DataLoader  # type: ignore
+import dtale
+from dtale.views import DtaleData
 
 # df = pd.DataFrame()
 # class WithinByContextManager(Exception):
@@ -34,6 +36,7 @@ class Dataset:
     METADATA_DEFAULT = {"data_label": "", "variable_labels": {}}
 
     def __init__(self) -> None:
+        self.dtale_browser: DtaleData | None = None
         self.quietly = False
         self.has_preserved = False
         self._clear_data()
@@ -70,7 +73,17 @@ class Dataset:
 
     @property
     def df(self):
+        # returns a copy of df
+        # use current._df to return a reference
+        # print(
+        #     "Making a copy of current dataframe.  Use current._df to get a reference to the current dataframe."
+        # )
+        # return self._df.copy()
         return self._df
+
+    @property
+    def df_labeled(self):
+        return self._df.rename(columns=self.metadata["variable_labels"])
 
     @df.setter
     def df(self, value: pd.DataFrame):

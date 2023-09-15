@@ -21,16 +21,16 @@ def egen(assignment, by=None):
     arguments = fnc_and_args_list[1][:-1]
 
     if not by:
-        current.df["by"] = "_all"
+        current._df["by"] = "_all"
         by = "by"
 
     if egen_fnc == "rank":
-        current.df[newvar] = current.df.groupby(by)[arguments].rank(method="average")
+        current._df[newvar] = current._df.groupby(by)[arguments].rank(method="average")
     else:
         # mean, count, median, min, max
-        current.df[newvar] = current.df.groupby(by)[arguments].transform(egen_fnc)
+        current._df[newvar] = current._df.groupby(by)[arguments].transform(egen_fnc)
 
     if by == "by":
-        del current.df["by"]
+        del current._df["by"]
 
-    _print(current.df)
+    _print(current._df)

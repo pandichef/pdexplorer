@@ -26,20 +26,20 @@ def collapse(commandarg: str) -> None:
         set(clist_as_list)
     ), "Duplicate names found.  Create appropriately named columns first before collapsing."
 
-    df = current.df
+    # df = current.df
     if not weight:
-        df["weight"] = 1
+        current._df["weight"] = 1
         weight = "weight"
     if not by:
-        df["by"] = "_all"
+        current._df["by"] = "_all"
         by = "by"
 
     fnc = {
         # "mean": lambda x: (x * df[weight]).sum() / (df[weight]).sum(), # Denominator didn't work here
-        "mean": lambda x: (x * df.loc[x.index, weight]).sum()  #  From ChatGPT
-        / (df.loc[x.index, weight]).sum(),  # type:ignore
+        "mean": lambda x: (x * current._df.loc[x.index, weight]).sum()  #  From ChatGPT
+        / (current._df.loc[x.index, weight]).sum(),  # type:ignore
         "median": lambda x: x.median(),
-        "sum": lambda x: (x * df[weight]).sum(),
+        "sum": lambda x: (x * current._df[weight]).sum(),
         "rawsum": lambda x: x.sum(),
         "count": lambda x: x.count(),
         "max": lambda x: x.max(),
@@ -57,8 +57,8 @@ def collapse(commandarg: str) -> None:
         # print(stat)
 
     if not weight:
-        del df["weight"]
+        del current._df["weight"]
 
-    current.df = df.groupby(by).agg(agg_functions).reset_index()
+    current.df = current._df.groupby(by).agg(agg_functions).reset_index()
 
-    _print(current.df)
+    _print(current._df)
