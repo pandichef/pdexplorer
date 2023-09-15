@@ -138,7 +138,9 @@ setup(
         "statsmodels",
         "scikit-learn",
         "torch",
-        "ydata-profiling"
+        "ydata-profiling",
+        "vega_datasets",
+        "datasets",  # https://github.com/huggingface/datasets
         # "altair",
         # "altair_saver",
         # "bokeh",
