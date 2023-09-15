@@ -138,6 +138,7 @@ setup(
         "statsmodels",
         "scikit-learn",
         "torch",
+        "ydata-profiling"
         # "altair",
         # "altair_saver",
         # "bokeh",
