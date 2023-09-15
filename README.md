@@ -57,32 +57,6 @@ regress('mpg weight foreign')
 
 See https://www.stata.com/manuals/rregress.pdf
 
-<style>
-.row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.column {
-  flex-basis: 48%; /* Adjust this value as needed */
-}
-</style>
-
-<div class="row">
-  <div class="column">
-    ```python
-    # Code snippet 1
-    print("Hello, World!")
-    ```
-  </div>
-  <div class="column">
-    ```python
-    # Code snippet 2
-    print("Code in the second column")
-    ```
-  </div>
-</div>
-
 ## My Story
 
 I used Stata for 7 years for both data exploration and programming. After that, I used Python/pandas for 3 years and
