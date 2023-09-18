@@ -53,6 +53,7 @@ See https://www.stata.com/manuals/rsummarize.pdf
 ```python
 webuse('auto')
 regress('mpg weight foreign')
+ereturnlist()
 ```
 
 See https://www.stata.com/manuals/rregress.pdf
