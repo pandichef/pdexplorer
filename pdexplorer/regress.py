@@ -12,11 +12,12 @@ import statsmodels.formula.api as smf
 from ._print import _print
 from statsmodels.regression.linear_model import RegressionResultsWrapper
 from sklearn.linear_model import LinearRegression
+from typing import Union
 
 
 def regress(
     varlist: str, library="statsmodels", epochs: int = 100
-) -> RegressionResultsWrapper | LinearRegression | None:
+) -> Union[RegressionResultsWrapper, LinearRegression, None]:
     """
     Stata docs: https://www.stata.com/manuals/rregress.pdf
     Returns: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
