@@ -26,6 +26,20 @@ def regress(varlist: str, library="statsmodels", epochs=100):
         _print(results.summary())
         current.methods, current.properties = _get_custom_attributes(results)
         # print(results)
+        # print(current.properties)
+        current.stored_results["e"] = {}
+        current.stored_results["e"] = {
+            "scalars": {
+                "N": int(results.nobs),
+                "df_m": int(results.df_model),
+                "df_r": int(results.df_resid),
+                "F": results.fvalue,
+                "r2": results.rsquared,
+                "mss": results.mse_model,
+                "r2_a": results.rsquared_adj,
+                "ll": results.llf,
+            }
+        }
         return results
     elif library == "sklearn":
         # import numpy as np

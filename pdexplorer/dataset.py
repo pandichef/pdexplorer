@@ -39,6 +39,13 @@ class Dataset:
         self.dtale_browser: DtaleData | None = None
         self.quietly = False
         self.has_preserved = False
+        self.stored_results = {
+            "r": {},  # results from general commands
+            "e": {},  # results from estimation commands
+            "s": {},  # results from parsing commands
+            "n": {},  # commands that do not store in r(), e(), or s()
+            "c": {},  # contains the values of system parameters and settings
+        }
         self._clear_data()
         self._clear_settings()
         self._clear_results()

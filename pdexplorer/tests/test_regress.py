@@ -4,6 +4,7 @@ from ..dataset import current
 import statsmodels.api as sm
 from ..quietly import quietly
 from ..regress import regress
+from ..returnlist import _e
 
 
 def test_regress_smf_vs_sm():
@@ -82,3 +83,11 @@ def test_regress_smf_vs_pytorch_Rprop_2_covariates():
         float(list(model.parameters())[0][0][1]),  # type:ignore
         abs_tol=abs_tol,  # type:ignore
     )
+
+
+def test_ereturn_list():
+    webuse("auto", use_local=True)
+    res = regress("price mpg")
+    assert type(res.nobs) == float  # type: ignore
+    assert type(_e("N")) == int
+    assert int(res.nobs) == _e("N")  # type: ignore

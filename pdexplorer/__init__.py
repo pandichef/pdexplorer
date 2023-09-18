@@ -46,6 +46,18 @@ from .ai.generate_split import generate_split
 from .ai.nnlinear import nnlinear
 from ._print_horizontal_line import print_horizontal_line
 from .cf import cf
+from .returnlist import (
+    returnlist,
+    _r,
+    ereturnlist,
+    _e,
+    sreturnlist,
+    _s,
+    nreturnlist,
+    _n,
+    creturnlist,
+    _c,
+)
 
 # from .dataset import Dataset
 # from .dataset import current
