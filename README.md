@@ -56,7 +56,32 @@ regress('mpg weight foreign')
 ereturnlist()
 ```
 
-See https://www.stata.com/manuals/rregress.pdf
+## Return Values
+
+In the last example, note the use of `ereturnlist()`, corresponding to the Stata command [`ereturn list`](https://www.stata.com/manuals/pereturn.pdf). Additionally, a Python object may also be available as the command's return value. For example,
+
+```python
+webuse('auto')
+results = regress('mpg weight foreign')
+```
+
+Here, `results` is a [RegressionResultsWrapper](https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html) object from the [statsmodels](https://www.statsmodels.org/) package.
+
+Similarly,
+
+```python
+results = regress('mpg weight foreign', library='scikit-learn')
+```
+
+Now, `results` is a [LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html) object from the [scikit-learn](https://scikit-learn.org/) package.
+
+Finally,
+
+```python
+results = regress('mpg weight foreign', library='pytorch')
+```
+
+Here, `results` is a [torch.nn.Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html) object from the [PyTorch](https://pytorch.org/) package.
 
 ## My Story
 

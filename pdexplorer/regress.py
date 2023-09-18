@@ -10,13 +10,17 @@ from ._get_custom_attributes import _get_custom_attributes
 from ._patsify import _patsify
 import statsmodels.formula.api as smf
 from ._print import _print
-
-# from statsmodels.regression.linear_model import RegressionResultsWrapper
-
-# smf.logit
+from statsmodels.regression.linear_model import RegressionResultsWrapper
+from sklearn.linear_model import LinearRegression
 
 
-def regress(varlist: str, library="statsmodels", epochs=100):
+def regress(
+    varlist: str, library="statsmodels", epochs: int = 100
+) -> RegressionResultsWrapper | LinearRegression | None:
+    """
+    Stata docs: https://www.stata.com/manuals/rregress.pdf
+    Returns: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
+    """
     if library == "statsmodels":
         df = current.df
         patsy_formula = _patsify(varlist)
@@ -41,9 +45,8 @@ def regress(varlist: str, library="statsmodels", epochs=100):
             }
         }
         return results
-    elif library == "sklearn":
+    elif library == "sklearn" or library == "scikit-learn":
         # import numpy as np
-        from sklearn.linear_model import LinearRegression
 
         varlist_as_list = varlist.split()
         yvar = varlist_as_list[0]
@@ -58,6 +61,15 @@ def regress(varlist: str, library="statsmodels", epochs=100):
         # This didn't work with SDG, so I used Rprop instead
         import torch
         from torch.autograd import Variable
+
+        # class linearRegression(torch.nn.Module):
+        #     def __init__(self, inputSize, outputSize):
+        #         super(linearRegression, self).__init__()
+        #         self.linear = torch.nn.Linear(inputSize, outputSize)
+
+        #     def forward(self, x):
+        #         out = self.linear(x)
+        #         return out
 
         if varlist == "":
             # create dummy data for training
@@ -88,21 +100,13 @@ def regress(varlist: str, library="statsmodels", epochs=100):
         # print(X)
         # print(y)
 
-        class linearRegression(torch.nn.Module):
-            def __init__(self, inputSize, outputSize):
-                super(linearRegression, self).__init__()
-                self.linear = torch.nn.Linear(inputSize, outputSize)
-
-            def forward(self, x):
-                out = self.linear(x)
-                return out
-
         inputDim = X.shape[1]  # takes variable 'x'
         outputDim = 1  # takes variable 'y'
         learningRate = 0.01
         epochs = epochs
 
-        model = linearRegression(inputDim, outputDim)
+        # model = linearRegression(inputDim, outputDim)
+        model = torch.nn.Linear(inputDim, outputDim)
         ##### For GPU #######
         if torch.cuda.is_available():
             model.cuda()
@@ -151,6 +155,8 @@ def regress(varlist: str, library="statsmodels", epochs=100):
         """
 
         return model
+    else:
+        return None
 
 
 """
