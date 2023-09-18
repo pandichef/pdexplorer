@@ -112,8 +112,7 @@ comparison purposes.
 ## How `pdexplorer` differs from Stata
 
 - Commands are implemented as Python functions and hence require at least one set of parentheses
-- `pdexplorer` uses Python libraries under the hood. The result of a command reflects the output of those libraries,
-  even when they differ from Stata.
+- `pdexplorer` uses Python libraries under the hood. (The result of a command reflects the output of those libraries. See above.)
 - There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
   `pdexplorer` is just the Python data stack.
 

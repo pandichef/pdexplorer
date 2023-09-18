@@ -154,9 +154,9 @@ def regress(
         plt.show()
         """
 
-        return model
+        return model  # type: ignore
     else:
-        return None
+        raise Exception("Invalid library name.")
 
 
 """
