@@ -206,7 +206,7 @@ circlechart(size=60).encode(
 ```
 
 The `()` at the end tells Altair to open the chart in a web browser. This method is not available in `alt.Charts` itself,
-but we monkey patched this into the class for convenience. In this example, `circlechart()` itself simple returns a `alt.Chart` object.
+but we monkey patched this into the class for convenience. In this example, `circlechart()` itself simply returns a `alt.Chart` object.
 
 `pdexplorer` charts also support a `varlist` parameter with `y`/`x` encodings and additional encodings via options e.g., the previous block can be written as
 
