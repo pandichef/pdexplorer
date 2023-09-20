@@ -16,7 +16,9 @@ alt.HConcatChart.__call__ = _call  # type: ignore
 alt.VConcatChart.__call__ = _call  # type: ignore
 
 
+# def _get_kwargs_list(commandarg, yX=True, use_labels=False):
 def _get_kwargs_list(commandarg, yX=True):
+    """get encodings as keywords"""
     parsed_commandarg = parse_commandarg(commandarg)
     non_x_y_encodings = parse_options(parsed_commandarg["options"], values_as_list=True)
     for k, v in non_x_y_encodings.items():
@@ -24,19 +26,14 @@ def _get_kwargs_list(commandarg, yX=True):
             non_x_y_encodings[k] = v[0]
     varlist = parsed_commandarg["anything"].split()
     if yX:
-        # parsed_commandarg = parse_commandarg(commandarg)
-        # non_x_y_encodings = parse_options(
-        #     parsed_commandarg["options"], values_as_list=True
-        # )
-        # for k, v in non_x_y_encodings.items():
-        #     # Becuase Altair doesn't like lists of length 1
-        #     if len(v) == 1:
-        #         non_x_y_encodings[k] = v[0]
-        # # varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
-        # varlist = parsed_commandarg["anything"].split()
         if len(varlist) == 1:
             yvar = varlist[0]
             xvars = list(current.df.columns)
+            # xvars = (
+            #     list(current.df_labeled.columns)
+            #     if use_labels
+            #     else list(current.df.columns)
+            # )
             xvars.remove(yvar)
         else:
             yvar = varlist.pop(0)
@@ -44,7 +41,6 @@ def _get_kwargs_list(commandarg, yX=True):
         kwargs_list = []
         for xvar in xvars:
             this_kwargs = {"y": yvar, "x": xvar}
-            # print(non_x_y_encodings)
             this_kwargs.update(non_x_y_encodings)
             kwargs_list.append(this_kwargs)
         return kwargs_list
@@ -52,6 +48,11 @@ def _get_kwargs_list(commandarg, yX=True):
         if len(varlist) == 1:
             xvar = varlist[0]
             yvars = list(current.df.columns)
+            # yvars = (
+            #     list(current.df_labeled.columns)
+            #     if use_labels
+            #     else list(current.df.columns)
+            # )
             yvars.remove(xvar)
         else:
             xvar = varlist.pop()
@@ -59,41 +60,9 @@ def _get_kwargs_list(commandarg, yX=True):
         kwargs_list = []
         for yvar in yvars:
             this_kwargs = {"y": yvar, "x": xvar}
-            # print(non_x_y_encodings)
             this_kwargs.update(non_x_y_encodings)
             kwargs_list.append(this_kwargs)
         return kwargs_list
-
-
-# def _get_encode_kwargs(commandarg):
-#     quantitative_encodings = ["y", "x", "color", "size"]
-#     ordinal_encodings = ["color", "column"]
-#     parsed_commandarg = parse_commandarg(commandarg)
-#     varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
-#     encode_kwargs = {}
-#     try:
-#         for varname in varlist:
-#             if current.df[varname].dtype in ["object", "bool", "category"]:
-#                 this_encoding = ordinal_encodings.pop(0)
-#                 if this_encoding in quantitative_encodings:
-#                     quantitative_encodings.remove(this_encoding)
-#             else:
-#                 this_encoding = quantitative_encodings.pop(0)
-#                 if this_encoding in ordinal_encodings:
-#                     ordinal_encodings.remove(this_encoding)
-
-#             encode_kwargs.update({this_encoding: varname})
-#     except IndexError:
-#         raise IndexError(
-#             "There are enough default encodings specified.  Add additional encodings explicitly."
-#         )
-#     return encode_kwargs
-
-
-# fnc = """def {marktype}chart(commandarg=None, *args, **kwargs):
-#     encode_kwargs = _get_encode_kwargs(commandarg) if commandarg else {{}}
-#     return alt.Chart(current.df).mark_{marktype}(*args, **kwargs).encode(**encode_kwargs)
-# """
 
 
 def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwargs):
@@ -150,42 +119,6 @@ def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwarg
             return vconcat
 
 
-# fnc = """def {marktype}chart(commandarg=None, layered=False, *args, **kwargs):
-#     _kwargs_list = _get_kwargs_list(commandarg) if commandarg else []
-#     if len(_kwargs_list) == 0:
-#         return alt.Chart(current.df).mark_{marktype}(*args, **kwargs)
-#     if len(_kwargs_list) == 1:
-#         return alt.Chart(current.df).mark_{marktype}(*args, **kwargs).encode(**_kwargs_list[0])
-#     else:
-#         if layered:
-#             # sugar for layered charts in the Stata-like manner
-#             parsed_commandarg = parse_commandarg(commandarg)
-#             layered_encodings = parse_options(parsed_commandarg["options"], values_as_list=True)
-#             for k, v in layered_encodings.items():
-#                 # Becuase Altair doesn't like lists of length 1
-#                 if len(v) == 1:
-#                     layered_encodings[k] = v[0]
-#             yvars = parsed_commandarg['anything'].split()
-#             xvar = yvars.pop()
-#             layered_encodings.update({{'color': 'key:N'}})
-#             layered_encodings.update({{'x': xvar}})
-#             layered_encodings.update({{'y': 'value:Q'}})
-#             return alt.Chart(current.df).mark_{marktype}(*args, **kwargs).encode(**layered_encodings).transform_fold(yvars)
-#         else:
-#             vconcat = (
-#                 alt.Chart(current.df).mark_{marktype}(*args, **kwargs).encode(**_kwargs_list[0])
-#             )
-#             for i, _kwargs in enumerate(_kwargs_list):
-#                 if i > 0:
-#                     vconcat = vconcat & (
-#                         alt.Chart(current.df)
-#                         .mark_{marktype}(*args, **kwargs)
-#                         .encode(**_kwargs_list[i])
-#                     )
-#             return vconcat
-# """
-
-
 marktypes = [  # https://altair-viz.github.io/user_guide/marks/index.html
     "arc",  # https://altair-viz.github.io/user_guide/marks/arc.html#user-guide-arc-marks
     "area",  # https://altair-viz.github.io/user_guide/marks/area.html#user-guide-area-marks
@@ -206,39 +139,22 @@ marktypes = [  # https://altair-viz.github.io/user_guide/marks/index.html
     "errorbar",  # https://altair-viz.github.io/user_guide/marks/errorbar.html#user-guide-errorbar-marks
 ]
 
-# for marktype in marktypes:
-#     exec(fnc.format(marktype=marktype))
-
 fnc = """def {marktype}chart(*args, **kwargs):
-    return _chart(alt.Chart(current.df).mark_{marktype}, *args, **kwargs)
+    mark_method = alt.Chart(current.df).mark_{marktype}
+    return _chart(mark_method, *args, **kwargs)
 """
+# fnc = """def {marktype}chart(use_labels=True, *args, **kwargs):
+#     if use_labels:
+#         mark_method = alt.Chart(current.df_labeled).mark_{marktype}
+#     else:
+#         mark_method = alt.Chart(current.df).mark_{marktype}
+#     return _chart(mark_method, use_labels=use_labels, *args, **kwargs)
+# """
 
 for marktype in marktypes:
     exec(fnc.format(marktype=marktype))
 
-
-# def circlechart(commandarg=None, *args, **kwargs):
-#     _kwargs_list = _get_kwargs_list(commandarg) if commandarg else []
-#     if len(_kwargs_list) == 0:
-#         return alt.Chart(current.df).mark_circle(*args, **kwargs)
-#     if len(_kwargs_list) == 1:
-#         return (
-#             alt.Chart(current.df).mark_circle(*args, **kwargs).encode(**_kwargs_list[0])
-#         )
-#     else:
-#         layered_chart = (
-#             alt.Chart(current.df).mark_circle(*args, **kwargs).encode(**_kwargs_list[0])
-#         )
-#         for i, _kwargs in enumerate(_kwargs_list):
-#             if i > 0:
-#                 layered_chart = layered_chart & (
-#                     alt.Chart(current.df)
-#                     .mark_circle(*args, **kwargs)
-#                     .encode(**_kwargs_list[i])
-#                 )
-#         return layered_chart
-
-
+##################################################################
 # Stata-like Sugar Below
 def histogram(varname):
     barchart().encode(alt.X(varname, bin=True), y="count()")()  # type: ignore
