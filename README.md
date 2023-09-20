@@ -251,7 +251,7 @@ webuse("cars", "vega")
 circlechart("miles_per_gallon horsepower weight_in_lbs", stacked=True)()
 ```
 
-Note that the Stata `varlist` interpretation is used here by default i.e., `var1 var2 var3` is assumed to represent
+Note that Stata's `varlist` interpretation is used here by default i.e., `var1 var2 var3` is assumed to represent
 `yvar1 yvar2 xvar`. We can change this interpretation with the optional argument `yX`.
 
 ```python
