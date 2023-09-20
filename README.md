@@ -165,7 +165,6 @@ labeldata("label")
 | cf                   | [ydata-profiling](https://github.com/ydataai/ydata-profiling) or [sweetviz](https://github.com/fbdesignpro/sweetviz)                                                       |
 | browse               | [dtale](https://github.com/man-group/dtale)                                                                                                                                |
 | regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) |
-| scatter              | [seaborn](https://github.com/mwaskom/seaborn)                                                                                                                              |
 
 <!-- ## Subfolders
 
