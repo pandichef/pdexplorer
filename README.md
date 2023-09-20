@@ -214,12 +214,16 @@ but we monkey patched this into the class for convenience. In this example, `cir
 ```python
 from pdexplorer import *
 webuse("cars", "vega")
-circlechart("miles_per_gallon horsepower, color(origin) tooltip(name origin horsepower miles_per_gallon)", size=60)()
+circlechart(
+    "miles_per_gallon horsepower, color(origin) \
+    tooltip(name origin horsepower miles_per_gallon)",
+    size=60,
+)()
 ```
 
-In this version, `pdexplorer` uses variable labels for the y- and x- axes.
+Here, `pdexplorer` uses variable labels for the y- and x- axes.
 
-Note that `encode()` is optional here. So, for a quick scatterplot, we can write
+Also, note that `encode()` is optional here. So, for a quick scatterplot, we can write
 
 ```python
 from pdexplorer import *
