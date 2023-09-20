@@ -263,7 +263,7 @@ circlechart("miles_per_gallon horsepower weight_in_lbs", yX=True, stacked=True)(
 Now `var1 var2 var3` is assumed to represent `yvar xvar1 xvar2` as it would be for the `regress` command.
 
 Moreover, the Stata default is to layer all variables onto a single chart. The `stacked=True` option allows the graphs to be shown on
-separate grids. If `stacked=False`, the graphs on all shows on the same grid i.e.,
+separate grids. If `stacked=False`, the charts are all shown on the same grid i.e.,
 
 ```python
 from pdexplorer import *
