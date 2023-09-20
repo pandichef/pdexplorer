@@ -167,13 +167,13 @@ labeldata("label")
 | regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) |
 | scatter              | [seaborn](https://github.com/mwaskom/seaborn)                                                                                                                              |
 
-## Subfolders
+<!-- ## Subfolders
 
-`core/`: stata commands for data wrangling  
-`plus/`: data wrangling commands that are not in Stata  
-`finance/`: financial functions  
-`ai/`: Machine Learning and Artificial Intelligence  
-`experimental/`: Commands that are no longer actively maintained
+`core/`: stata commands for data wrangling
+`plus/`: data wrangling commands that are not in Stata
+`finance/`: financial functions
+`ai/`: Machine Learning and Artificial Intelligence
+`experimental/`: Commands that are no longer actively maintained -->
 
 ## Charts
 
