@@ -123,6 +123,9 @@ def regress(
                 inputs = X
                 labels = y
 
+            # print(inputs)
+            # print(labels)
+
             # Clear gradient buffers because we don't want any gradient from previous epoch to carry forward, dont want to cummulate gradients
             optimizer.zero_grad()
 
@@ -154,6 +157,58 @@ def regress(
         plt.legend(loc="best")
         plt.show()
         """
+
+        return model  # type: ignore
+    elif library == "pytorch_dataloader":
+        # same as above, but using the dataloader
+        import torch
+        from torch.autograd import Variable
+
+        ds = current.get_pytorch_dataset(varlist)
+        dl = current.get_pytorch_dataloader(varlist)
+
+        print(ds.x_train.shape)
+        print(ds.y_train.shape)
+        # print(y.shape)
+
+        inputDim = ds.x_train.shape[1]  # takes variable 'x'
+        outputDim = 1  # takes variable 'y'
+        learningRate = 0.01
+        epochs = epochs
+
+        model = torch.nn.Linear(inputDim, outputDim)
+        ##### For GPU #######
+        if torch.cuda.is_available():
+            model.cuda()
+        criterion = torch.nn.MSELoss()
+        optimizer = torch.optim.Rprop(model.parameters(), lr=learningRate)
+
+        for epoch in range(epochs):
+            for batch, (X, y) in enumerate(dl):
+                # Converting inputs and labels to Variable
+                if torch.cuda.is_available():
+                    inputs = X.cuda()
+                    labels = y.cuda()
+                else:
+                    inputs = X
+                    labels = y
+
+                # Clear gradient buffers because we don't want any gradient from previous epoch to carry forward, dont want to cummulate gradients
+                optimizer.zero_grad()
+
+                # get output from the model, given the inputs
+                outputs = model(inputs)
+
+                # get loss for the predicted output
+                loss = criterion(outputs, labels)
+                # print(loss)
+                # get gradients w.r.t to parameters
+                loss.backward()
+
+                # update parameters
+                optimizer.step()
+
+                # print("epoch {}, loss {}".format(epoch, loss.item()))
 
         return model  # type: ignore
     else:

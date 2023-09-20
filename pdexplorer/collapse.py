@@ -22,9 +22,10 @@ def collapse(commandarg: str) -> None:
     clist = parsed_commandarg["anything"]
 
     clist_as_list = clist.split()
-    assert len(clist_as_list) == len(
-        set(clist_as_list)
-    ), "Duplicate names found.  Create appropriately named columns first before collapsing."
+    # print(clist_as_list)
+    # assert len(clist_as_list) == len(
+    #     set(clist_as_list)
+    # ), "Duplicate names found.  Create appropriately named columns first before collapsing."
 
     # df = current.df
     if not weight:

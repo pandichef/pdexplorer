@@ -16,8 +16,8 @@ alt.HConcatChart.__call__ = _call  # type: ignore
 alt.VConcatChart.__call__ = _call  # type: ignore
 
 
-# def _get_kwargs_list(commandarg, yX=True, use_labels=False):
-def _get_kwargs_list(commandarg, yX=True):
+# def _get_kwargs_list(commandarg, yX=True):
+def _get_kwargs_list(commandarg, yX=True, use_labels=True):
     """get encodings as keywords"""
     parsed_commandarg = parse_commandarg(commandarg)
     non_x_y_encodings = parse_options(parsed_commandarg["options"], values_as_list=True)
@@ -29,18 +29,21 @@ def _get_kwargs_list(commandarg, yX=True):
         if len(varlist) == 1:
             yvar = varlist[0]
             xvars = list(current.df.columns)
-            # xvars = (
-            #     list(current.df_labeled.columns)
-            #     if use_labels
-            #     else list(current.df.columns)
-            # )
             xvars.remove(yvar)
         else:
             yvar = varlist.pop(0)
             xvars = varlist
         kwargs_list = []
         for xvar in xvars:
-            this_kwargs = {"y": yvar, "x": xvar}
+            if use_labels:
+                this_kwargs = {
+                    # "y": current.metadata["variable_labels"][yvar],
+                    # "x": current.metadata["variable_labels"][xvar],
+                    "y": alt.Y(yvar, title=current.metadata["variable_labels"][yvar]),
+                    "x": alt.X(xvar, title=current.metadata["variable_labels"][xvar]),
+                }
+            else:
+                this_kwargs = {"y": yvar, "x": xvar}
             this_kwargs.update(non_x_y_encodings)
             kwargs_list.append(this_kwargs)
         return kwargs_list
@@ -48,18 +51,22 @@ def _get_kwargs_list(commandarg, yX=True):
         if len(varlist) == 1:
             xvar = varlist[0]
             yvars = list(current.df.columns)
-            # yvars = (
-            #     list(current.df_labeled.columns)
-            #     if use_labels
-            #     else list(current.df.columns)
-            # )
             yvars.remove(xvar)
         else:
             xvar = varlist.pop()
             yvars = varlist
         kwargs_list = []
         for yvar in yvars:
-            this_kwargs = {"y": yvar, "x": xvar}
+            # this_kwargs = {"y": yvar, "x": xvar}
+            if use_labels:
+                this_kwargs = {
+                    # "y": current.metadata["variable_labels"][yvar],
+                    # "x": current.metadata["variable_labels"][xvar],
+                    "y": alt.Y(yvar, title=current.metadata["variable_labels"][yvar]),
+                    "x": alt.X(xvar, title=current.metadata["variable_labels"][xvar]),
+                }
+            else:
+                this_kwargs = {"y": yvar, "x": xvar}
             this_kwargs.update(non_x_y_encodings)
             kwargs_list.append(this_kwargs)
         return kwargs_list
@@ -92,7 +99,9 @@ def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwarg
                 yvar = xvars.pop(0)
                 layered_encodings.update({"color": "key:N"})
                 layered_encodings.update({"x": "value:Q"})
-                layered_encodings.update({"y": yvar})
+                layered_encodings.update(
+                    {"y": alt.Y(yvar, title=current.metadata["variable_labels"][yvar])}
+                )
                 return (
                     mark_method(*args, **kwargs)
                     .encode(**layered_encodings)
@@ -102,7 +111,9 @@ def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwarg
                 yvars = parsed_commandarg["anything"].split()
                 xvar = yvars.pop()
                 layered_encodings.update({"color": "key:N"})
-                layered_encodings.update({"x": xvar})
+                layered_encodings.update(
+                    {"x": alt.X(xvar, title=current.metadata["variable_labels"][xvar])}
+                )
                 layered_encodings.update({"y": "value:Q"})
                 return (
                     mark_method(*args, **kwargs)
@@ -110,6 +121,7 @@ def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwarg
                     .transform_fold(yvars)
                 )
         else:
+            # Stacked version here
             vconcat = mark_method(*args, **kwargs).encode(**_kwargs_list[0])
             for i, _kwargs in enumerate(_kwargs_list):
                 if i > 0:

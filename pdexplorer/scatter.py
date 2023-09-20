@@ -1,4 +1,5 @@
 # TODO: support multiple variables e.g.,  scatter yvar1 yvar2 xvar
+# Deprecated: use altair_mapper instead
 import matplotlib.pyplot as plt
 import numpy as np
 from .dataset import current

@@ -11,24 +11,43 @@ from dtale.views import DtaleData
 #     pass
 
 
+# varlist_as_list = varlist.split()
+# yvar = varlist_as_list[0]
+# xvars = varlist_as_list[1:]
+# xvars = search_iterable(current.df.columns, " ".join(xvars))
+# x_train = current.df.dropna()[xvars].values
+# y_train = current.df.dropna()[[yvar]].values
+# X = torch.tensor(x_train).to(torch.float32)
+# y = torch.tensor(y_train).to(torch.float32)
+
+
 class PyTorchDataset(Dataset):
     # PyTorch dataset is a iterable that separates the X variables from the y variable
     def __init__(self, df, varlist):
+        # self.nobs = len(df)
         varlist_as_list = varlist.split()
         yvar = varlist_as_list[0]
         xvars = varlist_as_list[1:]
         xvars = search_iterable(df.columns, " ".join(xvars))
 
-        x_df = df[xvars]
-        y_series = df[yvar]
+        x_train = df.dropna()[xvars].values
+        y_train = df.dropna()[[yvar]].values
+        self.x_train = torch.tensor(x_train).to(torch.float32)
+        self.y_train = torch.tensor(y_train).to(torch.float32)
 
-        self.x_train = torch.tensor(x_df.values)
-        self.y_train = torch.tensor(y_series)
+        # x_df = df[xvars]
+        # y_series = df[yvar]
+
+        # self.x_train = torch.tensor(x_df.values)
+        # self.y_train = torch.tensor(y_series)
 
     def __len__(self):
         return len(self.y_train)
 
     def __getitem__(self, idx):
+        # idx = torch.long(idx)
+        # idx = torch.arange(self.nobs, dtype=torch.long)
+        # print(type(idx))
         return self.x_train[idx], self.y_train[idx]
 
 

@@ -13,7 +13,7 @@ from .browse import browse
 from .gsort import gsort
 from .order import order
 from .keep import keep
-from .scatter import scatter
+from .scatter import scatter as scatter_old
 from .xpose import xpose
 from .lst import lst
 
@@ -59,9 +59,35 @@ from .returnlist import (
     _c,
 )
 
+from .ai.bard import bard
+from .ai.chatgpt import chatgpt
+from .ai.streamlit import streamlit
+
+
 # from .dataset import Dataset
 # from .dataset import current
 from pdexplorer.dataset import current
+from pdexplorer.altair_mapper import (
+    histogram,
+    scatter,
+    arcchart,  # type: ignore
+    areachart,  # type: ignore
+    barchart,  # type: ignore
+    circlechart,  # type: ignore
+    geoshapechart,  # type: ignore
+    imagechart,  # type: ignore
+    linechart,  # type: ignore
+    pointchart,  # type: ignore
+    rectchart,  # type: ignore
+    rulechart,  # type: ignore
+    squarechart,  # type: ignore
+    textchart,  # type: ignore
+    tickchart,  # type: ignore
+    trailchart,  # type: ignore
+    boxplotchart,  # type: ignore
+    errorbandchart,  # type: ignore
+    errorbarchart,  # type: ignore
+)
 
 
 def methods():

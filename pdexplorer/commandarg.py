@@ -9,7 +9,7 @@ def _clean(string_with_extra_spaces: str) -> str:
 def parse_commandarg(_commandarg: str) -> dict:
     _commandarg = _commandarg.replace("==", "__eq__").replace("!=", "__neq__")
     split_identifiers = (
-        "in ",
+        " in ",
         "if ",
         "using",
         ",",
@@ -77,15 +77,17 @@ def parse_commandarg(_commandarg: str) -> dict:
     del parsed[","]
     parsed["if"] = parsed["if "]
     del parsed["if "]
-    parsed["in"] = parsed["in "]
-    del parsed["in "]
+    parsed["in"] = parsed[" in "]
+    del parsed[" in "]
     # parsed["exp"] = parsed["="]
 
     # print(parsed)
     return parsed
 
 
-def parse_options(options_string: str) -> dict:
+def parse_options(options_string: str, values_as_list=False) -> dict:
+    if options_string is None:
+        return {}
     options_string = options_string.replace("( ", "(")
     options_string = options_string.replace(" )", ")")
 
@@ -100,9 +102,12 @@ def parse_options(options_string: str) -> dict:
     for word in remaining_words:
         result[word] = None
 
-    return result
+    if values_as_list:
+        return {key: value.split(" ") for key, value in result.items()}
+    else:
+        return result
 
 
 def parse_if_condition(if_condition_string: str) -> dict:
-    pass
-    # todo: handle inlist
+    return {}  # todo
+
