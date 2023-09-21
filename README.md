@@ -279,11 +279,12 @@ webuse("cars", "vega")
 circlechart().transform_calculate_variable_labels().encode(
     y="value:Q", x=alt.X("weight_in_lbs", title="Weight_in_Lbs"), color="key:N"
 ).transform_fold(
-    ["Miles_per_Gallon", "Horsepower"]
+    ["Miles_per_Gallon", "Horsepower"] # The variable labels are accessible
 )()
 ```
 
-Note that `transform_calculate_variable_labels` is monkey patched into `alt.Chart` to enable access to variable labels.
+Note that `transform_calculate_variable_labels` is monkey patched into `alt.Chart` to enable access to variable labels in the
+`transform_fold` method.
 
 ## References
 
