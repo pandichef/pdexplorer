@@ -268,18 +268,22 @@ separate grids. If `stacked=False`, the charts are all shown on the same grid i.
 from pdexplorer import *
 webuse("cars", "vega")
 circlechart("miles_per_gallon horsepower weight_in_lbs")() # stacked=False is the default option
-# TODO: apply variable labels to legend names
 ```
 
 Note that `pdexplorer` uses Altair's [`transform_fold`](https://altair-viz.github.io/user_guide/transform/fold.html#user-guide-fold-transform) method under the hood. For further customization, the Altair methods can be used explicitly e.g.,
 
 ```python
+import altair as alt
 from pdexplorer import *
 webuse("cars", "vega")
-circlechart().encode(y="value:Q", x="weight_in_lbs", color="key:N").transform_fold(
-    ["miles_per_gallon", "horsepower"]
+circlechart().transform_calculate_variable_labels().encode(
+    y="value:Q", x=alt.X("weight_in_lbs", title="Weight_in_Lbs"), color="key:N"
+).transform_fold(
+    ["Miles_per_Gallon", "Horsepower"]
 )()
 ```
+
+Note that `transform_calculate_variable_labels` is monkey patched into `alt.Chart` to enable access to variable labels.
 
 ## References
 

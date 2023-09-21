@@ -10,7 +10,15 @@ def _call(self):
     webbrowser.open("tmpqbxcec2k.html")
 
 
+def _transform_calculate_variable_labels(self):
+    reversed_variable_labels = {
+        v: "datum." + k for k, v in current.metadata["variable_labels"].items()
+    }
+    return alt.Chart.transform_calculate(self, **reversed_variable_labels)
+
+
 alt.Chart.__call__ = _call  # type: ignore
+alt.Chart.transform_calculate_variable_labels = _transform_calculate_variable_labels  # type: ignore
 alt.LayerChart.__call__ = _call  # type: ignore
 alt.HConcatChart.__call__ = _call  # type: ignore
 alt.VConcatChart.__call__ = _call  # type: ignore
@@ -72,16 +80,27 @@ def _get_kwargs_list(commandarg, yX=True, use_labels=True):
         return kwargs_list
 
 
-def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwargs):
+def _chart(
+    mark_method,
+    commandarg=None,
+    use_labels=True,
+    yX=False,
+    stacked=False,
+    *args,
+    **kwargs
+):
     """
     xvars: If True, the "v1 v2 v3" is mapped as "y x1 x2"
     layered: If True, all charts are layered onto a single grid
     """
-    _kwargs_list = _get_kwargs_list(commandarg, yX=yX) if commandarg else []
-    print(_kwargs_list)
+    _kwargs_list = (
+        _get_kwargs_list(commandarg, yX=yX, use_labels=use_labels) if commandarg else []
+    )
+    # print(_kwargs_list)
     if len(_kwargs_list) == 0:
         return mark_method(*args, **kwargs)
     if len(_kwargs_list) == 1:
+        print("asdfasdfasfd")
         return mark_method(*args, **kwargs).encode(**_kwargs_list[0])
     else:
         if not stacked:
@@ -100,26 +119,70 @@ def _chart(mark_method, commandarg=None, yX=False, stacked=False, *args, **kwarg
                 layered_encodings.update({"color": "key:N"})
                 layered_encodings.update({"x": "value:Q"})
                 layered_encodings.update(
-                    {"y": alt.Y(yvar, title=current.metadata["variable_labels"][yvar])}
+                    {
+                        "y": alt.Y(
+                            yvar, title=current.metadata["variable_labels"][yvar]
+                        )
+                        if use_labels
+                        else yvar
+                    }
                 )
-                return (
-                    mark_method(*args, **kwargs)
-                    .encode(**layered_encodings)
-                    .transform_fold(xvars)
-                )
+                if use_labels:
+                    return (
+                        mark_method(*args, **kwargs)
+                        .transform_calculate_variable_labels()
+                        .encode(**layered_encodings)
+                        .transform_fold(
+                            list(
+                                map(
+                                    lambda x: current.metadata["variable_labels"][x],
+                                    xvars,
+                                )
+                            )
+                        )
+                    )
+                else:
+                    return (
+                        mark_method(*args, **kwargs)
+                        .encode(**layered_encodings)
+                        .transform_fold(xvars)
+                    )
             else:
                 yvars = parsed_commandarg["anything"].split()
                 xvar = yvars.pop()
                 layered_encodings.update({"color": "key:N"})
-                layered_encodings.update(
-                    {"x": alt.X(xvar, title=current.metadata["variable_labels"][xvar])}
-                )
                 layered_encodings.update({"y": "value:Q"})
-                return (
-                    mark_method(*args, **kwargs)
-                    .encode(**layered_encodings)
-                    .transform_fold(yvars)
+                layered_encodings.update(
+                    {
+                        "x": alt.X(
+                            xvar, title=current.metadata["variable_labels"][xvar]
+                        )
+                        if use_labels
+                        else xvar
+                    }
                 )
+                print(layered_encodings)
+                print(yvars)
+                if use_labels:
+                    return (
+                        mark_method(*args, **kwargs)
+                        .transform_calculate_variable_labels()
+                        .encode(**layered_encodings)
+                        .transform_fold(
+                            list(
+                                map(
+                                    lambda x: current.metadata["variable_labels"][x],
+                                    yvars,
+                                )
+                            )
+                        )
+                    )
+                else:
+                    return (
+                        mark_method(*args, **kwargs)
+                        .encode(**layered_encodings)
+                        .transform_fold(yvars)
+                    )
         else:
             # Stacked version here
             vconcat = mark_method(*args, **kwargs).encode(**_kwargs_list[0])
@@ -151,9 +214,9 @@ marktypes = [  # https://altair-viz.github.io/user_guide/marks/index.html
     "errorbar",  # https://altair-viz.github.io/user_guide/marks/errorbar.html#user-guide-errorbar-marks
 ]
 
-fnc = """def {marktype}chart(*args, **kwargs):
+fnc = """def {marktype}chart(commandarg=None, use_labels=True, *args, **kwargs):
     mark_method = alt.Chart(current.df).mark_{marktype}
-    return _chart(mark_method, *args, **kwargs)
+    return _chart(mark_method, commandarg, use_labels, *args, **kwargs)
 """
 # fnc = """def {marktype}chart(use_labels=True, *args, **kwargs):
 #     if use_labels:
