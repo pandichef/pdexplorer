@@ -2,10 +2,11 @@ from pprint import pprint, pformat
 
 # import pandas as pd
 # import ._command_abbreviation # type: ignore
-from .regress import regress
 from .regress import regress as reg
 from .regress import regress as regr
+from .regress import regress as regre
 from .regress import regress as regres
+from .regress import regress as regress
 from .webuse import webuse
 from .logit import logit
 from .drop import drop
@@ -20,15 +21,32 @@ from .lst import lst
 from .clear import clear
 from .clear import clearall
 from .use import use
-from .keepin import keepin
-from .keepif import keepif
-from .dropif import dropif
-from .dropin import dropin
-from .generate import generate
+
+# from .keepin import keepin
+# from .keepif import keepif
+# from .dropif import dropif
+# from .dropin import dropin
+from .generate import generate as gen
+from .generate import generate as gene
+from .generate import generate as gener
+from .generate import generate as genera
+from .generate import generate as generat
+from .generate import generate as generate
 from .replace import replace
-from .summarize import summarize  # "describe" in pandas
+from .summarize import summarize as sum  # "describe" in pandas
+from .summarize import summarize as summ
+from .summarize import summarize as summa
+from .summarize import summarize as summar
+from .summarize import summarize as summari
+from .summarize import summarize as summariz
+from .summarize import summarize as summarize
 from .describe import describe  # "info" in pandas
-from .tabulate import tabulate
+from .tabulate import tabulate as tab
+from .tabulate import tabulate as tabu
+from .tabulate import tabulate as tabul
+from .tabulate import tabulate as tabula
+from .tabulate import tabulate as tabulat
+from .tabulate import tabulate as tabulate
 from .rename import rename
 from .save import save
 from .preserve import preserve
@@ -40,7 +58,7 @@ from .egen import egen
 from .reshape import reshapelong, reshapewide
 from .profile import ydata_profile
 from .sort import sort
-from .by import by
+from .by import by  # context manager
 from .melt import melt
 from .ai.flan_t5_base import flan_t5_base
 from .ai.generate_split import generate_split
