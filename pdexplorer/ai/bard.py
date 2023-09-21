@@ -1,11 +1,12 @@
 import os
 import requests
-from bardapi import Bard, SESSION_HEADERS
 
 
 def bard(prompt: str = "How is the weather today in seoul?"):
     # See https://github.com/dsdanielpark/Bard-API/issues/155
     # This is a really a big hack and barely works
+    from bardapi import Bard, SESSION_HEADERS
+
     __Secure1PSID = os.environ["__Secure-1PSID"]
     __Secure1PSIDCC = os.environ["__Secure-1PSIDCC"]
     __Secure1PSIDTS = os.environ["__Secure-1PSIDTS"]

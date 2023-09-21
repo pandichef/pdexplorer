@@ -1,10 +1,11 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from ..dataset import current
 from .._print import _print
 
 
 def generate_split(*args, **kwargs):
+    from sklearn.model_selection import train_test_split
+
     train, test = train_test_split(current.df, *args, **kwargs)
     train["split"] = "train"  # type: ignore
     test["split"] = "test"  # type: ignore

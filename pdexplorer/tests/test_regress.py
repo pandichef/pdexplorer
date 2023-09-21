@@ -1,7 +1,6 @@
 from math import isclose
 from ..webuse import webuse
 from ..dataset import current
-import statsmodels.api as sm
 from ..quietly import quietly
 from ..regress import regress
 from ..returnlist import _e
@@ -10,6 +9,8 @@ from ..returnlist import _e
 def test_regress_smf_vs_sm():
     # https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.OLS.html
     # compare sm and smf
+    import statsmodels.api as sm
+
     with quietly():
         webuse("Duncan__carData", "rdatasets", use_local=True)
     Y = current.df["income"]

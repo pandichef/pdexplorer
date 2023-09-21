@@ -1,11 +1,13 @@
 from typing import Tuple, Dict
-import statsmodels.api as sm
+
+# import statsmodels.api as sm
 from .dataset import current
-import requests
+
+# import requests
 from urllib.parse import urljoin
 
 # import pyreadstat
-import tempfile
+# import tempfile
 import os
 from pandas.io.stata import StataReader
 import pandas as pd

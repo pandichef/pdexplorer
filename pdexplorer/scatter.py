@@ -1,21 +1,20 @@
 # TODO: support multiple variables e.g.,  scatter yvar1 yvar2 xvar
 # Deprecated: use altair_mapper instead
-import matplotlib.pyplot as plt
-import numpy as np
 from .dataset import current
 from .search import search_iterable
-import matplotlib.pyplot as plt
 import warnings
 from .commandarg import parse_commandarg
 
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    import seaborn as sns  # produces a bunch of warnings during tests
-
-sns.set()
-
 
 def scatter(commandarg: str, byvar=None) -> None:
+    import matplotlib.pyplot as plt
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        import seaborn as sns  # produces a bunch of warnings during tests
+
+    sns.set()
+
     parsed_commandarg = parse_commandarg(commandarg)
     df = current.df
     # try:

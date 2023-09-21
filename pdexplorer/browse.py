@@ -5,10 +5,11 @@ import subprocess
 import os
 from .dataset import current
 from typing import Optional
-import dtale
 
 
 def browse():
+    import dtale  # very slow import
+
     # df = current.df
     if current.dtale_browser:
         current.dtale_browser.kill()

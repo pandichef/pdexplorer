@@ -1,10 +1,10 @@
 import pandas as pd
 from copy import copy
 from .search import search_iterable
-import torch
-from torch.utils.data import Dataset, DataLoader  # type: ignore
-import dtale
-from dtale.views import DtaleData
+
+
+# import dtale
+# from dtale.views import DtaleData
 
 # df = pd.DataFrame()
 # class WithinByContextManager(Exception):
@@ -21,41 +21,12 @@ from dtale.views import DtaleData
 # y = torch.tensor(y_train).to(torch.float32)
 
 
-class PyTorchDataset(Dataset):
-    # PyTorch dataset is a iterable that separates the X variables from the y variable
-    def __init__(self, df, varlist):
-        # self.nobs = len(df)
-        varlist_as_list = varlist.split()
-        yvar = varlist_as_list[0]
-        xvars = varlist_as_list[1:]
-        xvars = search_iterable(df.columns, " ".join(xvars))
-
-        x_train = df.dropna()[xvars].values
-        y_train = df.dropna()[[yvar]].values
-        self.x_train = torch.tensor(x_train).to(torch.float32)
-        self.y_train = torch.tensor(y_train).to(torch.float32)
-
-        # x_df = df[xvars]
-        # y_series = df[yvar]
-
-        # self.x_train = torch.tensor(x_df.values)
-        # self.y_train = torch.tensor(y_series)
-
-    def __len__(self):
-        return len(self.y_train)
-
-    def __getitem__(self, idx):
-        # idx = torch.long(idx)
-        # idx = torch.arange(self.nobs, dtype=torch.long)
-        # print(type(idx))
-        return self.x_train[idx], self.y_train[idx]
-
-
 class Dataset:
     METADATA_DEFAULT = {"data_label": "", "variable_labels": {}}
 
     def __init__(self) -> None:
-        self.dtale_browser: DtaleData | None = None
+        # self.dtale_browser: DtaleData | None = None
+        self.dtale_browser = None  # type DtaleData
         self.quietly = False
         self.has_preserved = False
         self.stored_results = {
@@ -150,12 +121,45 @@ class Dataset:
             print(self._df.split.value_counts())
         return _return_df
 
-    def get_pytorch_dataset(self, varlist: str) -> PyTorchDataset:
+    def get_pytorch_dataset(self, varlist: str):
+        from torch.utils.data import DataLoader
+        import torch
+
+        class PyTorchDataset(Dataset):
+            # PyTorch dataset is a iterable that separates the X variables from the y variable
+            def __init__(self, df, varlist):
+
+                # self.nobs = len(df)
+                varlist_as_list = varlist.split()
+                yvar = varlist_as_list[0]
+                xvars = varlist_as_list[1:]
+                xvars = search_iterable(df.columns, " ".join(xvars))
+
+                x_train = df.dropna()[xvars].values
+                y_train = df.dropna()[[yvar]].values
+                self.x_train = torch.tensor(x_train).to(torch.float32)
+                self.y_train = torch.tensor(y_train).to(torch.float32)
+
+                # x_df = df[xvars]
+                # y_series = df[yvar]
+
+                # self.x_train = torch.tensor(x_df.values)
+                # self.y_train = torch.tensor(y_series)
+
+            def __len__(self):
+                return len(self.y_train)
+
+            def __getitem__(self, idx):
+                # idx = torch.long(idx)
+                # idx = torch.arange(self.nobs, dtype=torch.long)
+                # print(type(idx))
+                return self.x_train[idx], self.y_train[idx]
+
         return PyTorchDataset(self._df, varlist)
 
-    def get_pytorch_dataloader(
-        self, varlist: str, batch_size=10, shuffle=False
-    ) -> DataLoader:
+    def get_pytorch_dataloader(self, varlist: str, batch_size=10, shuffle=False):
+        from torch.utils.data import DataLoader
+
         dataset = self.get_pytorch_dataset(varlist)
         return DataLoader(dataset=dataset, batch_size=batch_size, shuffle=shuffle)  # type: ignore
 

@@ -1,28 +1,22 @@
-import matplotlib.pyplot as plt
-from pprint import pprint
-import statsmodels.api as sm
-import numpy as np
-import pandas as pd
-from pandas import CategoricalDtype
 from .search import search_iterable
 from .dataset import current
 from ._get_custom_attributes import _get_custom_attributes
 from ._patsify import _patsify
-import statsmodels.formula.api as smf
 from ._print import _print
-from statsmodels.regression.linear_model import RegressionResultsWrapper
-from sklearn.linear_model import LinearRegression
+
+# from statsmodels.regression.linear_model import RegressionResultsWrapper
 from typing import Union
 
 
-def regress(
-    varlist: str, library="statsmodels", epochs: int = 100
-) -> Union[RegressionResultsWrapper, LinearRegression, None]:
+def regress(varlist: str, library="statsmodels", epochs: int = 100):
+    # ) -> Union[RegressionResultsWrapper, LinearRegression, None]:
     """
     Stata docs: https://www.stata.com/manuals/rregress.pdf
     Returns: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
     """
     if library == "statsmodels":
+        import statsmodels.formula.api as smf
+
         df = current.df
         patsy_formula = _patsify(varlist)
         # print(patsy_formula)
@@ -47,6 +41,8 @@ def regress(
         }
         return results
     elif library == "sklearn" or library == "scikit-learn":
+        from sklearn.linear_model import LinearRegression
+
         # import numpy as np
 
         varlist_as_list = varlist.split()
@@ -60,6 +56,7 @@ def regress(
     elif library == "pytorch":
         # Source: https://towardsdatascience.com/linear-regression-with-pytorch-eb6dedead817
         # This didn't work with SDG, so I used Rprop instead
+        import numpy as np
         import torch
         from torch.autograd import Variable
 
