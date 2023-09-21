@@ -100,7 +100,7 @@ def _chart(
     if len(_kwargs_list) == 0:
         return mark_method(*args, **kwargs)
     if len(_kwargs_list) == 1:
-        print("asdfasdfasfd")
+        # print("asdfasdfasfd")
         return mark_method(*args, **kwargs).encode(**_kwargs_list[0])
     else:
         if not stacked:
@@ -161,8 +161,8 @@ def _chart(
                         else xvar
                     }
                 )
-                print(layered_encodings)
-                print(yvars)
+                # print(layered_encodings)
+                # print(yvars)
                 if use_labels:
                     return (
                         mark_method(*args, **kwargs)
