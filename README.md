@@ -276,15 +276,26 @@ Note that `pdexplorer` uses Altair's [`transform_fold`](https://altair-viz.githu
 import altair as alt
 from pdexplorer import *
 webuse("cars", "vega")
-circlechart().transform_calculate_variable_labels().encode(
-    y="value:Q", x=alt.X("weight_in_lbs", title="Weight_in_Lbs"), color="key:N"
-).transform_fold(
+circlechart().transform_calculate_variable_labels().transform_fold(
     ["Miles_per_Gallon", "Horsepower"] # The variable labels are accessible
+).encode(
+    y="value:Q", x=alt.X("weight_in_lbs", title="Weight_in_lbs"), color="key:N"
 )()
 ```
 
 Note that `transform_calculate_variable_labels` is monkey patched into `alt.Chart` to enable access to variable labels in the
-`transform_fold` method.
+`transform_fold` method. `transform_form` is Altair's version of `pd.melt`. So another option is to first reshape the data using
+pandas and then use Altair for charting.
+
+```python
+import altair as alt
+from pdexplorer import *
+webuse("cars", "vega")
+melt("miles_per_gallon horsepower,  keep(weight_in_lbs)")
+alt.Chart(current.df_labeled).mark_circle().encode(
+    y="value:Q", x='Weight_in_lbs', color="variable:N"
+)()
+```
 
 ## References
 

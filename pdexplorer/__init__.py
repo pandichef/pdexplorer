@@ -41,6 +41,7 @@ from .reshape import reshapelong, reshapewide
 from .profile import ydata_profile
 from .sort import sort
 from .by import by
+from .melt import melt
 from .ai.flan_t5_base import flan_t5_base
 from .ai.generate_split import generate_split
 from .ai.nnlinear import nnlinear
