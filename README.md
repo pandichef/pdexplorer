@@ -297,6 +297,35 @@ alt.Chart(current.df_labeled).mark_circle().encode(
 )()
 ```
 
+## Abbreviations
+
+As mentioned ealier, Stata supports name abbreviations for both variable names as well as command names. In `pdexplorer`, all the following regression statements are equivalent:
+
+```python
+from pdexplorer import *
+webuse("auto")
+reg('price mpg weight')
+regr('price mpg weight')
+regre('price mpg weight')
+regres('price mpg weight')
+regress('price mpg weight')
+reg('pr mpg wei')
+```
+
+Similarly, for charting,
+
+```python
+from pdexplorer import *
+webuse("cars", "vega")
+circle("miles_per_gallon horsepower")()
+circlec("miles_per_gallon horsepower")()
+circlech("miles_per_gallon horsepower")()
+circlecha("miles_per_gallon horsepower")()
+circlechar("miles_per_gallon horsepower")()
+circlechart("miles_per_gallon horsepower")()
+circle("miles horse")()
+```
+
 ## References
 
 - https://aeturrell.github.io/coding-for-economists/coming-from-stata.html

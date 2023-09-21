@@ -32,7 +32,9 @@ def _get_kwargs_list(commandarg, yX=True, use_labels=True):
     for k, v in non_x_y_encodings.items():
         if len(v) == 1:
             non_x_y_encodings[k] = v[0]
-    varlist = parsed_commandarg["anything"].split()
+    # varlist = parsed_commandarg["anything"].split()
+
+    varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
     if yX:
         if len(varlist) == 1:
             yvar = varlist[0]
