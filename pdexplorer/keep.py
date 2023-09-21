@@ -5,6 +5,7 @@ import pandas as pd
 from .commandarg import parse_commandarg
 from .keepif import keepif
 from .keepin import keepin
+from .quietly import quietly
 
 
 def _keep(df: pd.DataFrame, columns_to_keep: list) -> pd.DataFrame:
@@ -35,10 +36,11 @@ def keep(commandarg: str) -> None:
         assert (
             parsed_commandarg["anything"] is None
         ), "drop takes either a varlist or in/if, but not both"
-        if parsed_commandarg["in"]:
-            keepin(parsed_commandarg["in"])
-        if parsed_commandarg["if"]:
-            keepif(parsed_commandarg["if"])
+        with quietly():
+            if parsed_commandarg["in"]:
+                keepin(parsed_commandarg["in"])
+            if parsed_commandarg["if"]:
+                keepif(parsed_commandarg["if"])
     else:
         raise Exception("drop: Missing Arguments")
 

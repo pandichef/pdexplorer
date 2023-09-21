@@ -8,10 +8,16 @@ def _clean(string_with_extra_spaces: str) -> str:
 
 def parse_commandarg(_commandarg: str) -> dict:
     _commandarg = _commandarg.replace("==", "__eq__").replace("!=", "__neq__")
+    if (
+        _commandarg.startswith("if ")
+        or _commandarg.startswith("in ")
+        or _commandarg.startswith("using ")
+    ):
+        _commandarg = " " + _commandarg
     split_identifiers = (
         " in ",
-        "if ",
-        "using",
+        " if ",
+        " using ",
         ",",
         " [",
         "]",
@@ -65,8 +71,8 @@ def parse_commandarg(_commandarg: str) -> dict:
     parsed["anything"] = _clean(_commandarg[:end_of_anything])
     if parsed["anything"] == "":
         parsed["anything"] = None
-    if parsed["if "]:
-        parsed["if "] = parsed["if "].replace("__eq__", "==").replace("__neq__", "!=")
+    if parsed[" if "]:
+        parsed[" if "] = parsed[" if "].replace("__eq__", "==").replace("__neq__", "!=")
 
     # rename
     parsed["weight"] = parsed[" ["]
@@ -75,10 +81,12 @@ def parse_commandarg(_commandarg: str) -> dict:
         del parsed["]"]  # hack
     parsed["options"] = parsed[","]
     del parsed[","]
-    parsed["if"] = parsed["if "]
-    del parsed["if "]
+    parsed["if"] = parsed[" if "]
+    del parsed[" if "]
     parsed["in"] = parsed[" in "]
     del parsed[" in "]
+    parsed["using"] = parsed[" using "]
+    del parsed[" using "]
     # parsed["exp"] = parsed["="]
 
     # print(parsed)
