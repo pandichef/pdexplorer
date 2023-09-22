@@ -72,7 +72,7 @@ def mtgyield(
         origterm=self[origterm],
         dayofmonth=dayofmonth,
         delay=delay,
-        servicing_fee=self[servicing_fee],
+        servicing_fee=self[servicing_fee],  # type: ignore
     )
     # df = self.copy()
     self[beyield] = pd.Series(beyield_array)
