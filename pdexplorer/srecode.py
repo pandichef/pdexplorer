@@ -6,6 +6,7 @@
 import re
 import numpy as np
 import pandas as pd
+from typing import Optional
 from ._dataset import current
 from ._print import _print
 from pandas.api.types import is_integer_dtype, is_float_dtype
@@ -15,11 +16,10 @@ from pandas.api.types import is_integer_dtype, is_float_dtype
 def srecode(
     newvar,
     varname,
-    step_size: float | None = None,
-    bin_count: int | None = None,
+    step_size: Optional[float] = None,
+    bin_count: Optional[int] = None,
     right: bool = True,
     format: str = "{:3.2f}",
-    prettify=True,
 ) -> None:
     """Converts pd.Series of dtype float or int into a ordinal pd.Series of
     dtype category that is formatted in a manner suitable for publishing in
