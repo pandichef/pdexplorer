@@ -7,6 +7,8 @@ from .regress import regress as regr
 from .regress import regress as regre
 from .regress import regress as regres
 from .regress import regress as regress
+from .nn.regressnn import regressnn
+from .ml.regressml import regressml
 from .webuse import webuse
 from .logit import logit
 from .drop import drop

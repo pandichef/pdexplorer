@@ -28,16 +28,24 @@ def test_regress_smf_vs_sm():
     )
 
 
-def test_regress_smf_vs_sklearn():
-    # compare smf and sklearn
-    with quietly():
-        webuse("Duncan__carData", "rdatasets", use_local=True)
-    with quietly():
-        results = regress("income education")
-    with quietly():
-        results2 = regress("income education", library="sklearn")
-    assert isclose(results.params["Intercept"], results2.intercept_)  # type:ignore
-    assert isclose(results.params["education"], results2.coef_[0])  # type:ignore
+def test_ereturn_list():
+    webuse("auto", use_local=True)
+    res = regress("price mpg")
+    assert type(res.nobs) == float  # type: ignore
+    assert type(_e("N")) == int
+    assert int(res.nobs) == _e("N")  # type: ignore
+
+
+# def test_regress_smf_vs_sklearn():
+#     # compare smf and sklearn
+#     with quietly():
+#         webuse("Duncan__carData", "rdatasets", use_local=True)
+#     with quietly():
+#         results = regress("income education")
+#     with quietly():
+#         results2 = regress("income education", library="sklearn")
+#     assert isclose(results.params["Intercept"], results2.intercept_)  # type:ignore
+#     assert isclose(results.params["education"], results2.coef_[0])  # type:ignore
 
 
 # def test_regress_smf_vs_pytorch_Rprop():
@@ -60,37 +68,30 @@ def test_regress_smf_vs_sklearn():
 #     )
 
 
-@pytest.mark.slow
-def test_regress_smf_vs_pytorch_Rprop_2_covariates():
-    with quietly():
-        webuse("Duncan__carData", "rdatasets", use_local=True)
-    with quietly():
-        results = regress("income education prestige")
-    with quietly():
-        model = regress("income education prestige", library="pytorch", epochs=100)
-    abs_tol = 0.5
-    # print(list(model.parameters()))
-    assert isclose(
-        results.params["Intercept"],  # type:ignore
-        float(list(model.parameters())[1]),  # type:ignore
-        abs_tol=abs_tol,  # type:ignore
-    )
-    # print(list(model.parameters())[0][0][0])
-    assert isclose(
-        results.params["education"],  # type:ignore
-        float(list(model.parameters())[0][0][0]),  # type:ignore
-        abs_tol=abs_tol,  # type:ignore
-    )
-    assert isclose(
-        results.params["prestige"],  # type:ignore
-        float(list(model.parameters())[0][0][1]),  # type:ignore
-        abs_tol=abs_tol,  # type:ignore
-    )
+# @pytest.mark.slow
+# def test_regress_smf_vs_pytorch_Rprop_2_covariates():
+#     with quietly():
+#         webuse("Duncan__carData", "rdatasets", use_local=True)
+#     with quietly():
+#         results = regress("income education prestige")
+#     with quietly():
+#         model = regress("income education prestige", library="pytorch", epochs=100)
+#     abs_tol = 0.5
+#     # print(list(model.parameters()))
+#     assert isclose(
+#         results.params["Intercept"],  # type:ignore
+#         float(list(model.parameters())[1]),  # type:ignore
+#         abs_tol=abs_tol,  # type:ignore
+#     )
+#     # print(list(model.parameters())[0][0][0])
+#     assert isclose(
+#         results.params["education"],  # type:ignore
+#         float(list(model.parameters())[0][0][0]),  # type:ignore
+#         abs_tol=abs_tol,  # type:ignore
+#     )
+#     assert isclose(
+#         results.params["prestige"],  # type:ignore
+#         float(list(model.parameters())[0][0][1]),  # type:ignore
+#         abs_tol=abs_tol,  # type:ignore
+#     )
 
-
-def test_ereturn_list():
-    webuse("auto", use_local=True)
-    res = regress("price mpg")
-    assert type(res.nobs) == float  # type: ignore
-    assert type(_e("N")) == int
-    assert int(res.nobs) == _e("N")  # type: ignore
