@@ -1,9 +1,9 @@
 # TODO: support multiple variables e.g.,  scatter yvar1 yvar2 xvar
 # Deprecated: use altair_mapper instead
-from .dataset import current
-from .search import search_iterable
+from ._dataset import current
+from ._search import search_iterable
 import warnings
-from .commandarg import parse_commandarg
+from ._commandarg import parse_commandarg
 
 
 def scatter(commandarg: str, byvar=None) -> None:

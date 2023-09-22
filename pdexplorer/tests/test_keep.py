@@ -1,7 +1,7 @@
-from ..dataset import current
+from .._dataset import current
 from ..keep import keep
 from ..webuse import webuse
-from ..quietly import quietly
+from .._quietly import quietly
 
 # from magicpandas.frame import MagicDataFrame
 import warnings

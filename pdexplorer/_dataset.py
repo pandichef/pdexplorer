@@ -1,6 +1,6 @@
 import pandas as pd
 from copy import copy
-from .search import search_iterable
+from ._search import search_iterable
 
 
 # import dtale

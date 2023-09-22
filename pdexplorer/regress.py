@@ -1,5 +1,5 @@
-from .search import search_iterable
-from .dataset import current
+from ._search import search_iterable
+from ._dataset import current
 from ._get_custom_attributes import _get_custom_attributes
 from ._patsify import _patsify
 from ._print import _print

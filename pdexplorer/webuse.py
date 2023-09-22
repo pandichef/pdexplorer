@@ -2,9 +2,9 @@
 
 # from ._singleton import singleton
 
-# from .dataset import current as _current
+# from ._dataset import current as _current
 
-from .dataset import current
+from ._dataset import current
 
 # import pdexplorer.dataset
 
@@ -28,7 +28,7 @@ from .preserve import preserve
 from .use import use
 from .save import save
 from ._print import _print
-from .quietly import quietly
+from ._quietly import quietly
 from .clear import clear
 
 

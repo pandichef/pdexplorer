@@ -3,19 +3,22 @@
 import pandas as pd
 import subprocess
 import os
-from .dataset import current
+from ._dataset import current
 from typing import Optional
 
 
-def browse():
+def browse(use_labels=True):
     import dtale  # very slow import
 
-    # df = current.df
     if current.dtale_browser:
         current.dtale_browser.kill()
-    new_dtale_browser = dtale.show(current.df_labeled, name="currentdf")
-    if current.dtale_browser is None:
-        new_dtale_browser.open_browser()
+    if use_labels:
+        # Note: for whatever reason, the "name" attribute cannot contain underscores
+        new_dtale_browser = dtale.show(current.df_labeled, name="currentdflabeled")
+    else:
+        new_dtale_browser = dtale.show(current.df, name="currentdf")
+    # if current.dtale_browser is None:
+    new_dtale_browser.open_browser()
     current.dtale_browser = new_dtale_browser
     # current.dtale_browser = dtale.show(current.df_labeled, name="currentdf")
     # current.dtale_browser.open_browser()

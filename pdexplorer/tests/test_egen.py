@@ -1,11 +1,11 @@
 from math import isclose
 import pandas as pd
-from ..dataset import current
+from .._dataset import current
 from ..use import use
 from ..merge import merge
 from ..lst import lst
-from ..quietly import quietly
-from ..keepif import keepif
+from .._quietly import quietly
+from ..keep import keep
 from ..collapse import collapse
 from ..webuse import webuse
 from ..preserve import preserve
@@ -17,7 +17,7 @@ def test_egen1():
     with quietly():
         webuse("iris", "vega", use_local=True)
         egen("asdf = sum(  petalwidth)", by="species")
-        keepif('species == "setosa"')
+        keep('if species == "setosa"')
         egen_calculation = current.df.asdf[0]
         pandas_calculation = current.df.petalwidth.mean()
         isclose(egen_calculation, pandas_calculation)

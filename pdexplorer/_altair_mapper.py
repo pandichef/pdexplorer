@@ -1,8 +1,8 @@
 import webbrowser
 import altair as alt
-from .dataset import current
-from .commandarg import parse_commandarg, parse_options
-from .search import search_iterable
+from ._dataset import current
+from ._commandarg import parse_commandarg, parse_options
+from ._search import search_iterable
 
 # monkey patch callable method
 def _call(self):
@@ -233,9 +233,9 @@ for marktype in marktypes:
 
 ##################################################################
 # Stata-like Sugar Below
-def histogram(varname):
-    barchart().encode(alt.X(varname, bin=True), y="count()")()  # type: ignore
+# def histogram(varname):
+#     barchart().encode(alt.X(varname, bin=True), y="count()")()  # type: ignore
 
 
-def scatter(commandarg):
-    circlechart(commandarg)()  # type: ignore
+# def scatter(commandarg):
+#     circlechart(commandarg)()  # type: ignore

@@ -1,5 +1,5 @@
 from .fixtures import df1 as df
-from ..search import _search_by_ranges
+from .._search import _search_by_ranges
 
 
 def test_basic_example():

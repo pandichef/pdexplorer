@@ -1,5 +1,5 @@
 from .fixtures import df1 as df
-from ..search import search_iterable
+from .._search import search_iterable
 
 
 def test_wildcard() -> None:

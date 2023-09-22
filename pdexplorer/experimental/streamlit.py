@@ -1,6 +1,6 @@
 import re
 import subprocess
-from ..dataset import current
+from .._dataset import current
 from .chatgpt import chatgpt
 
 streamlit_script_filename = "tmpqbxcec2k.py"

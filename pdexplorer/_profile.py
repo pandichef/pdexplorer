@@ -1,15 +1,17 @@
+# "profile" isn't a stata command
+# these commands are used for the "cf" command
 import os
-from .dataset import current
-from ydata_profiling import ProfileReport
+from ._dataset import current
 import webbrowser
 import tempfile
 from .use import _use
 from .keep import _keep
-from .search import search_iterable
-import sweetviz as sv
+from ._search import search_iterable
 
 
 def sweetviz_profile(varlist=None, compare_to=None):
+    import sweetviz as sv
+
     if varlist:
         columns_to_keep = search_iterable(current.df.columns, varlist)
     else:
@@ -29,6 +31,8 @@ def ydata_profile(varlist=None, compare_to=None):
     # This primarily used for the cf command since dtale doesn't apparently
     # support comparisons directly
     # Note: this isn't a Stata command, but it should have been
+    from ydata_profiling import ProfileReport
+
     if varlist:
         columns_to_keep = search_iterable(current.df.columns, varlist)
     else:

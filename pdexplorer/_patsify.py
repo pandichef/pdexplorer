@@ -1,5 +1,5 @@
-from .dataset import current
-from .search import search_iterable
+from ._dataset import current
+from ._search import search_iterable
 
 
 def _patsify(varlist: str) -> str:

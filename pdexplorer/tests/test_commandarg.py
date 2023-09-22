@@ -1,4 +1,4 @@
-from ..commandarg import parse_commandarg, parse_options
+from .._commandarg import parse_commandarg, parse_options
 
 
 def test_parse_commandarg1():

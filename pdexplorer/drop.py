@@ -1,9 +1,24 @@
-from .search import search_iterable
-from .dataset import current
-from .commandarg import parse_commandarg
-from .dropif import dropif
-from .dropin import dropin
+from ._search import search_iterable
+from ._dataset import current
+from ._commandarg import parse_commandarg
 from ._print import _print
+from ._dataset import current
+from ._search import search_iterable
+from ._print import _print
+from ._stata_slice import _stata_slice
+from ._dataset import current
+from ._print import _print
+
+
+def dropin(range: str) -> None:
+    range = _stata_slice(range)
+    current.df = eval(f"current.df.drop(current.df.index[{range}])")
+    _print(current.df)
+
+
+def dropif(condition: str) -> None:
+    current.df.query("~(" + condition + ")", inplace=True)
+    _print(current.df)
 
 
 def drop(commandarg: str) -> None:

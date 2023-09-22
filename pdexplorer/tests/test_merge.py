@@ -1,10 +1,10 @@
 import pandas as pd
-from ..dataset import current
+from .._dataset import current
 from ..use import use
 from ..merge import merge
 from ..lst import lst
-from ..quietly import quietly
-from ..keepif import keepif
+from .._quietly import quietly
+from ..keep import keep
 from ..preserve import preserve
 
 
@@ -20,7 +20,7 @@ def test_merge1():
         # res = master.merge(using, how="outer", on="id", indicator=True)
         # print(res)
         assert len(current.df) == 4
-        keepif('_merge == "both"')
+        keep('if _merge == "both"')
         assert len(current.df) == 2
 
 

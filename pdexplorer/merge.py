@@ -1,10 +1,10 @@
 import os
 import pandas as pd
-from .dataset import current
+from ._dataset import current
 from .use import _use
 from .restore import restore
 from ._print import _print
-from .search import search_iterable
+from ._search import search_iterable
 
 
 def merge(

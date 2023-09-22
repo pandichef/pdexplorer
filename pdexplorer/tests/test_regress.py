@@ -1,7 +1,7 @@
 from math import isclose
 from ..webuse import webuse
-from ..dataset import current
-from ..quietly import quietly
+from .._dataset import current
+from .._quietly import quietly
 from ..regress import regress
 from ..returnlist import _e
 

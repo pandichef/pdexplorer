@@ -1,11 +1,31 @@
-from .search import search_iterable
-from .dataset import current
+from ._search import search_iterable
+from ._dataset import current
 from ._print import _print
 import pandas as pd
-from .commandarg import parse_commandarg
-from .keepif import keepif
-from .keepin import keepin
-from .quietly import quietly
+from ._commandarg import parse_commandarg
+
+# from .keepif import keepif
+# from .keepin import keepin
+from ._quietly import quietly
+from ._dataset import current
+from ._search import search_iterable
+import pandas as pd
+from ._print import _print
+from ._stata_slice import _stata_slice
+from ._dataset import current
+from ._print import _print
+
+
+def keepin(range: str) -> None:
+    range = _stata_slice(range)
+
+    current.df = eval(f"current.df[{range}]")
+    _print(current.df)
+
+
+def keepif(condition: str) -> None:
+    current.df.query(condition, inplace=True)
+    _print(current.df)
 
 
 def _keep(df: pd.DataFrame, columns_to_keep: list) -> pd.DataFrame:

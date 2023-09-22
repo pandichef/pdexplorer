@@ -1,9 +1,9 @@
-from ..dataset import current
+from .._dataset import current
 from ..keep import keep
 from ..webuse import webuse
-from ..dropin import dropin
-from ..keepif import keepif
-from ..quietly import quietly
+from ..drop import dropin
+from ..keep import keep
+from .._quietly import quietly
 
 
 def test_dropin1():
@@ -18,7 +18,7 @@ def test_dropin1():
 def test_dropin2():
     with quietly():
         webuse("auto", use_local=True)
-        keepif("price > 5000")
+        keep("if price > 5000")
         row_count0 = len(current.df)
         dropin(f"{row_count0 - 5}:")
         row_count1 = len(current.df)

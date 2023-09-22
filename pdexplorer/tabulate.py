@@ -1,6 +1,6 @@
 import warnings
-from .search import search_iterable
-from .dataset import current
+from ._search import search_iterable
+from ._dataset import current
 import pandas as pd
 from ._print import _print
 

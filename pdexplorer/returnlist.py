@@ -1,5 +1,5 @@
 from typing import Literal
-from .dataset import current
+from ._dataset import current
 from pprint import pprint
 
 ###############################################

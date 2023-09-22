@@ -1,4 +1,4 @@
-from .dataset import current
+from ._dataset import current
 
 
 def labelvariable(varname: str, label: str):

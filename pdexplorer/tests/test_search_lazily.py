@@ -1,5 +1,5 @@
 from .fixtures import df1 as df
-from ..search import _search_lazily
+from .._search import _search_lazily
 
 
 def test_basic_example():

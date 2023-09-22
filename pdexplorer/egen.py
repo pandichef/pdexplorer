@@ -1,6 +1,6 @@
 # under construction: additional egen functions must be added over time
 import numpy as np
-from .dataset import current
+from ._dataset import current
 from ._print import _print
 
 

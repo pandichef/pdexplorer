@@ -14,7 +14,8 @@ from .browse import browse
 from .gsort import gsort
 from .order import order
 from .keep import keep
-from .scatter import scatter as scatter_old
+
+# from .scatter import scatter as scatter_old
 from .xpose import xpose
 from .lst import lst
 
@@ -52,17 +53,13 @@ from .save import save
 from .preserve import preserve
 from .merge import merge
 from .restore import restore
-from .quietly import quietly
+from ._quietly import quietly
 from .collapse import collapse
 from .egen import egen
 from .reshape import reshapelong, reshapewide
-from .profile import ydata_profile
 from .sort import sort
-from .by import by  # context manager
-from .melt import melt
-from .ai.flan_t5_base import flan_t5_base
-from .ai.generate_split import generate_split
-from .ai.nnlinear import nnlinear
+from ._by import by  # context manager
+from .shortcuts.melt import melt
 from ._print_horizontal_line import print_horizontal_line
 from .cf import cf
 from .returnlist import (
@@ -78,14 +75,10 @@ from .returnlist import (
     _c,
 )
 
-from .ai.bard import bard
-from .ai.chatgpt import chatgpt
-from .ai.streamlit import streamlit
 
-
-# from .dataset import Dataset
-# from .dataset import current
-from pdexplorer.dataset import current
+# from ._dataset import Dataset
+# from ._dataset import current
+from pdexplorer._dataset import current
 
 
 def methods():
@@ -105,14 +98,7 @@ def properties():
 # props = pformat(singleton.properties)
 
 
-from pdexplorer.altair_mapper import (
-    scatter,  # sc in Stata documentation
-    histogram as hist,
-    histogram as histo,
-    histogram as histog,
-    histogram as histogr,
-    histogram as histogra,
-    histogram as histogram,
+from pdexplorer._altair_mapper import (
     arcchart as arc,  # type: ignore
     arcchart as arcc,  # type: ignore
     arcchart as arcch,  # type: ignore
@@ -216,3 +202,22 @@ from pdexplorer.altair_mapper import (
     errorbarchart as errorbarchar,  # type: ignore
     errorbarchart as errorbarchart,  # type: ignore
 )
+
+from .shortcuts.scatter import scatter
+from .shortcuts.histogram import histogram as hist
+from .shortcuts.histogram import histogram as histo
+from .shortcuts.histogram import histogram as histog
+from .shortcuts.histogram import histogram as histogr
+from .shortcuts.histogram import histogram as histogra
+from .shortcuts.histogram import histogram as histogram
+
+# Experimental commands might not have dependencies specified in setup.py
+try:
+    from .experimental.flan_t5_base import flan_t5_base
+    from .experimental.generate_split import generate_split
+    from .experimental.nnlinear import nnlinear
+    from .experimental.bard import bard
+    from .experimental.chatgpt import chatgpt
+    from .experimental.streamlit import streamlit
+except:
+    pass

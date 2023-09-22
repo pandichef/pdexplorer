@@ -1,7 +1,7 @@
 from typing import Tuple, Dict
 
 # import statsmodels.api as sm
-from .dataset import current
+from ._dataset import current
 
 # import requests
 from urllib.parse import urljoin

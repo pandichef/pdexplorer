@@ -1,6 +1,6 @@
-from .search import search_iterable
-from .dataset import current
-from .by import byable
+from ._search import search_iterable
+from ._dataset import current
+from ._by import byable
 from ._print import _print
 
 

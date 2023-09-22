@@ -1,7 +1,7 @@
 # under construction
 import numpy as np
-from .search import search_iterable
-from .dataset import current
+from ._search import search_iterable
+from ._dataset import current
 from ._print import _print
 import pandas as pd
 

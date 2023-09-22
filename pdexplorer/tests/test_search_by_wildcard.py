@@ -1,5 +1,5 @@
 from .fixtures import df1 as df
-from ..search import _search_by_wildcard
+from .._search import _search_by_wildcard
 
 
 def test_basic_example():

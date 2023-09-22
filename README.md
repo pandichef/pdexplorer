@@ -1,18 +1,6 @@
 > "...succinctness is power... we take the trouble to develop high-level languages...
 > so that we can say (and more importantly, think) in 10 lines of a high-level language what would require 1000 lines of machine language... -[Paul Graham, Succinctness is Power](http://www.paulgraham.com/power.html)
 
-## pdexplorer
-
-**pdexplorer** is a Stata emulator for Python/pandas. In contrast to pandas, Stata syntax achieves succinctness by:
-
-- Using spaces and commas rather than parentheses, brackets, curly braces, and quotes (where possible)
-- Specifying a set of concise commands on the "current" dataset rather than cluttering the namespace with multiple datasets
-- Being verbose by default i.e., displaying output that represents the results of the command
-- Having sensible defaults that cover the majority of use cases and demonstrate common usage
-- Allowing for namespace abbreviations for both commands and variable names
-- Employing two types of column names: Variable name are concise and used for programming. Variable labels are verbose
-  and used for presentation.
-
 ## Installation
 
 `pdexplorer` is available on [PyPI](https://pypi.org/project/pdexplorer/). Run `pip` to install:
@@ -26,6 +14,20 @@ Then import the `pdexplorer` commands with
 ```python
 from pdexplorer import *
 ```
+
+## pdexplorer
+
+**pdexplorer** is a Stata emulator for Python/pandas. In contrast to raw Python/pandas, Stata syntax achieves succinctness by:
+
+- Using spaces and commas rather than parentheses, brackets, curly braces, and quotes (where possible)
+- Specifying a set of concise commands on the "current" dataset rather than cluttering the namespace with multiple datasets
+- Being verbose by default i.e., displaying output that represents the results of the command
+- Having sensible defaults that cover the majority of use cases and demonstrate common usage
+- Allowing for namespace abbreviations for both commands and variable names
+- Employing two types of column names: Variable name are concise and used for programming. Variable labels are verbose
+  and used for presentation.
+- Packages are imported lazily e.g., `import torch` is loaded only when it's first used by a command. This ensures that
+  `from pdexplorer import *` runs quickly.
 
 ## Examples
 
@@ -158,21 +160,26 @@ becomes
 labeldata("label")
 ```
 
-## Dependencies
+## Module Dependencies
+
+| File location       | Description                                                                        | Dependencies     |
+| ------------------- | ---------------------------------------------------------------------------------- | ---------------- |
+| `/`                 | commands that are native to Stata related to data wrangling or statistics          | `pandas`         |
+| `/altair_mapper.py` | commands that are native to Altair for charting                                    | `altair`         |
+| `shortcuts/`        | shortcut commands related to data wrangling, statistics, or charting               | all of the above |
+| `finance/`          | commands that are specific to financial applications                               | all of the above |
+| `ml/`               | commands that use machine learning techniques (and are outside the scope of Stata) | `scikit-learn`   |
+| `nn/`               | commands that use neutral networks (primarily built using PyTorch)                 | `PyTorch`        |
+| `data/`             | python scripts that collect data from various sources                              | Data suppliers   |
+| `experimental/`     | commands that are current under development and not yet stable                     | N/A              |
+
+## Command Dependencies
 
 | `pdexplorer` command | package dependency                                                                                                                                                         |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | cf                   | [ydata-profiling](https://github.com/ydataai/ydata-profiling) or [sweetviz](https://github.com/fbdesignpro/sweetviz)                                                       |
 | browse               | [dtale](https://github.com/man-group/dtale)                                                                                                                                |
 | regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) |
-
-<!-- ## Subfolders
-
-`core/`: stata commands for data wrangling
-`plus/`: data wrangling commands that are not in Stata
-`finance/`: financial functions
-`ai/`: Machine Learning and Artificial Intelligence
-`experimental/`: Commands that are no longer actively maintained -->
 
 ## Charts
 

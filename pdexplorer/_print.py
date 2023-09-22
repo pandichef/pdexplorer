@@ -1,5 +1,5 @@
 # from ._singleton import singleton
-from .dataset import current
+from ._dataset import current
 
 
 def _print(obj):

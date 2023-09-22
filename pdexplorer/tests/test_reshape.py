@@ -1,10 +1,11 @@
 import pandas as pd
-from ..dataset import current
+from .._dataset import current
 from ..use import use
 from ..merge import merge
 from ..lst import lst
-from ..quietly import quietly
-from ..keepif import keepif
+from .._quietly import quietly
+
+# from ..keepif import keepif
 from ..reshape import reshapelong, reshapewide
 from ..save import save
 from ..xpose import xpose

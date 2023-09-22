@@ -133,27 +133,24 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
         "requests",
-        "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
-        "seaborn",  # Use Altair instead
-        "statsmodels",
-        "scikit-learn",
-        "torch",
-        "ydata-profiling",
-        "sweetviz",
-        "dtale",
-        "vega_datasets",
-        "datasets",  # https://github.com/huggingface/datasets
-        "streamlit",
-        "bardapi",
-        "openai",  # requires API Key
-        "altair",
-        "vegafusion[embed]"
-        # "altair_viewer",
-        # "altair_saver",
-        # "bokeh",
-        # "plotly",
-        # "tabulate",
-        # "typing-extensions",
+        # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
+        "pandas",
+        # "seaborn",  # Use Altair instead
+        "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
+        "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
+        "vega_datasets",  # data from Vega (which Altair is based on)
+        "statsmodels",  # Econometrics
+        "scikit-learn",  # Machine Learning (excluding neural networks)
+        "torch",  # PyTorch for Neural networks
+        "datasets",  # data from Hugging Face (associated with PyTorch)
+        "ydata-profiling",  # for cf command
+        "sweetviz",  # for cf command
+        "dtale",  # fro browse command
+        # "streamlit",
+        # "bardapi",
+        # "openai",  # requires API Key
+        "pandas_market_calendars",  # dates for financial markets
+        "numpy-financial",  # basic financial functions
     ],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"

@@ -1,7 +1,7 @@
 import numpy as np
-from .dataset import current
+from ._dataset import current
 from ._print import _print
-from .commandarg import parse_commandarg, parse_options
+from ._commandarg import parse_commandarg, parse_options
 
 
 def collapse(commandarg: str) -> None:

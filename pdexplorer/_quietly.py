@@ -1,5 +1,5 @@
 import contextlib
-from .dataset import current
+from ._dataset import current
 
 
 @contextlib.contextmanager

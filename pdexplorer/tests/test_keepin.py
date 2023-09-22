@@ -1,9 +1,10 @@
-from ..dataset import current
+from .._dataset import current
 from ..keep import keep
 from ..webuse import webuse
-from ..keepin import keepin
-from ..keepif import keepif
-from ..quietly import quietly
+from ..keep import keepin
+
+# from ..keepif import keepif
+from .._quietly import quietly
 
 
 def test_keepin1():

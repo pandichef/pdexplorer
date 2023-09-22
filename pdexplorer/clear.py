@@ -1,5 +1,5 @@
 import pandas as pd
-from .dataset import current
+from ._dataset import current
 
 
 def clear(include_preserved=True):

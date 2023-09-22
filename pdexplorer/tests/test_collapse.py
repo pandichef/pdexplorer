@@ -1,11 +1,10 @@
 import math
 import pandas as pd
-from ..dataset import current
+from .._dataset import current
 from ..use import use
 from ..merge import merge
 from ..lst import lst
-from ..quietly import quietly
-from ..keepif import keepif
+from .._quietly import quietly
 from ..keep import keep
 from ..collapse import collapse
 from ..webuse import webuse
@@ -20,7 +19,7 @@ def test_collapse1():
     # webuse("iris", "vega")
     with quietly():
         webuse("iris", "vega", use_local=_use_local)
-        keepif('species == "setosa"')
+        keep('if species == "setosa"')
         sepallength__mean = current._df.sepallength.mean()
         sepalwidth__mean = current._df.sepalwidth.mean()
         petallength__sum = current._df.petallength.sum()
@@ -29,7 +28,7 @@ def test_collapse1():
         collapse(
             "(mean) sepallength sepalwidth (sum) petallength petalwidth, by(species)"
         )
-        keepif('species == "setosa"')
+        keep('if species == "setosa"')
         assert math.isclose(current._df.sepallength[0], sepallength__mean)
         assert math.isclose(current._df.sepalwidth[0], sepalwidth__mean)
         assert math.isclose(current._df.petallength[0], petallength__sum)
@@ -39,7 +38,7 @@ def test_collapse1():
 def test_collapse2():  # weights
     with quietly():
         webuse("iris", "vega", use_local=_use_local)
-        keepif('species == "setosa"')
+        keep('if species == "setosa"')
         denominator = current._df.petalwidth.sum()
         sepallength__mean = (
             current._df.sepallength * current._df.petalwidth

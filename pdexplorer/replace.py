@@ -1,7 +1,7 @@
 # TODO: add in_/if_
-from .dataset import current
+from ._dataset import current
 from ._print import _print
-from .commandarg import parse_commandarg
+from ._commandarg import parse_commandarg
 
 
 def replace(commandarg: str) -> None:

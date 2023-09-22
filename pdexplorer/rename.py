@@ -1,4 +1,4 @@
-from .dataset import current
+from ._dataset import current
 from ._print import _print
 
 

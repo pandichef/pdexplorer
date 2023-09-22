@@ -1,5 +1,5 @@
-from .dataset import current
-from .quietly import quietly
+from ._dataset import current
+from ._quietly import quietly
 from copy import copy
 from ._print_horizontal_line import print_horizontal_line
 from .use import use

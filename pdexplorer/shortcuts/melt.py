@@ -1,7 +1,7 @@
 import pandas as pd
-from .commandarg import parse_commandarg, parse_options
-from .dataset import current
-from ._print import _print
+from .._commandarg import parse_commandarg, parse_options
+from .._dataset import current
+from .._print import _print
 
 
 def melt(commandarg, use_labels=True):

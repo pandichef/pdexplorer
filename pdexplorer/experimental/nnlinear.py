@@ -1,5 +1,5 @@
-from ..search import search_iterable
-from ..dataset import current
+from .._search import search_iterable
+from .._dataset import current
 
 
 def nnlinear(varlist: str):

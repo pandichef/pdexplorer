@@ -1,8 +1,8 @@
 from ..webuse import webuse
 from ..keep import keep
-from ..dataset import current
+from .._dataset import current
 from .._print import _print
-from ..quietly import quietly
+from .._quietly import quietly
 
 # example_indices_full = [40, 80, 120]
 # example_index_to_summarize = 200

@@ -1,7 +1,7 @@
 import io
 import sys
 from contextlib import contextmanager
-from ..dataset import current
+from .._dataset import current
 
 
 @contextmanager
