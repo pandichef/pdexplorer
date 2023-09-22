@@ -16,6 +16,9 @@ from .browse import browse
 from .gsort import gsort
 from .order import order
 from .keep import keep
+from .finance.mtgyield import mtgyield
+from .finance.mtgprice import mtgprice
+from .srecode import srecode
 
 # from .scatter import scatter as scatter_old
 from .xpose import xpose

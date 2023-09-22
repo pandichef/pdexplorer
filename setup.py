@@ -43,7 +43,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="0.0.21",  # Required
+    version="0.0.22",  # Required
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
@@ -135,6 +135,7 @@ setup(
         "requests",
         # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
         "pandas",
+        "scipy",
         # "seaborn",  # Use Altair instead
         "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
         "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
@@ -149,8 +150,8 @@ setup(
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key
-        "pandas_market_calendars",  # dates for financial markets
-        "numpy-financial",  # basic financial functions
+        # "pandas_market_calendars",  # dates for financial markets
+        # "numpy-financial",  # basic financial functions
     ],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
