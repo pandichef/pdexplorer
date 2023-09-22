@@ -12,13 +12,18 @@ from .ml.regressml import regressml
 from .webuse import webuse
 from .logit import logit
 from .drop import drop
-from .browse import browse
+from .browse import browse as br
+from .browse import browse as bro
+from .browse import browse as brow
+from .browse import browse as brows
+from .browse import browse as browse
 from .gsort import gsort
 from .order import order
 from .keep import keep
 from .finance.mtgyield import mtgyield
 from .finance.mtgprice import mtgprice
 from .srecode import srecode
+from .shortcuts.profile import profile
 
 # from .scatter import scatter as scatter_old
 from .xpose import xpose

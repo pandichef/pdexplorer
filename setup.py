@@ -135,7 +135,7 @@ setup(
         "requests",
         # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
         "pandas",
-        "scipy",
+        "scipy",  # see mtgyield()
         # "seaborn",  # Use Altair instead
         "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
         "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
