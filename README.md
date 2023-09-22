@@ -162,16 +162,16 @@ labeldata("label")
 
 ## Module Dependencies
 
-| File location       | Description                                                                        | Dependencies     |
-| ------------------- | ---------------------------------------------------------------------------------- | ---------------- |
-| `/`                 | commands that are native to Stata related to data wrangling or statistics          | `pandas`         |
-| `/altair_mapper.py` | commands that are native to Altair for charting                                    | `altair`         |
-| `shortcuts/`        | shortcut commands related to data wrangling, statistics, or charting               | all of the above |
-| `finance/`          | commands that are specific to financial applications                               | all of the above |
-| `ml/`               | commands that use machine learning techniques (and are outside the scope of Stata) | `scikit-learn`   |
-| `nn/`               | commands that use neutral networks (primarily built using PyTorch)                 | `PyTorch`        |
-| `data/`             | python scripts that collect data from various sources                              | Data suppliers   |
-| `experimental/`     | commands that are current under development and not yet stable                     | N/A              |
+| File location        | Description                                                                        | Dependencies     |
+| -------------------- | ---------------------------------------------------------------------------------- | ---------------- |
+| `/*.py`              | commands that are native to Stata related to data wrangling or statistics          | `pandas`         |
+| `/_altair_mapper.py` | commands that are native to Altair for charting                                    | `altair`         |
+| `shortcuts/*.py`     | shortcut commands related to data wrangling, statistics, or charting               | all of the above |
+| `finance/*.py`       | commands that are specific to financial applications                               | all of the above |
+| `ml/*.py`            | commands that use machine learning techniques (and are outside the scope of Stata) | `scikit-learn`   |
+| `nn/*.py`            | commands that use neutral networks (primarily built using PyTorch)                 | `PyTorch`        |
+| `data/*.py`          | python scripts that collect data from various sources                              | Data suppliers   |
+| `experimental/*.py`  | commands that are current under development and not yet stable                     | N/A              |
 
 ## Command Dependencies
 
