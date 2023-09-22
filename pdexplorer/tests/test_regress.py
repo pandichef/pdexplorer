@@ -1,4 +1,5 @@
 from math import isclose
+import pytest
 from ..webuse import webuse
 from .._dataset import current
 from .._quietly import quietly
@@ -59,6 +60,7 @@ def test_regress_smf_vs_sklearn():
 #     )
 
 
+@pytest.mark.slow
 def test_regress_smf_vs_pytorch_Rprop_2_covariates():
     with quietly():
         webuse("Duncan__carData", "rdatasets", use_local=True)

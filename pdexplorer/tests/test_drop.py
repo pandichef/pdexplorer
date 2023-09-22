@@ -8,7 +8,6 @@ from .._quietly import quietly
 
 # with warnings.catch_warnings():
 #     warnings.simplefilter("ignore")
-import statsmodels.api as sm
 
 
 def test_drop_columns():

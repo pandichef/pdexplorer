@@ -4,11 +4,11 @@ from ..webuse import webuse
 from .._quietly import quietly
 
 # from magicpandas.frame import MagicDataFrame
-import warnings
+# import warnings
 
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    import statsmodels.api as sm
+# with warnings.catch_warnings():
+#     warnings.simplefilter("ignore")
+#     import statsmodels.api as sm
 
 
 def test_keep_columns():
