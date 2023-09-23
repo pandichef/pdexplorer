@@ -1,4 +1,5 @@
 import re
+from ._dataset import current
 
 
 def _clean(string_with_extra_spaces: str) -> str:
@@ -6,94 +7,22 @@ def _clean(string_with_extra_spaces: str) -> str:
     return cleaned
 
 
-def parse_commandarg(_commandarg: str) -> dict:
-    _commandarg = _commandarg.replace("==", "__eq__").replace("!=", "__neq__")
-    if (
-        _commandarg.startswith("if ")
-        or _commandarg.startswith("in ")
-        or _commandarg.startswith("using ")
-    ):
-        _commandarg = " " + _commandarg
-    split_identifiers = (
-        " in ",
-        " if ",
-        " using ",
-        ",",
-        " [",
-        "]",
-        "=",  # check for = before weights only
-    )
-    split_locations = {}
-    end_of_anything = None
-    for i, split_identifier in enumerate(split_identifiers):
-        # this_location = commandarg.find(split_identifier)
-        split_locations[split_identifier] = _commandarg.find(split_identifier)
-        # print(split_identifier)
-        # print(split_locations[split_identifier])
-        if (  # exclude when "=" is after the open bracket
-            split_identifier == "="
-            and split_locations[" ["] > -1
-            and split_locations[split_identifier] > split_locations[" ["]
-        ):
-            print(split_locations[split_identifier])
-            print(split_locations[" ["])
-            split_locations[split_identifier] = -1
-        if split_locations[split_identifier] > -1:
-            if end_of_anything:
-                end_of_anything = min(
-                    split_locations[split_identifier], end_of_anything
-                )
-            else:
-                end_of_anything = split_locations[split_identifier]
-    # print(split_locations)
-    sorted_splits = sorted(
-        split_locations.items(), key=lambda x: x[1]
-    )  # list of tuples
-    parsed = {}
-    for index, (identifier, position) in enumerate(sorted_splits):
-        if position == -1:
-            parsed[identifier] = None
-        else:
-            if identifier == "[":
-                startpos = position + len(identifier)
-                endpos = split_locations["]"]
-                parsed[identifier] = _clean(_commandarg[startpos:endpos])
-            elif identifier != "]":
-                startpos = position + len(identifier)  # + 1
-                try:
-                    endpos = sorted_splits[index + 1][1]
-                    parsed[identifier] = _clean(_commandarg[startpos:endpos])
-                except IndexError:
-                    parsed[identifier] = _clean(_commandarg[startpos:])
-        # if parsed[identifier] and :  # i.e., not None
-        #     parsed[identifier] = " ".join(parsed[identifier].split())
-
-    parsed["anything"] = _clean(_commandarg[:end_of_anything])
-    if parsed["anything"] == "":
-        parsed["anything"] = None
-    if parsed[" if "]:
-        parsed[" if "] = parsed[" if "].replace("__eq__", "==").replace("__neq__", "!=")
-
-    # rename
-    parsed["weight"] = parsed[" ["]
-    del parsed[" ["]
-    if parsed["weight"] is None:
-        del parsed["]"]  # hack
-    parsed["options"] = parsed[","]
-    del parsed[","]
-    parsed["if"] = parsed[" if "]
-    del parsed[" if "]
-    parsed["in"] = parsed[" in "]
-    del parsed[" in "]
-    parsed["using"] = parsed[" using "]
-    del parsed[" using "]
-    # parsed["exp"] = parsed["="]
-
-    # print(parsed)
-    return parsed
+def check_syntax(parsed_commandarg, syntax) -> dict:
+    _ = parsed_commandarg
+    updates = {}
+    if syntax is not None and syntax != "" and syntax.find("varlist") > -1:
+        for name in _["anything"].split():
+            assert (
+                name in current.df.columns
+            ), f"Syntax specifies a varlist, but {name} not found in current dataset."
+        updates.update({"varlist": _["anything"]})
+    else:
+        pass
+    return updates
 
 
-def parse_options(options_string: str, values_as_list=False) -> dict:
+def parse_options(options_string: str, split_values=False) -> dict:
+    # split_values is used in _altair_mapper
     if options_string is None:
         return {}
     options_string = options_string.replace("( ", "(")
@@ -108,12 +37,104 @@ def parse_options(options_string: str, values_as_list=False) -> dict:
 
     remaining_words = re.sub(pattern, "", options_string).split()
     for word in remaining_words:
-        result[word] = None
+        result[word] = True
 
-    if values_as_list:
+    if split_values:
         return {key: value.split(" ") for key, value in result.items()}
     else:
         return result
+
+
+def parse(commandarg: str, syntax: str = "") -> dict:
+    commandarg = commandarg.replace("==", "__eq__").replace("!=", "__neq__")
+    if (
+        commandarg.startswith("if ")
+        or commandarg.startswith("in ")
+        or commandarg.startswith("using ")
+    ):
+        commandarg = " " + commandarg
+    split_identifiers = (
+        " in ",
+        " if ",
+        " using ",
+        ",",
+        " [",
+        "]",
+        "=",  # check for = before weights only
+    )
+    split_locations = {}
+    end_of_anything = None
+    for i, split_identifier in enumerate(split_identifiers):
+        # this_location = commandarg.find(split_identifier)
+        split_locations[split_identifier] = commandarg.find(split_identifier)
+        # print(split_identifier)
+        # print(split_locations[split_identifier])
+        if (  # exclude when "=" is after the open bracket
+            split_identifier == "="
+            and split_locations[" ["] > -1
+            and split_locations[split_identifier] > split_locations[" ["]
+        ):
+            # print(split_locations[split_identifier])
+            # print(split_locations[" ["])
+            split_locations[split_identifier] = -1
+        if split_locations[split_identifier] > -1:
+            if end_of_anything:
+                end_of_anything = min(
+                    split_locations[split_identifier], end_of_anything
+                )
+            else:
+                end_of_anything = split_locations[split_identifier]
+    # print(split_locations)
+    sorted_splits = sorted(
+        split_locations.items(), key=lambda x: x[1]
+    )  # list of tuples
+    _ = {}  # parsed commandarg is represented as _
+    for index, (identifier, position) in enumerate(sorted_splits):
+        if position == -1:
+            _[identifier] = None
+        else:
+            if identifier == "[":
+                startpos = position + len(identifier)
+                endpos = split_locations["]"]
+                _[identifier] = _clean(commandarg[startpos:endpos])
+            elif identifier != "]":
+                startpos = position + len(identifier)  # + 1
+                try:
+                    endpos = sorted_splits[index + 1][1]
+                    _[identifier] = _clean(commandarg[startpos:endpos])
+                except IndexError:
+                    _[identifier] = _clean(commandarg[startpos:])
+        # if parsed[identifier] and :  # i.e., not None
+        #     parsed[identifier] = " ".join(parsed[identifier].split())
+
+    _["anything"] = _clean(commandarg[:end_of_anything])
+    if _["anything"] == "":
+        _["anything"] = None
+    if _[" if "]:
+        _[" if "] = _[" if "].replace("__eq__", "==").replace("__neq__", "!=")
+
+    # rename
+    _["weight"] = _[" ["]
+    del _[" ["]
+    if _["weight"] is None:
+        del _["]"]  # hack
+    _["options"] = _[","]
+    del _[","]
+    _["if"] = _[" if "]
+    del _[" if "]
+    _["in"] = _[" in "]
+    del _[" in "]
+    _["using"] = _[" using "]
+    del _[" using "]
+    # parsed["exp"] = parsed["="]
+
+    # See https://www.stata.com/manuals13/psyntax.pdf
+    parsed_options = parse_options(_["options"])
+    _.update(parsed_options)
+    # _["options"] = parse_options(_["options"], split_values=True)
+    updates = check_syntax(_, syntax)  # raise error is syntax is invalid
+    _.update(updates)  # e.g., varlist added if passes validation
+    return _
 
 
 def parse_if_condition(if_condition_string: str) -> dict:

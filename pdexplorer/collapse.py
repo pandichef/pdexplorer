@@ -1,11 +1,11 @@
 import numpy as np
 from ._dataset import current
 from ._print import _print
-from ._commandarg import parse_commandarg, parse_options
+from ._commandarg import parse, parse_options
 
 
 def collapse(commandarg: str) -> None:
-    parsed_commandarg = parse_commandarg(commandarg)
+    parsed_commandarg = parse(commandarg)
 
     weight = parsed_commandarg["weight"]
     weight = weight.split("=")[1] if weight else None

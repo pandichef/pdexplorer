@@ -1,6 +1,6 @@
 from ._search import search_iterable
 from ._dataset import current
-from ._commandarg import parse_commandarg
+from ._commandarg import parse
 from ._print import _print
 from ._dataset import current
 from ._search import search_iterable
@@ -22,7 +22,7 @@ def dropif(condition: str) -> None:
 
 
 def drop(commandarg: str) -> None:
-    parsed_commandarg = parse_commandarg(commandarg)
+    parsed_commandarg = parse(commandarg)
 
     if parsed_commandarg["anything"]:
         assert (

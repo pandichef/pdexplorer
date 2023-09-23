@@ -1,11 +1,11 @@
 # TODO: add in_/if_
 from ._dataset import current
 from ._print import _print
-from ._commandarg import parse_commandarg
+from ._commandarg import parse
 
 
 def generate(commandarg: str) -> None:
-    parsed_commandarg = parse_commandarg(commandarg)
+    parsed_commandarg = parse(commandarg)
     # print(parsed_commandarg)
     assignment = parsed_commandarg["anything"] + "=" + parsed_commandarg["="]
 

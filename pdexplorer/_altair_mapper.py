@@ -1,7 +1,7 @@
 import webbrowser
 import altair as alt
 from ._dataset import current
-from ._commandarg import parse_commandarg, parse_options
+from ._commandarg import parse, parse_options
 from ._search import search_iterable
 
 # monkey patch callable method
@@ -20,15 +20,18 @@ def _transform_calculate_variable_labels(self):
 alt.Chart.__call__ = _call  # type: ignore
 alt.Chart.transform_calculate_variable_labels = _transform_calculate_variable_labels  # type: ignore
 alt.LayerChart.__call__ = _call  # type: ignore
+alt.LayerChart.transform_calculate_variable_labels = _transform_calculate_variable_labels  # type: ignore
 alt.HConcatChart.__call__ = _call  # type: ignore
+alt.HConcatChart.transform_calculate_variable_labels = _transform_calculate_variable_labels  # type: ignore
 alt.VConcatChart.__call__ = _call  # type: ignore
+alt.VConcatChart.transform_calculate_variable_labels = _transform_calculate_variable_labels  # type: ignore
 
 
 # def _get_kwargs_list(commandarg, yX=True):
 def _get_kwargs_list(commandarg, yX=True, use_labels=True):
     """get encodings as keywords"""
-    parsed_commandarg = parse_commandarg(commandarg)
-    non_x_y_encodings = parse_options(parsed_commandarg["options"], values_as_list=True)
+    parsed_commandarg = parse(commandarg)
+    non_x_y_encodings = parse_options(parsed_commandarg["options"], split_values=True)
     for k, v in non_x_y_encodings.items():
         if len(v) == 1:
             non_x_y_encodings[k] = v[0]
@@ -107,9 +110,9 @@ def _chart(
     else:
         if not stacked:
             # sugar for layered charts in the Stata-like manner
-            parsed_commandarg = parse_commandarg(commandarg)
+            parsed_commandarg = parse(commandarg)
             layered_encodings = parse_options(
-                parsed_commandarg["options"], values_as_list=True
+                parsed_commandarg["options"], split_values=True
             )
             for k, v in layered_encodings.items():
                 # Becuase Altair doesn't like lists of length 1
@@ -130,9 +133,9 @@ def _chart(
                     }
                 )
                 if use_labels:
+                    # .transform_calculate_variable_labels()
                     return (
                         mark_method(*args, **kwargs)
-                        .transform_calculate_variable_labels()
                         .encode(**layered_encodings)
                         .transform_fold(
                             list(
@@ -218,7 +221,15 @@ marktypes = [  # https://altair-viz.github.io/user_guide/marks/index.html
 
 fnc = """def {marktype}chart(commandarg=None, use_labels=True, *args, **kwargs):
     mark_method = alt.Chart(current.df).mark_{marktype}
-    return _chart(mark_method, commandarg, use_labels, *args, **kwargs)
+    _chart(mark_method, commandarg, use_labels, *args, **kwargs)()
+"""
+
+fnc2 = """def {marktype}chart_(commandarg=None, use_labels=True, calculate_variable_labels=True, *args, **kwargs):
+    mark_method = alt.Chart(current.df).mark_{marktype}
+    if calculate_variable_labels:
+        return _chart(mark_method, commandarg, use_labels, *args, **kwargs).transform_calculate_variable_labels()
+    else:
+        return _chart(mark_method, commandarg, use_labels, *args, **kwargs)
 """
 # fnc = """def {marktype}chart(use_labels=True, *args, **kwargs):
 #     if use_labels:
@@ -230,6 +241,7 @@ fnc = """def {marktype}chart(commandarg=None, use_labels=True, *args, **kwargs):
 
 for marktype in marktypes:
     exec(fnc.format(marktype=marktype))
+    exec(fnc2.format(marktype=marktype))
 
 ##################################################################
 # Stata-like Sugar Below

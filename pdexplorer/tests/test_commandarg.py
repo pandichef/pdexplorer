@@ -1,43 +1,61 @@
-from .._commandarg import parse_commandarg, parse_options
+from .._commandarg import parse, parse_options
+
+
+def test_parse_options1():
+    parsed = parse_options("by(hello world) verbose")
+    assert parsed == {"by": "hello world", "verbose": True}
+
+
+def test_parse_options2():
+    parsed = parse_options("   by(hello   world)    verbose")
+    assert parsed == {"by": "hello   world", "verbose": True}
+
+
+def test_parse_options3():
+    parsed = parse_options("by(species)")
+    assert parsed == {"by": "species"}
+
+
+def test_parse_options4():
+    parsed = parse_options("by(species)", split_values=True)
+    assert parsed == {"by": ["species"]}
 
 
 def test_parse_commandarg1():
-    parsed = parse_commandarg(
-        "  brave      huxley   = exp in   new [  w=balance], world"
-    )
+    parsed = parse("  brave      huxley   = exp in   new [  w=balance], world")
     assert parsed == {
         "if": None,
         "using": None,
         "=": "exp",
         "in": "new",
         "weight": "w=balance",
+        "world": True,
         "options": "world",
         "anything": "brave huxley",
     }
 
 
 def test_parse_commandarg2():
-    parsed = parse_commandarg('if species == "setosa"')
+    parsed = parse('if species == "setosa"')
     assert parsed["if"] == 'species == "setosa"'
 
 
 def test_parse_commandarg3():
-    parsed = parse_commandarg(
-        "(mean) sepallength sepalwidth [w=petalwidth], by(species)"
-    )
+    parsed = parse("(mean) sepallength sepalwidth [w=petalwidth], by(species)")
     assert parsed == {
         "if": None,
         "using": None,
         "=": None,
         "in": None,
         "weight": "w=petalwidth",
-        "options": "by(species)",
+        "by": "species",
         "anything": "(mean) sepallength sepalwidth",
+        "options": "by(species)",
     }
 
 
 def test_parse_commandarg4_name_clash():
-    parsed = parse_commandarg(
+    parsed = parse(
         '  brave      huxley   = exp if index == 5 and serif == "sans" in   new [  w=balance], world'
     )
     # print(parsed)
@@ -47,13 +65,14 @@ def test_parse_commandarg4_name_clash():
         "=": "exp",
         "in": "new",
         "weight": "w=balance",
-        "options": "world",
+        "world": True,
         "anything": "brave huxley",
+        "options": "world",
     }
 
 
 def test_parse_commandarg_exp_only():
-    parsed = parse_commandarg("a = 2")
+    parsed = parse("a = 2")
     # print(parsed)
     assert parsed == {
         "if": None,
@@ -67,7 +86,7 @@ def test_parse_commandarg_exp_only():
 
 
 def test_parse_commandarg_if_only():
-    parsed = parse_commandarg('if _merge!="both"')
+    parsed = parse('if _merge!="both"')
     # print(parsed)
     assert parsed == {
         "if": '_merge!="both"',
@@ -78,18 +97,3 @@ def test_parse_commandarg_if_only():
         "options": None,
         "anything": None,
     }
-
-
-def test_parse_options1():
-    parsed = parse_options("by(hello world) verbose")
-    assert parsed == {"by": "hello world", "verbose": None}
-
-
-def test_parse_options2():
-    parsed = parse_options("   by(hello   world)    verbose")
-    assert parsed == {"by": "hello   world", "verbose": None}
-
-
-def test_parse_options3():
-    parsed = parse_options("by(species)")
-    assert parsed == {"by": "species"}

@@ -9,52 +9,54 @@ from .._print import _print
 from typing import Union
 
 
-def regressnn(varlist: str, library="pytorch", epochs: int = 100):
+# def regressnn(varlist: str, library="pytorch", epochs: int = 100):
+def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
     # ) -> Union[RegressionResultsWrapper, LinearRegression, None]:
     """
     Stata docs: https://www.stata.com/manuals/rregress.pdf
     Returns: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
     """
-    if library == "statsmodels":
-        import statsmodels.formula.api as smf
+    # if library == "statsmodels":
+    #     import statsmodels.formula.api as smf
 
-        df = current.df
-        patsy_formula = _patsify(varlist)
-        # print(patsy_formula)
-        model = smf.ols(patsy_formula, data=df, missing="drop")
-        results = model.fit()
-        _print(results.summary())
-        current.methods, current.properties = _get_custom_attributes(results)
-        # print(results)
-        # print(current.properties)
-        current.stored_results["e"] = {}
-        current.stored_results["e"] = {
-            "scalars": {
-                "N": int(results.nobs),
-                "df_m": int(results.df_model),
-                "df_r": int(results.df_resid),
-                "F": results.fvalue,
-                "r2": results.rsquared,
-                "mss": results.mse_model,
-                "r2_a": results.rsquared_adj,
-                "ll": results.llf,
-            }
-        }
-        return results
-    elif library == "sklearn" or library == "scikit-learn":
-        from sklearn.linear_model import LinearRegression
+    #     df = current.df
+    #     patsy_formula = _patsify(varlist)
+    #     # print(patsy_formula)
+    #     model = smf.ols(patsy_formula, data=df, missing="drop")
+    #     results = model.fit()
+    #     _print(results.summary())
+    #     current.methods, current.properties = _get_custom_attributes(results)
+    #     # print(results)
+    #     # print(current.properties)
+    #     current.stored_results["e"] = {}
+    #     current.stored_results["e"] = {
+    #         "scalars": {
+    #             "N": int(results.nobs),
+    #             "df_m": int(results.df_model),
+    #             "df_r": int(results.df_resid),
+    #             "F": results.fvalue,
+    #             "r2": results.rsquared,
+    #             "mss": results.mse_model,
+    #             "r2_a": results.rsquared_adj,
+    #             "ll": results.llf,
+    #         }
+    #     }
+    #     return results
+    # elif library == "sklearn" or library == "scikit-learn":
+    #     from sklearn.linear_model import LinearRegression
 
-        # import numpy as np
+    #     # import numpy as np
 
-        varlist_as_list = varlist.split()
-        yvar = varlist_as_list[0]
-        xvars = varlist_as_list[1:]
-        xvars = search_iterable(current.df.columns, " ".join(xvars))
-        X = current.df.dropna()[xvars].values
-        y = current.df.dropna()[yvar].values
-        reg = LinearRegression().fit(X, y)
-        return reg
-    elif library == "pytorch":
+    #     varlist_as_list = varlist.split()
+    #     yvar = varlist_as_list[0]
+    #     xvars = varlist_as_list[1:]
+    #     xvars = search_iterable(current.df.columns, " ".join(xvars))
+    #     X = current.df.dropna()[xvars].values
+    #     y = current.df.dropna()[yvar].values
+    #     reg = LinearRegression().fit(X, y)
+    #     return reg
+    if not use_dataloader:
+        # elif library == "pytorch":
         # Source: https://towardsdatascience.com/linear-regression-with-pytorch-eb6dedead817
         # This didn't work with SDG, so I used Rprop instead
         import numpy as np
@@ -157,7 +159,8 @@ def regressnn(varlist: str, library="pytorch", epochs: int = 100):
         """
 
         return model  # type: ignore
-    elif library == "pytorch_dataloader":
+    else:
+        # elif library == "pytorch_dataloader":
         # same as above, but using the dataloader
         import torch
         from torch.autograd import Variable
@@ -209,8 +212,8 @@ def regressnn(varlist: str, library="pytorch", epochs: int = 100):
                 # print("epoch {}, loss {}".format(epoch, loss.item()))
 
         return model  # type: ignore
-    else:
-        raise Exception("Invalid library name.")
+    # else:
+    # raise Exception("Invalid library name.")
 
 
 """

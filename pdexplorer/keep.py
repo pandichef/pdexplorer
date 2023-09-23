@@ -2,7 +2,7 @@ from ._search import search_iterable
 from ._dataset import current
 from ._print import _print
 import pandas as pd
-from ._commandarg import parse_commandarg
+from ._commandarg import parse
 
 # from .keepif import keepif
 # from .keepin import keepin
@@ -40,7 +40,7 @@ def _keep(df: pd.DataFrame, columns_to_keep: list) -> pd.DataFrame:
 
 
 def keep(commandarg: str) -> None:
-    parsed_commandarg = parse_commandarg(commandarg)
+    parsed_commandarg = parse(commandarg)
     # print(parsed_commandarg["in"])
     # print(parsed_commandarg["in"])
     # print(parsed_commandarg["in"])

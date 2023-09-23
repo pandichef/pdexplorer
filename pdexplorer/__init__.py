@@ -107,8 +107,17 @@ def properties():
 
 # props = pformat(singleton.properties)
 
+# from pdexplorer._altair_mapper import circlechart_ as circle_  # type: ignore
 
-from pdexplorer._altair_mapper import (
+# print(_circlechart)
+# print(_circlechart)
+# print(_circlechart)
+# print(_circlechart)
+#  as blahblah  # type: ignore
+
+# _circle = blahblah
+
+from ._altair_mapper import (
     arcchart as arc,  # type: ignore
     arcchart as arcc,  # type: ignore
     arcchart as arcch,  # type: ignore
@@ -213,7 +222,117 @@ from pdexplorer._altair_mapper import (
     errorbarchart as errorbarchart,  # type: ignore
 )
 
-from .shortcuts.scatter import scatter
+from ._altair_mapper import (
+    arcchart_ as arc_,  # type: ignore
+    arcchart_ as arcc_,  # type: ignore
+    arcchart_ as arcch_,  # type: ignore
+    arcchart_ as arccha_,  # type: ignore
+    arcchart_ as arcchar_,  # type: ignore
+    arcchart_ as arcchart_,  # type: ignore
+    areachart_ as area_,  # type: ignore
+    areachart_ as areac_,  # type: ignore
+    areachart_ as areach_,  # type: ignore
+    areachart_ as areacha_,  # type: ignore
+    areachart_ as areachar_,  # type: ignore
+    areachart_ as areachart_,  # type: ignore
+    barchart_ as bar_,  # type: ignore
+    barchart_ as barc_,  # type: ignore
+    barchart_ as barch_,  # type: ignore
+    barchart_ as barcha_,  # type: ignore
+    barchart_ as barchar_,  # type: ignore
+    barchart_ as barchart_,  # type: ignore
+    circlechart_ as circle_,  # type: ignore
+    circlechart_ as circlec_,  # type: ignore
+    circlechart_ as circlech_,  # type: ignore
+    circlechart_ as circlecha_,  # type: ignore
+    circlechart_ as circlechar_,  # type: ignore
+    circlechart_ as circlechart_,  # type: ignore
+    geoshapechart_ as geoshape_,  # type: ignore
+    geoshapechart_ as geoshapec_,  # type: ignore
+    geoshapechart_ as geoshapech_,  # type: ignore
+    geoshapechart_ as geoshapecha_,  # type: ignore
+    geoshapechart_ as geoshapechar_,  # type: ignore
+    geoshapechart_ as geoshapechart_,  # type: ignore
+    imagechart_ as image_,  # type: ignore
+    imagechart_ as imagec_,  # type: ignore
+    imagechart_ as imagech_,  # type: ignore
+    imagechart_ as imagecha_,  # type: ignore
+    imagechart_ as imagechar_,  # type: ignore
+    imagechart_ as imagechart_,  # type: ignore
+    linechart_ as line_,  # type: ignore
+    linechart_ as linec_,  # type: ignore
+    linechart_ as linech_,  # type: ignore
+    linechart_ as linecha_,  # type: ignore
+    linechart_ as linechar_,  # type: ignore
+    linechart_ as linechart_,  # type: ignore
+    pointchart_ as point_,  # type: ignore
+    pointchart_ as pointc_,  # type: ignore
+    pointchart_ as pointch_,  # type: ignore
+    pointchart_ as pointcha_,  # type: ignore
+    pointchart_ as pointchar_,  # type: ignore
+    pointchart_ as pointchart_,  # type: ignore
+    rectchart_ as rect_,  # type: ignore
+    rectchart_ as rectc_,  # type: ignore
+    rectchart_ as rectch_,  # type: ignore
+    rectchart_ as rectcha_,  # type: ignore
+    rectchart_ as rectchar_,  # type: ignore
+    rectchart_ as rectchart_,  # type: ignore
+    rulechart_ as rule_,  # type: ignore
+    rulechart_ as rulec_,  # type: ignore
+    rulechart_ as rulech_,  # type: ignore
+    rulechart_ as rulecha_,  # type: ignore
+    rulechart_ as rulechar_,  # type: ignore
+    rulechart_ as rulechart_,  # type: ignore
+    squarechart_ as square_,  # type: ignore
+    squarechart_ as squarec_,  # type: ignore
+    squarechart_ as squarech_,  # type: ignore
+    squarechart_ as squarecha_,  # type: ignore
+    squarechart_ as squarechar_,  # type: ignore
+    squarechart_ as squarechart_,  # type: ignore
+    textchart_ as text_,  # type: ignore
+    textchart_ as textc_,  # type: ignore
+    textchart_ as textch_,  # type: ignore
+    textchart_ as textcha_,  # type: ignore
+    textchart_ as textchar_,  # type: ignore
+    textchart_ as textchart_,  # type: ignore
+    tickchart_ as tick_,  # type: ignore
+    tickchart_ as tickc_,  # type: ignore
+    tickchart_ as tickch_,  # type: ignore
+    tickchart_ as tickcha_,  # type: ignore
+    tickchart_ as tickchar_,  # type: ignore
+    tickchart_ as tickchart_,  # type: ignore
+    trailchart_ as trail_,  # type: ignore
+    trailchart_ as trailc_,  # type: ignore
+    trailchart_ as trailch_,  # type: ignore
+    trailchart_ as trailcha_,  # type: ignore
+    trailchart_ as trailchar_,  # type: ignore
+    trailchart_ as trailchart_,  # type: ignore
+    boxplotchart_ as boxplot_,  # type: ignore
+    boxplotchart_ as boxplotc_,  # type: ignore
+    boxplotchart_ as boxplotch_,  # type: ignore
+    boxplotchart_ as boxplotcha_,  # type: ignore
+    boxplotchart_ as boxplotchar_,  # type: ignore
+    boxplotchart_ as boxplotchart_,  # type: ignore
+    errorbandchart_ as errorband_,  # type: ignore
+    errorbandchart_ as errorbandc_,  # type: ignore
+    errorbandchart_ as errorbandch_,  # type: ignore
+    errorbandchart_ as errorbandcha_,  # type: ignore
+    errorbandchart_ as errorbandchar_,  # type: ignore
+    errorbandchart_ as errorbandchart_,  # type: ignore
+    errorbarchart_ as errorbar_,  # type: ignore
+    errorbarchart_ as errorbarc_,  # type: ignore
+    errorbarchart_ as errorbarch_,  # type: ignore
+    errorbarchart_ as errorbarcha_,  # type: ignore
+    errorbarchart_ as errorbarchar_,  # type: ignore
+    errorbarchart_ as errorbarchart_,  # type: ignore
+)
+
+from .shortcuts.scatter import scatter as sc
+from .shortcuts.scatter import scatter as sca
+from .shortcuts.scatter import scatter as scat
+from .shortcuts.scatter import scatter as scatt
+from .shortcuts.scatter import scatter as scatte
+from .shortcuts.scatter import scatter as scatter
 from .shortcuts.histogram import histogram as hist
 from .shortcuts.histogram import histogram as histo
 from .shortcuts.histogram import histogram as histog

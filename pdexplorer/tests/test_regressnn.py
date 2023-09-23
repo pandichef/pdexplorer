@@ -36,7 +36,7 @@ def test_regress_smf_vs_pytorch_Rprop_2_covariates():
         results = regress("income education prestige")
     with quietly():
         model = regressnn(
-            "income education prestige"
+            "income education prestige", use_dataloader=False
         )  # , library="pytorch", epochs=100)
     abs_tol = 0.5
     # print(list(model.parameters()))
@@ -56,4 +56,3 @@ def test_regress_smf_vs_pytorch_Rprop_2_covariates():
         float(list(model.parameters())[0][0][1]),  # type:ignore
         abs_tol=abs_tol,  # type:ignore
     )
-
