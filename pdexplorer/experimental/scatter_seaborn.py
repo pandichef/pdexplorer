@@ -1,9 +1,9 @@
 # TODO: support multiple variables e.g.,  scatter yvar1 yvar2 xvar
 # Deprecated: use altair_mapper instead
-from ._dataset import current
-from ._search import search_iterable
+from .._dataset import current
+from .._search import search_iterable
 import warnings
-from ._commandarg import parse_commandarg
+from .._commandarg import parse
 
 
 def scatter(commandarg: str, byvar=None) -> None:
@@ -15,10 +15,10 @@ def scatter(commandarg: str, byvar=None) -> None:
 
     sns.set()
 
-    parsed_commandarg = parse_commandarg(commandarg)
+    _ = parse(commandarg)
     df = current.df
     # try:
-    varlist = search_iterable(df.columns, parsed_commandarg["anything"])
+    varlist = search_iterable(df.columns, _["anything"])
     # fig, ax = plt.subplots()
     assert len(varlist) == 2, "Scatterplot only supports two variables"
     # ax.scatter(labels[1], labels[0], data=df)

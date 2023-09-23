@@ -67,8 +67,8 @@ def test_simple_scatter_plot():
     with quietly():
         webuse("cars", "vega")
     dict_repr = circlechart_("miles_per_gallon horsepower").to_dict()
-    # assert dict_repr["mark"] == {"type": "circle"}
-    assert dict_repr["mark"] == "circle"
+    assert dict_repr["mark"] == {"type": "circle"}
+    # assert dict_repr["mark"] == "circle"
     assert dict_repr["encoding"]["x"] == {
         "field": "horsepower",
         "title": "Horsepower",
@@ -102,7 +102,7 @@ def test_stacked():
     # "mark": {"type": "circle"},
     vconcat = [
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -117,7 +117,7 @@ def test_stacked():
             },
         },
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -153,7 +153,7 @@ def test_stacked_calculate_variable_labels():
     # "mark": {"type": "circle"},
     vconcat = [
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -179,7 +179,7 @@ def test_stacked_calculate_variable_labels():
             ],
         },
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -213,7 +213,7 @@ def test_stacked_calculate_variable_labels():
     ).to_dict()
     assert dict_repr["vconcat"] == [
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -228,7 +228,7 @@ def test_stacked_calculate_variable_labels():
             },
         },
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",
@@ -256,7 +256,7 @@ def test_yX_format():
     ).to_dict()
     assert dict_repr["vconcat"] == [
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "horsepower",
@@ -271,7 +271,7 @@ def test_yX_format():
             },
         },
         {
-            "mark": "circle",
+            "mark": {"type": "circle"},
             "encoding": {
                 "x": {
                     "field": "weight_in_lbs",

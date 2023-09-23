@@ -5,21 +5,23 @@ from ._commandarg import parse, parse_options
 
 
 def collapse(commandarg: str) -> None:
-    parsed_commandarg = parse(commandarg)
+    _ = parse(commandarg)
 
-    weight = parsed_commandarg["weight"]
+    weight = _["weight"]
     weight = weight.split("=")[1] if weight else None
 
-    if parsed_commandarg["options"]:
-        parsed_options = parse_options(parsed_commandarg["options"])
-        if parsed_options["by"]:
-            by = parsed_options["by"]
-        else:
-            by = None
-    else:
-        by = None
+    by = _["by"] if _["by"] else None
 
-    clist = parsed_commandarg["anything"]
+    # if _["options"]:
+    #     parsed_options = parse_options(_["options"])
+    #     if parsed_options["by"]:
+    #         by = parsed_options["by"]
+    #     else:
+    #         by = None
+    # else:
+    #     by = None
+
+    clist = _["anything"]
 
     clist_as_list = clist.split()
     # print(clist_as_list)

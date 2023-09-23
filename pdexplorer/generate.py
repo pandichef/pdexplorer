@@ -5,9 +5,8 @@ from ._commandarg import parse
 
 
 def generate(commandarg: str) -> None:
-    parsed_commandarg = parse(commandarg)
-    # print(parsed_commandarg)
-    assignment = parsed_commandarg["anything"] + "=" + parsed_commandarg["="]
+    _ = parse(commandarg)
+    assignment = _["anything"] + "=" + _["="]
 
     new_column_name = assignment.split("=")[0].strip()
     assert (
@@ -15,11 +14,8 @@ def generate(commandarg: str) -> None:
     ), 'Column already exists.  See "replace" command.'
     # current.df.eval(assignment, inplace=True)
 
-    if parsed_commandarg["if"]:
-        current.df.loc[
-            current.df.query(parsed_commandarg["if"]).index,
-            parsed_commandarg["anything"],
-        ] = parsed_commandarg["="]
+    if _["if"]:
+        current.df.loc[current.df.query(_["if"]).index, _["anything"],] = _["="]
     else:
         current.df.eval(assignment, inplace=True)
 

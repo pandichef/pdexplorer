@@ -30,14 +30,13 @@ alt.VConcatChart.transform_calculate_variable_labels = _transform_calculate_vari
 # def _get_kwargs_list(commandarg, yX=True):
 def _get_kwargs_list(commandarg, yX=True, use_labels=True):
     """get encodings as keywords"""
-    parsed_commandarg = parse(commandarg)
-    non_x_y_encodings = parse_options(parsed_commandarg["options"], split_values=True)
+    _ = parse(commandarg)
+    non_x_y_encodings = parse_options(_["options"], split_values=True)
     for k, v in non_x_y_encodings.items():
         if len(v) == 1:
             non_x_y_encodings[k] = v[0]
-    # varlist = parsed_commandarg["anything"].split()
 
-    varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
+    varlist = search_iterable(current.df.columns, _["anything"])
     if yX:
         if len(varlist) == 1:
             yvar = varlist[0]
@@ -110,16 +109,14 @@ def _chart(
     else:
         if not stacked:
             # sugar for layered charts in the Stata-like manner
-            parsed_commandarg = parse(commandarg)
-            layered_encodings = parse_options(
-                parsed_commandarg["options"], split_values=True
-            )
+            _ = parse(commandarg)
+            layered_encodings = parse_options(_["options"], split_values=True)
             for k, v in layered_encodings.items():
                 # Becuase Altair doesn't like lists of length 1
                 if len(v) == 1:
                     layered_encodings[k] = v[0]
             if yX:
-                xvars = parsed_commandarg["anything"].split()
+                xvars = _["anything"].split()
                 yvar = xvars.pop(0)
                 layered_encodings.update({"color": "key:N"})
                 layered_encodings.update({"x": "value:Q"})
@@ -153,7 +150,7 @@ def _chart(
                         .transform_fold(xvars)
                     )
             else:
-                yvars = parsed_commandarg["anything"].split()
+                yvars = _["anything"].split()
                 xvar = yvars.pop()
                 layered_encodings.update({"color": "key:N"})
                 layered_encodings.update({"y": "value:Q"})

@@ -40,27 +40,23 @@ def _keep(df: pd.DataFrame, columns_to_keep: list) -> pd.DataFrame:
 
 
 def keep(commandarg: str) -> None:
-    parsed_commandarg = parse(commandarg)
-    # print(parsed_commandarg["in"])
-    # print(parsed_commandarg["in"])
-    # print(parsed_commandarg["in"])
-    # print(parsed_commandarg)
+    _ = parse(commandarg)
 
-    if parsed_commandarg["anything"]:
+    if _["anything"]:
         assert (
-            parsed_commandarg["in"] is None and parsed_commandarg["if"] is None
+            _["in"] is None and _["if"] is None
         ), "drop takes either a varlist or in/if, but not both"
-        varlist = search_iterable(current.df.columns, parsed_commandarg["anything"])
+        varlist = search_iterable(current.df.columns, _["anything"])
         current.df = _keep(current._df, varlist)
-    elif parsed_commandarg["in"] or parsed_commandarg["if"]:
+    elif _["in"] or _["if"]:
         assert (
-            parsed_commandarg["anything"] is None
+            _["anything"] is None
         ), "drop takes either a varlist or in/if, but not both"
         with quietly():
-            if parsed_commandarg["in"]:
-                keepin(parsed_commandarg["in"])
-            if parsed_commandarg["if"]:
-                keepif(parsed_commandarg["if"])
+            if _["in"]:
+                keepin(_["in"])
+            if _["if"]:
+                keepif(_["if"])
     else:
         raise Exception("drop: Missing Arguments")
 

@@ -22,23 +22,23 @@ def dropif(condition: str) -> None:
 
 
 def drop(commandarg: str) -> None:
-    parsed_commandarg = parse(commandarg)
+    _ = parse(commandarg)
 
-    if parsed_commandarg["anything"]:
+    if _["anything"]:
         assert (
-            parsed_commandarg["in"] is None and parsed_commandarg["if"] is None
+            _["in"] is None and _["if"] is None
         ), "drop takes either a varlist or in/if, but not both"
-        varlist = search_iterable(current._df.columns, parsed_commandarg["anything"])
+        varlist = search_iterable(current._df.columns, _["anything"])
         current._df.drop(labels=varlist, axis=1, inplace=True)
-    elif parsed_commandarg["in"] or parsed_commandarg["if"]:
+    elif _["in"] or _["if"]:
         assert (
-            parsed_commandarg["anything"] is None
+            _["anything"] is None
         ), "drop takes either a varlist or in/if, but not both"
-        if parsed_commandarg["in"]:
-            dropin(parsed_commandarg["in"])
-        if parsed_commandarg["if"]:
+        if _["in"]:
+            dropin(_["in"])
+        if _["if"]:
             print("YES")
-            dropif(parsed_commandarg["if"])
+            dropif(_["if"])
     else:
         raise Exception("drop: Missing Arguments")
 

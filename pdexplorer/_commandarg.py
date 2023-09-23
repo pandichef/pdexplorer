@@ -7,8 +7,8 @@ def _clean(string_with_extra_spaces: str) -> str:
     return cleaned
 
 
-def check_syntax(parsed_commandarg, syntax) -> dict:
-    _ = parsed_commandarg
+def check_syntax(_: dict, syntax: str) -> dict:
+    # _ is the parsed commandarg
     updates = {}
     if syntax is not None and syntax != "" and syntax.find("varlist") > -1:
         for name in _["anything"].split():

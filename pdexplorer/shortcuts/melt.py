@@ -6,9 +6,9 @@ from .._print import _print
 
 def melt(commandarg, use_labels=True):
     # e.g., melt("miles_per_gallon horsepower,  keep(weight_in_lbs)")
-    parsed_commandarg = parse(commandarg)
-    parsed_options = parse_options(parsed_commandarg["options"])
-    value_vars = parsed_commandarg["anything"].split()
+    _ = parse(commandarg)
+    parsed_options = parse_options(_["options"])
+    value_vars = _["anything"].split()
     id_vars = parsed_options["keep"].split()
     if use_labels:
         for var in value_vars:

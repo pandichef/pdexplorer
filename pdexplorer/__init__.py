@@ -348,5 +348,6 @@ try:
     from .experimental.bard import bard
     from .experimental.chatgpt import chatgpt
     from .experimental.streamlit import streamlit
+    from .experimental.scatter_seaborn import scatter as scatter_seaborn
 except:
     pass
