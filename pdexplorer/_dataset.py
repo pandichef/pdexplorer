@@ -122,6 +122,8 @@ class Dataset:
         return _return_df
 
     def get_pytorch_dataset(self, varlist: str):
+        varlist = " ".join(search_iterable(self._df.columns, varlist))
+
         from torch.utils.data import DataLoader
         import torch
 
@@ -137,6 +139,7 @@ class Dataset:
 
                 x_train = df.dropna()[xvars].values
                 y_train = df.dropna()[[yvar]].values
+                # below fails if not float32
                 self.x_train = torch.tensor(x_train).to(torch.float32)
                 self.y_train = torch.tensor(y_train).to(torch.float32)
 
@@ -160,6 +163,7 @@ class Dataset:
     def get_pytorch_dataloader(self, varlist: str, batch_size=10, shuffle=False):
         from torch.utils.data import DataLoader
 
+        varlist = " ".join(search_iterable(self._df.columns, varlist))
         dataset = self.get_pytorch_dataset(varlist)
         return DataLoader(dataset=dataset, batch_size=batch_size, shuffle=shuffle)  # type: ignore
 
