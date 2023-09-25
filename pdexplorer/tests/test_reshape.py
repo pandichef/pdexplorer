@@ -2,7 +2,7 @@ import pandas as pd
 from .._dataset import current
 from ..use import use
 from ..merge import merge
-from ..lst import lst
+from ..lis import lis
 from .._quietly import quietly
 
 # from ..keepif import keepif

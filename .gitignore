@@ -141,3 +141,6 @@ json_fixture.json
 * - Copy.*
 *.dta
 deleteme/
+wandb/
+test_trainer/
+output_dir/

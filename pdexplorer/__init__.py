@@ -27,7 +27,8 @@ from .shortcuts.profile import profile
 
 # from .scatter import scatter as scatter_old
 from .xpose import xpose
-from .lst import lst
+from .lis import lis as li
+from .lis import lis as lis
 
 from .clear import clear
 from .clear import clearall
@@ -355,3 +356,5 @@ except:
 from .nn.gpt2 import gpt2
 from .export import export
 
+from .nn.finetune import finetune
+from .nn.pipeline import pipeline

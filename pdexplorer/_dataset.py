@@ -122,19 +122,28 @@ class Dataset:
             print(self._df.split.value_counts())
         return _return_df
 
-    def get_huggingface_dataset(self, varlist: Optional[str] = None):
+    def get_huggingface_dataset(
+        self, varlist: Optional[str] = None, split: Optional[str] = None
+    ):
         import datasets
 
         if not varlist:
             varlist = "*"
         varlist = " ".join(search_iterable(self._df.columns, varlist))
-        dataset = datasets.Dataset.from_pandas(self._df[varlist.split()])
+        if split:
+            dataset = datasets.Dataset.from_pandas(
+                self._df[varlist.split()].query(f"""split=='{split}'""")
+            )
+        else:
+            dataset = datasets.Dataset.from_pandas(self._df[varlist.split()])
         return dataset
 
-    def get_pytorch_dataset(self, varlist: Optional[str] = None):
+    def get_pytorch_dataset(
+        self, varlist: Optional[str] = None, split: Optional[str] = None
+    ):
         import torch
 
-        dataset = self.get_huggingface_dataset(varlist)
+        dataset = self.get_huggingface_dataset(varlist, split)
         # dataset.set_format(type="torch")
         # https://huggingface.co/docs/datasets/use_with_pytorch#dataset-format #
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -178,12 +187,16 @@ class Dataset:
         # return PyTorchDataset(self._df, varlist)
 
     def get_pytorch_dataloader(
-        self, varlist: Optional[str] = None, batch_size=10, shuffle=False
+        self,
+        varlist: Optional[str] = None,
+        split: Optional[str] = None,
+        batch_size=10,
+        shuffle=False,
     ):
         from torch.utils.data import DataLoader
 
         # varlist = " ".join(search_iterable(self._df.columns, varlist))
-        ds = self.get_pytorch_dataset(varlist)
+        ds = self.get_pytorch_dataset(varlist, split)
         dl = DataLoader(dataset=ds, batch_size=batch_size, shuffle=shuffle)  # type: ignore
         return dl
 

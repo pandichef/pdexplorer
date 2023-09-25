@@ -6,8 +6,8 @@ from ._print import _print
 from ._stata_slice import _stata_slice
 
 # def list(varlist: str, rows=10):
-def lst(varlist=None, if_=None, in_=None):
-    """The Stata equivalent is list.  However, lst was used here since list is a 
+def lis(varlist=None, if_=None, in_=None):
+    """The Stata equivalent is list.  However, lis was used here since list is a 
     built-in type in Python.
     """
     # if isinstance(in_, str) and in_.find("/") > -1:  # Stata's slicing syntax
