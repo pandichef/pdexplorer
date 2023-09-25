@@ -351,3 +351,7 @@ try:
     from .experimental.scatter_seaborn import scatter as scatter_seaborn
 except:
     pass
+
+from .nn.gpt2 import gpt2
+from .export import export
+

@@ -143,6 +143,8 @@ setup(
         "statsmodels",  # Econometrics
         "scikit-learn",  # Machine Learning (excluding neural networks)
         "torch",  # PyTorch for Neural networks
+        "transformers",
+        # "accelerate"  # for device_map='auto'
         "datasets",  # data from Hugging Face (associated with PyTorch)
         "ydata-profiling",  # for cf command
         "sweetviz",  # for cf command

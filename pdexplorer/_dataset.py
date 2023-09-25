@@ -1,5 +1,6 @@
 import pandas as pd
 from copy import copy
+from typing import Optional
 from ._search import search_iterable
 
 
@@ -121,51 +122,70 @@ class Dataset:
             print(self._df.split.value_counts())
         return _return_df
 
-    def get_pytorch_dataset(self, varlist: str):
-        varlist = " ".join(search_iterable(self._df.columns, varlist))
+    def get_huggingface_dataset(self, varlist: Optional[str] = None):
+        import datasets
 
-        from torch.utils.data import DataLoader
+        if not varlist:
+            varlist = "*"
+        varlist = " ".join(search_iterable(self._df.columns, varlist))
+        dataset = datasets.Dataset.from_pandas(self._df[varlist.split()])
+        return dataset
+
+    def get_pytorch_dataset(self, varlist: Optional[str] = None):
         import torch
 
-        class PyTorchDataset(Dataset):
-            # PyTorch dataset is a iterable that separates the X variables from the y variable
-            def __init__(self, df, varlist):
+        dataset = self.get_huggingface_dataset(varlist)
+        # dataset.set_format(type="torch")
+        # https://huggingface.co/docs/datasets/use_with_pytorch#dataset-format #
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        ds = dataset.with_format("torch", device=device)
+        return ds
 
-                # self.nobs = len(df)
-                varlist_as_list = varlist.split()
-                yvar = varlist_as_list[0]
-                xvars = varlist_as_list[1:]
-                xvars = search_iterable(df.columns, " ".join(xvars))
+        # from torch.utils.data import DataLoader
+        # import torch
 
-                x_train = df.dropna()[xvars].values
-                y_train = df.dropna()[[yvar]].values
-                # below fails if not float32
-                self.x_train = torch.tensor(x_train).to(torch.float32)
-                self.y_train = torch.tensor(y_train).to(torch.float32)
+        # class PyTorchDataset(Dataset):
+        #     # PyTorch dataset is a iterable that separates the X variables from the y variable
+        #     def __init__(self, df, varlist):
 
-                # x_df = df[xvars]
-                # y_series = df[yvar]
+        #         # self.nobs = len(df)
+        #         varlist_as_list = varlist.split()
+        #         yvar = varlist_as_list[0]
+        #         xvars = varlist_as_list[1:]
+        #         xvars = search_iterable(df.columns, " ".join(xvars))
 
-                # self.x_train = torch.tensor(x_df.values)
-                # self.y_train = torch.tensor(y_series)
+        #         x_train = df.dropna()[xvars].values
+        #         y_train = df.dropna()[[yvar]].values
+        #         # below fails if not float32
+        #         self.x_train = torch.tensor(x_train).to(torch.float32)
+        #         self.y_train = torch.tensor(y_train).to(torch.float32)
 
-            def __len__(self):
-                return len(self.y_train)
+        #         # x_df = df[xvars]
+        #         # y_series = df[yvar]
 
-            def __getitem__(self, idx):
-                # idx = torch.long(idx)
-                # idx = torch.arange(self.nobs, dtype=torch.long)
-                # print(type(idx))
-                return self.x_train[idx], self.y_train[idx]
+        #         # self.x_train = torch.tensor(x_df.values)
+        #         # self.y_train = torch.tensor(y_series)
 
-        return PyTorchDataset(self._df, varlist)
+        #     def __len__(self):
+        #         return len(self.y_train)
 
-    def get_pytorch_dataloader(self, varlist: str, batch_size=10, shuffle=False):
+        #     def __getitem__(self, idx):
+        #         # idx = torch.long(idx)
+        #         # idx = torch.arange(self.nobs, dtype=torch.long)
+        #         # print(type(idx))
+        #         return self.x_train[idx], self.y_train[idx]
+
+        # return PyTorchDataset(self._df, varlist)
+
+    def get_pytorch_dataloader(
+        self, varlist: Optional[str] = None, batch_size=10, shuffle=False
+    ):
         from torch.utils.data import DataLoader
 
-        varlist = " ".join(search_iterable(self._df.columns, varlist))
-        dataset = self.get_pytorch_dataset(varlist)
-        return DataLoader(dataset=dataset, batch_size=batch_size, shuffle=shuffle)  # type: ignore
+        # varlist = " ".join(search_iterable(self._df.columns, varlist))
+        ds = self.get_pytorch_dataset(varlist)
+        dl = DataLoader(dataset=ds, batch_size=batch_size, shuffle=shuffle)  # type: ignore
+        return dl
 
 
 current = Dataset()  # https://www.stata.com/stata16/multiple-datasets-in-memory/

@@ -18,12 +18,17 @@ from ._print import _print
 # def _use(file_path=None, html_index=0) -> Tuple[pd.DataFrame, Dict]:
 def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
     """Version of use that returns a """
+    # use(): read from clipboard
     if not isinstance(file_path, pd.DataFrame) and not file_path:
         return pd.read_clipboard(), current.METADATA_DEFAULT
     elif not isinstance(file_path, str):  # i.e., it's a DataFrame
         return file_path.copy(), current.METADATA_DEFAULT
     # elif file_path.startswith("http"):
     #     return pd.read_html(file_path)[html_index], current.METADATA_DEFAULT
+    elif os.path.isdir(file_path):
+        import datasets
+
+        return datasets.load_from_disk(file_path).to_pandas(), current.METADATA_DEFAULT
     else:
         file_extension = os.path.splitext(file_path)[1]
         if file_extension == ".dta":

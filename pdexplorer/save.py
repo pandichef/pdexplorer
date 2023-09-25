@@ -15,6 +15,8 @@ def save(file_path=None, use_variable_labels=False):
     if not file_path:
         current.df.rename(columns=column_labels).to_clipboard()
         _print("(Data saved to clipboard)")
+    elif os.path.splitext(file_path)[1] == "":
+        current.get_huggingface_dataset().save_to_disk(file_path)
     else:
         assert (
             not use_variable_labels
