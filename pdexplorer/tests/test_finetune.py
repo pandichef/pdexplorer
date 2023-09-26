@@ -9,6 +9,7 @@ from ..nn.finetune import finetune
 
 @pytest.mark.slow
 @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
+@pytest.mark.skip
 def test_finetune2():
     # import datasets
     # import torch

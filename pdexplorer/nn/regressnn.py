@@ -72,31 +72,31 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
         #         out = self.linear(x)
         #         return out
 
-        if varlist == "":
-            # create dummy data for training
-            x_values = [i for i in range(11)]
-            x_train = np.array(x_values, dtype=np.float32)
-            x_train = x_train.reshape(-1, 1)
+        # if varlist == "":
+        #     # create dummy data for training
+        #     x_values = [i for i in range(11)]
+        #     x_train = np.array(x_values, dtype=np.float32)
+        #     x_train = x_train.reshape(-1, 1)
 
-            y_values = [2 * i + 1 for i in x_values]
-            y_train = np.array(y_values, dtype=np.float32)
-            y_train = y_train.reshape(-1, 1)
-            X = torch.tensor(x_train)
-            y = torch.tensor(y_train)
-        else:
-            varlist_as_list = varlist.split()
-            yvar = varlist_as_list[0]
-            xvars = varlist_as_list[1:]
-            xvars = search_iterable(current.df.columns, " ".join(xvars))
-            x_train = current.df.dropna()[xvars].values
-            y_train = current.df.dropna()[[yvar]].values
-            X = torch.tensor(x_train).to(torch.float32)
-            y = torch.tensor(y_train).to(torch.float32)
+        #     y_values = [2 * i + 1 for i in x_values]
+        #     y_train = np.array(y_values, dtype=np.float32)
+        #     y_train = y_train.reshape(-1, 1)
+        #     X = torch.tensor(x_train)
+        #     y = torch.tensor(y_train)
+        # else:
+        varlist_as_list = varlist.split()
+        yvar = varlist_as_list[0]
+        xvars = varlist_as_list[1:]
+        xvars = search_iterable(current.df.columns, " ".join(xvars))
+        x_train = current.df.dropna()[xvars].values
+        y_train = current.df.dropna()[[yvar]].values
+        X = torch.tensor(x_train).to(torch.float32)
+        y = torch.tensor(y_train).to(torch.float32)
 
         # print(X.dtype)
         # print(y.dtype)
-        print(X.shape)
-        print(y.shape)
+        # print(X.shape)
+        # print(y.shape)
         # print(X.shape[1])
         # print(X)
         # print(y)
@@ -168,8 +168,8 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
         ds = current.get_pytorch_dataset(varlist)
         dl = current.get_pytorch_dataloader(varlist)
 
-        print(ds.x_train.shape)
-        print(ds.y_train.shape)
+        # print(ds.x_train.shape)
+        # print(ds.y_train.shape)
         # print(y.shape)
 
         inputDim = ds.x_train.shape[1]  # takes variable 'x'
@@ -184,8 +184,14 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
         criterion = torch.nn.MSELoss()
         optimizer = torch.optim.Rprop(model.parameters(), lr=learningRate)
 
+        # for X, y in dl:
+        #     print(X)
+        #     print(y)
+        #     break
+
         for epoch in range(epochs):
-            for batch, (X, y) in enumerate(dl):
+            for X, y in dl:
+                # print(X.shape)
                 # Converting inputs and labels to Variable
                 if torch.cuda.is_available():
                     inputs = X.cuda()
@@ -193,6 +199,9 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
                 else:
                     inputs = X
                     labels = y
+
+                # print(inputs)
+                # print(labels)
 
                 # Clear gradient buffers because we don't want any gradient from previous epoch to carry forward, dont want to cummulate gradients
                 optimizer.zero_grad()
@@ -210,6 +219,21 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
                 optimizer.step()
 
                 # print("epoch {}, loss {}".format(epoch, loss.item()))
+
+        # for epoch in range(epochs):
+        #     for batch, (X, y) in enumerate(dl):
+        #         # Converting inputs and labels to Variable
+        #         if torch.cuda.is_available():
+        #             inputs = X.cuda()
+        #             labels = y.cuda()
+        #         else:
+        #             inputs = X
+        #             labels = y
+        #         optimizer.zero_grad()
+        #         outputs = model(inputs)
+        #         loss = criterion(outputs, labels)
+        #         loss.backward()
+        #         optimizer.step()
 
         return model  # type: ignore
     # else:

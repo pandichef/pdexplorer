@@ -139,58 +139,81 @@ class Dataset:
         return dataset
 
     def get_pytorch_dataset(
-        self, varlist: Optional[str] = None, split: Optional[str] = None
+        self, varlist: Optional[str] = None, split: Optional[str] = None, tokenizer=None
     ):
-        import torch
 
-        dataset = self.get_huggingface_dataset(varlist, split)
+        # from transformers import AutoTokenizer
+
+        if not varlist:
+            varlist = "*"
+        varlist = " ".join(search_iterable(self._df.columns, varlist))
+        xvars = varlist.split()
+        yvar = xvars.pop(0)
+        df_split = self._df.copy()
+
+        if split:
+            df_split = df_split.query(f"""split=='{split}'""")
+
+        # ds = self.get_huggingface_dataset(varlist, split)
+        # model expects the argument to be named labels #
+        # ds = ds.rename_column(yvar, "labels")
+        # ds.set_format("torch")
+        # model_name = "distilbert-base-uncased"  # bert-base-cased is much larger #
+        # tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+        # def tokenize_function(examples):
+        #     return tokenizer(examples[xvar], padding="max_length", truncation=True)
+
+        # tokenized_datasets = dataset.map(tokenize_function, batched=True,)
+
         # dataset.set_format(type="torch")
         # https://huggingface.co/docs/datasets/use_with_pytorch#dataset-format #
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        ds = dataset.with_format("torch", device=device)
-        return ds
+        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # ds = dataset.with_format("torch", device=device)
+        # return ds
 
         # from torch.utils.data import DataLoader
-        # import torch
+        import torch
+        from torch.utils.data import Dataset as PyTorchDataset
 
-        # class PyTorchDataset(Dataset):
-        #     # PyTorch dataset is a iterable that separates the X variables from the y variable
-        #     def __init__(self, df, varlist):
+        class _PyTorchDataset(PyTorchDataset):
+            # PyTorch dataset is a iterable that separates the X variables from the y variable
+            def __init__(self, df):
 
-        #         # self.nobs = len(df)
-        #         varlist_as_list = varlist.split()
-        #         yvar = varlist_as_list[0]
-        #         xvars = varlist_as_list[1:]
-        #         xvars = search_iterable(df.columns, " ".join(xvars))
+                # self.nobs = len(df)
+                # varlist_as_list = varlist.split()
+                # yvar = varlist_as_list[0]
+                # xvars = varlist_as_list[1:]
+                # xvars = search_iterable(df.columns, " ".join(xvars))
 
-        #         x_train = df.dropna()[xvars].values
-        #         y_train = df.dropna()[[yvar]].values
-        #         # below fails if not float32
-        #         self.x_train = torch.tensor(x_train).to(torch.float32)
-        #         self.y_train = torch.tensor(y_train).to(torch.float32)
+                x_train = df.dropna()[xvars].values
+                y_train = df.dropna()[[yvar]].values
+                # below fails if not float32
+                self.x_train = torch.tensor(x_train).to(torch.float32)
+                self.y_train = torch.tensor(y_train).to(torch.float32)
 
-        #         # x_df = df[xvars]
-        #         # y_series = df[yvar]
+                # x_df = df[xvars]
+                # y_series = df[yvar]
 
-        #         # self.x_train = torch.tensor(x_df.values)
-        #         # self.y_train = torch.tensor(y_series)
+                # self.x_train = torch.tensor(x_df.values)
+                # self.y_train = torch.tensor(y_series)
 
-        #     def __len__(self):
-        #         return len(self.y_train)
+            def __len__(self):
+                return len(self.y_train)
 
-        #     def __getitem__(self, idx):
-        #         # idx = torch.long(idx)
-        #         # idx = torch.arange(self.nobs, dtype=torch.long)
-        #         # print(type(idx))
-        #         return self.x_train[idx], self.y_train[idx]
+            def __getitem__(self, idx):
+                # idx = torch.long(idx)
+                # idx = torch.arange(self.nobs, dtype=torch.long)
+                # print(type(idx))
+                return self.x_train[idx], self.y_train[idx]
 
-        # return PyTorchDataset(self._df, varlist)
+        return _PyTorchDataset(df_split)
 
     def get_pytorch_dataloader(
         self,
         varlist: Optional[str] = None,
         split: Optional[str] = None,
-        batch_size=10,
+        batch_size=100,
         shuffle=False,
     ):
         from torch.utils.data import DataLoader

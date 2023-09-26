@@ -32,11 +32,11 @@ from ..returnlist import _e
 def test_regress_smf_vs_pytorch_Rprop_2_covariates():
     with quietly():
         webuse("Duncan__carData", "rdatasets", use_local=True)
-    with quietly():
-        results = regress("income education prestige")
+    # with quietly():
+    results = regress("income education prestige")
     with quietly():
         model = regressnn(
-            "income education prestige", use_dataloader=False
+            "income education prestige", use_dataloader=True,
         )  # , library="pytorch", epochs=100)
     abs_tol = 0.5
     # print(list(model.parameters()))
