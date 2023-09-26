@@ -2,6 +2,7 @@ import io
 import sys
 from contextlib import contextmanager
 from .._dataset import current
+from .._print import _print
 
 
 @contextmanager
@@ -18,7 +19,7 @@ def capture_stdout():
 
 
 def chatgpt(
-    prompt: str = "Can you summarize this data?",
+    prompt: str = "Can you summarize this data?  Who is the data provider for this data?",
     head=100,
     use_variable_labels=False,
     openai_model="gpt-3.5-turbo",
@@ -40,14 +41,19 @@ def chatgpt(
 
     if head:
         prompt = (
-            _current_df.head(head).to_csv()
+            "Data:\n"
+            + _current_df.head(head).to_csv()
             + "\n\n"
             + captured_output.getvalue()
             + f"\n\n{prompt}"
         )
     else:
         prompt = (
-            _current_df.to_csv() + "\n\n" + captured_output.getvalue() + f"\n\n{prompt}"
+            "Data:\n"
+            + _current_df.to_csv()
+            + "\n\n"
+            + captured_output.getvalue()
+            + f"\n\n{prompt}"
         )
 
     openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -56,4 +62,5 @@ def chatgpt(
         model=openai_model, messages=[{"role": "user", "content": prompt,}],
     )
 
+    _print(completion.choices[0].message.content)
     return completion.choices[0].message.content

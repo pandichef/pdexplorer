@@ -5,11 +5,12 @@ from ..webuse import webuse
 from ..use import use
 from .._dataset import current
 from ..nn.finetune import finetune
+from ..nn.pipeline import pipeline
 
 
+# @pytest.mark.skip
 @pytest.mark.slow
 @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
-@pytest.mark.skip
 def test_finetune2():
     # import datasets
     # import torch
@@ -26,9 +27,13 @@ def test_finetune2():
     # )
 
     use(os.path.join(os.path.dirname(__file__), "yelp_mini.dta"))  # fixture
-    finetune("label text", num_examples=10)
-    assert current.df._finetuned[0] == 4
-    assert current.df._finetuned[0] == 4
+    finetune("label text", num_examples=100)
+    pipeline("text")
+    import numpy as np
+
+    assert np.corrcoef(current.df.label, current.df._finetuned)[0][1] > 0.50
+    # assert current.df._finetuned[0] == 4
+    # assert current.df._finetuned[0] == 4
 
 
 # @pytest.mark.slow

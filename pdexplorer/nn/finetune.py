@@ -10,6 +10,7 @@ def finetune(
     num_examples=100,
     model_name="distilbert-base-uncased",
     num_labels=5,
+    run_in_sample=False,
 ):
     _ = parse(commandarg, "varlist")
     assert len(_["varlist"].split()) == 2
@@ -55,17 +56,23 @@ def finetune(
     model = AutoModelForSequenceClassification.from_pretrained(
         model_name, num_labels=num_labels
     )
-    text_classification_pipeline = pipeline(
-        "text-classification", model=model, tokenizer=tokenizer
-    )
 
-    def _text_classification_pipeline(x):
-        try:
-            return int(text_classification_pipeline(x)[0][yvar].replace("LABEL_", ""))
-        except RuntimeError:
-            return -1
+    if run_in_sample:
+        text_classification_pipeline = pipeline(
+            "text-classification", model=model, tokenizer=tokenizer
+        )
 
-    current._df["_pretrained"] = current._df[xvar].apply(_text_classification_pipeline)
+        def _text_classification_pipeline(x):
+            try:
+                return int(
+                    text_classification_pipeline(x)[0][yvar].replace("LABEL_", "")
+                )
+            except RuntimeError:
+                return -1
+
+        current._df["_pretrained"] = current._df[xvar].apply(
+            _text_classification_pipeline
+        )
 
     # train the model
     def compute_metrics(eval_pred):
@@ -92,25 +99,27 @@ def finetune(
     )
     trainer.train()
     trainer.save_model()  # saved to output_dir
+    _print(f"Saved model to ./{output_dir}")
 
-    fine_tuned_text_classification_pipeline = pipeline(
-        "text-classification",
-        model=AutoModelForSequenceClassification.from_pretrained(output_dir),
-        tokenizer=tokenizer,
-    )
+    if run_in_sample:
+        fine_tuned_text_classification_pipeline = pipeline(
+            "text-classification",
+            model=AutoModelForSequenceClassification.from_pretrained(output_dir),
+            tokenizer=tokenizer,
+        )
 
-    def _fine_tuned_text_classification_pipeline(x):
-        try:
-            return int(
-                fine_tuned_text_classification_pipeline(x)[0][yvar].replace(
-                    "LABEL_", ""
+        def _fine_tuned_text_classification_pipeline(x):
+            try:
+                return int(
+                    fine_tuned_text_classification_pipeline(x)[0][yvar].replace(
+                        "LABEL_", ""
+                    )
                 )
-            )
-        except RuntimeError:
-            return -1
+            except RuntimeError:
+                return -1
 
-    current._df["_finetuned"] = current._df[xvar].apply(
-        _fine_tuned_text_classification_pipeline
-    )
-    _print(current.df)
+        current._df["_finetuned"] = current._df[xvar].apply(
+            _fine_tuned_text_classification_pipeline
+        )
+        _print(current.df)
     torch.cuda.empty_cache()
