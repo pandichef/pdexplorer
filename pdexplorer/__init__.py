@@ -358,3 +358,10 @@ from .export import export
 
 from .nn.finetune import finetune
 from .nn.pipeline import pipeline
+
+from .data.thegraph.utils import (
+    extract_api_requests,
+    tothegraph,
+    searchframes,
+    searchqueries,
+)

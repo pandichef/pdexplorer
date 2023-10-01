@@ -387,13 +387,13 @@ Similarly, for charting,
 ```python
 from pdexplorer import *
 webuse("cars", "vega")
-circle("miles_per_gallon horsepower")()
-circlec("miles_per_gallon horsepower")()
-circlech("miles_per_gallon horsepower")()
-circlecha("miles_per_gallon horsepower")()
-circlechar("miles_per_gallon horsepower")()
-circlechart("miles_per_gallon horsepower")()
-circle("miles horse")()
+circle("miles_per_gallon horsepower")
+circlec("miles_per_gallon horsepower")
+circlech("miles_per_gallon horsepower")
+circlecha("miles_per_gallon horsepower")
+circlechar("miles_per_gallon horsepower")
+circlechart("miles_per_gallon horsepower")
+circle("miles horse")
 ```
 
 ## References
