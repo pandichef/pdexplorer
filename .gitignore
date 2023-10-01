@@ -144,3 +144,4 @@ deleteme/
 wandb/
 test_trainer/
 output_dir/
+pool_page.json

@@ -10,7 +10,7 @@ def extract_api_requests(
     api_prefix="https://api.thegraph.com/subgraphs/name/",
     wait_for: int = 20,
     filter_address="0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
-    output_file="output_file.json",
+    output_file="pool_page.json",
 ):
     """
     This automates the process of extracting API requests from a page.

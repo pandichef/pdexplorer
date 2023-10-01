@@ -152,6 +152,7 @@ setup(
         "dtale",  # for browse command
         "gql[all]",  # for thegraph
         "selenium-wire",  # for thegraph
+        "keyboard",
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key

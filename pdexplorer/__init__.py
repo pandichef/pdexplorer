@@ -6,24 +6,35 @@ from .regress import regress as reg
 from .regress import regress as regr
 from .regress import regress as regre
 from .regress import regress as regres
+
 from .regress import regress as regress
+
 from .nn.regressnn import regressnn
 from .ml.regressml import regressml
+
 from .webuse import webuse
 from .logit import logit
 from .drop import drop
+
 from .browse import browse as br
 from .browse import browse as bro
 from .browse import browse as brow
 from .browse import browse as brows
 from .browse import browse as browse
+from .shortcuts.dfedit import dfedit as dfed
+from .shortcuts.dfedit import dfedit as dfedi
+from .shortcuts.dfedit import dfedit as dfedit
 from .gsort import gsort
 from .order import order
 from .keep import keep
+
 from .finance.mtgyield import mtgyield
 from .finance.mtgprice import mtgprice
 from .srecode import srecode
 from .shortcuts.profile import profile
+from .doedit import doedit as doed
+from .doedit import doedit as doedi
+from .doedit import doedit as doedit
 
 # from .scatter import scatter as scatter_old
 from .xpose import xpose
@@ -365,3 +376,18 @@ from .data.thegraph.utils import (
     searchframes,
     searchqueries,
 )
+
+from .data.thegraph.uniswap_v3.pool_page import *
+
+from .doedit import run_active_python_script
+
+# from IPython.core.getipython import get_ipython
+
+# get_ipython().run_line_magic("shortcut", "Ctrl-D", "run_active_python_script")
+# from time import time
+
+# t0 = time()
+import keyboard
+
+keyboard.add_hotkey("ctrl+f9", run_active_python_script)
+# print(time() - t0)

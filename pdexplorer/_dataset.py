@@ -30,6 +30,7 @@ class Dataset:
         self.dtale_browser = None  # type DtaleData
         self.quietly = False
         self.has_preserved = False
+        self.active_python_script: Optional[str] = None  # see doedit
         self.stored_results = {
             "r": {},  # results from general commands
             "e": {},  # results from estimation commands
