@@ -1,102 +1,55 @@
-# Inspiration: https://xlsxwriter.readthedocs.io/working_with_pandas.html
-# Note the complexity in handling the header in pandas
-import pandas as pd
-import subprocess
-import os
 from ._dataset import current
-from typing import Optional
+
+# https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Table_Pandas.py
+# https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Matplotlib_Browser_Paned.py
+# import PySimpleGUI as sg
+import threading
+import time
 
 
-def browse(use_labels=True):
-    import dtale  # very slow import
+def display_dataframe(notify_event):
+    """Function to display the DataFrame when changes occur"""
+    previous_df = current.df.copy()
 
-    if current.dtale_browser:
-        current.dtale_browser.kill()
-    if use_labels:
-        # Note: for whatever reason, the "name" attribute cannot contain underscores
-        new_dtale_browser = dtale.show(current.df_labeled, name="currentdflabeled")
-    else:
-        new_dtale_browser = dtale.show(current.df, name="currentdf")
-    # if current.dtale_browser is None:
-    new_dtale_browser.open_browser()
-    current.dtale_browser = new_dtale_browser
-    # current.dtale_browser = dtale.show(current.df_labeled, name="currentdf")
-    # current.dtale_browser.open_browser()
+    while not notify_event.is_set():  # Check the event flag
+        current_df = current.df.copy()
+        if not current_df.equals(previous_df):
+            print("DataFrame has changed:")
+            print(current_df)
+            previous_df = current_df.copy()
+        time.sleep(1)
 
 
-# def browse_in_excel(
-#     path: Optional[str] = None,
-#     limit: Optional[int] = None,
-#     run: bool = True,
-#     percentage_columns: Optional[list] = None,
-#     autofit_columns: Optional[list] = None,
-# ) -> None:
-#     df = current.df
+turned_on = False
 
-#     if not path:
-#         # set default file i.e., tmp/easy_xlsxwriter.xlsx
-#         import tempfile
 
-#         path = os.path.join(tempfile.gettempdir(), "easy_xlsxwriter.xlsx")
+def browse():
+    global turned_on
+    if not turned_on:
+        # global browse_thread
+        # global browse_notify_event
+        # # Create an Event to notify the display thread of changes #
+        browse_notify_event = threading.Event()
 
-#     writer = pd.ExcelWriter(path=path, engine="xlsxwriter")  # type: ignore
-#     if limit:
-#         df.head(limit).to_excel(writer, sheet_name="Sheet1", startrow=1, header=False)
-#     else:
-#         df.to_excel(writer, sheet_name="Sheet1", startrow=1, header=False)
-#     workbook = writer.book
-#     worksheet = writer.sheets["Sheet1"]
+        # Create a separate thread to display the DataFrame when changes occur #
+        # browse_thread = threading.Thread(target=display_dataframe, args=(browse_notify_event,))
+        browse_thread = threading.Thread(
+            target=display_dataframe, args=(browse_notify_event,)
+        )
+        browse_thread.daemon = True  # prevent console from blocking
+        browse_thread.start()
+        turned_on = True
 
-#     default_format = workbook.add_format(  # type: ignore
-#         {
-#             "num_format": "#,##0.00",
-#             "align": "center",
-#             # 'shrink': True,
-#         }
-#     )
-#     for column in df.columns:
-#         this_column_position = list(df.columns).index(column) + 1
-#         worksheet.set_column(
-#             this_column_position, this_column_position, cell_format=default_format
-#         )
 
-#     percentage_format = workbook.add_format({"num_format": "0%", "align": "center"})  # type: ignore
-#     if percentage_columns:
-#         for column in percentage_columns:
-#             this_column_position = list(df.columns).index(column) + 1
-#             worksheet.set_column(
-#                 this_column_position,
-#                 this_column_position,
-#                 cell_format=percentage_format,
-#             )
+# atexit.register doesn't work to clean up the thread... but this does: #
+# https://stackoverflow.com/questions/58910372/script-stuck-on-exit-when-using-atexit-to-terminate-threads #
+# def monitor_thread():
+#     main_thread = threading.main_thread()
+#     main_thread.join()
+#     browse_notify_event.set()
+#     browse_thread.join()
 
-#     # format header
-#     header_format = workbook.add_format(  # type: ignore
-#         {
-#             "bold": True,
-#             "text_wrap": True,
-#             "align": "center",
-#             "valign": "top",
-#             "fg_color": "#D7E4BC",
-#             "border": 1,
-#         }
-#     )
-#     for col_num, value in enumerate(df.columns.values):
-#         worksheet.write(0, col_num + 1, value, header_format)
-#     worksheet.write(0, 0, "Ticker", header_format)
-#     worksheet.freeze_panes(1, 1)
 
-#     # autofit
-#     if autofit_columns:
-#         for column in autofit_columns:
-#             column_width = df[column].str.len().max()
-#             this_column_position = list(df.columns).index(column) + 1
-#             worksheet.set_column(
-#                 this_column_position, this_column_position, width=column_width
-#             )
-
-#     # save excel file
-#     worksheet.set_zoom(75)
-#     writer.close()  # type: ignore
-#     if run:
-#         subprocess.run(f"start excel {path}", shell=True)
+# monitor = threading.Thread(target=monitor_thread)
+# monitor.daemon = True
+# monitor.start()
