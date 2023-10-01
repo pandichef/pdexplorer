@@ -149,7 +149,9 @@ setup(
         "datasets",  # data from Hugging Face (associated with PyTorch)
         "ydata-profiling",  # for cf command
         "sweetviz",  # for cf command
-        "dtale",  # fro browse command
+        "dtale",  # for browse command
+        "gql[all]",  # for thegraph
+        "selenium-wire",  # for thegraph
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key
