@@ -35,6 +35,9 @@ from .shortcuts.profile import profile
 from .doedit import doedit as doed
 from .doedit import doedit as doedi
 from .doedit import doedit as doedit
+from .doedit import doedit as pyed
+from .doedit import doedit as pyedi
+from .doedit import doedit as pyedit
 
 # from .scatter import scatter as scatter_old
 from .xpose import xpose
