@@ -6,8 +6,11 @@ from ._search import search_iterable
 
 # monkey patch callable method
 def _call(self):
-    self.save("tmpqbxcec2k.html")
-    webbrowser.open("tmpqbxcec2k.html")
+    filename = "tmpqbxcec2k.html"
+    self.save(filename)
+    from ._webbrowser import webbrowser_open
+
+    webbrowser_open(filename)
 
 
 def _transform_calculate_variable_labels(self):

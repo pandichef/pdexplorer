@@ -153,6 +153,7 @@ setup(
         "gql[all]",  # for thegraph
         "selenium-wire",  # for thegraph
         "keyboard",
+        "selenium",  # since webbrowser.open is broken
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key

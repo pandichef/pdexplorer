@@ -106,7 +106,14 @@ def browse(num_rows=200):
         browse_thread.start()
     else:
         print("Already turned on.")
-    webbrowser.open("updated_df.html")
+    from ._webbrowser import webbrowser_open
+
+    # import os
+
+    # full_path = os.path.join(os.getcwd(), "updated_df.html")
+
+    webbrowser_open("updated_df.html")
+    # webbrowser.open("updated_df.html")we
 
 
 def browse_off():

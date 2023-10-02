@@ -16,6 +16,7 @@ def run_active_python_script() -> None:
     from IPython.core.getipython import get_ipython
 
     if current.active_python_script:
+        print(f"Running {current.active_python_script}.")
         get_ipython().run_line_magic("run", current.active_python_script)
     else:
         print("No active python script. Run doedit command first.")
