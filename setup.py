@@ -152,7 +152,8 @@ setup(
         "dtale",  # for browse command
         "gql[all]",  # for thegraph
         "selenium-wire",  # for thegraph
-        "keyboard",
+        # "keyboard",
+        "pynput",
         "selenium",  # since webbrowser.open is broken
         # "streamlit",
         # "bardapi",

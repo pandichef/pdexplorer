@@ -390,13 +390,24 @@ from .doedit import run_active_python_script
 # from time import time
 
 # t0 = time()
-try:
-    import keyboard
+# try:
+#     import keyboard
 
-    keyboard.add_hotkey("ctrl+f9", run_active_python_script)
-except:
-    pass  # fails in github actions
+# keyboard.add_hotkey("ctrl+f9", run_active_python_script)
+# except:
+#     pass  # fails in github actions
 # print(time() - t0)
 
 from .browse import browse_off
 
+# keyboard.as
+
+# import keyboard
+
+# keyboard.add_hotkey("ctrl+f9", lambda: input("How are you?"))
+try:
+    from ._hotkeys import hotkey_ctrl_f9
+
+    hotkey_ctrl_f9(run_active_python_script)
+except:
+    pass
