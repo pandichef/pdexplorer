@@ -390,9 +390,12 @@ from .doedit import run_active_python_script
 # from time import time
 
 # t0 = time()
-import keyboard
+try:
+    import keyboard
 
-keyboard.add_hotkey("ctrl+f9", run_active_python_script)
+    keyboard.add_hotkey("ctrl+f9", run_active_python_script)
+except:
+    pass  # fails in github actions
 # print(time() - t0)
 
 from .browse import browse_off
