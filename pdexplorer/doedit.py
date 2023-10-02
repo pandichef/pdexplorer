@@ -38,17 +38,23 @@ def check_script_for_input(script_path):
             and isinstance(node.func, ast.Name)
             and node.func.id == "input"
         ):
-            raise InputNotAllowedException(
-                "The 'input()' function is not allowed in this script"
-            )
+            # raise InputNotAllowedException(
+            #     "The 'input()' function is not allowed in this script"
+            # )
+            return False
+    return True
 
 
 def run_active_python_script() -> None:
     from IPython.core.getipython import get_ipython
 
     if current.active_python_script:
-        check_script_for_input(current.active_python_script)
-        print(f"Running {current.active_python_script}.")
-        get_ipython().run_line_magic("run", current.active_python_script)
+        if check_script_for_input(current.active_python_script):
+            print(f"Running {current.active_python_script}.")
+            get_ipython().run_line_magic("run", current.active_python_script)
+        else:
+            print(
+                f"Found input() in {current.active_python_script}, which causes ipython console to crash.\nRewrite the script or run the file explicitly."
+            )
     else:
         print("No active python script. Run doedit command first.")

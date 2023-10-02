@@ -3,10 +3,14 @@
 
 
 def hotkey_ctrl_f9(fnc):
-    # compare to:
-    # import keyboard; keyboard.add_hotkey("ctrl+f9", lambda: print("hello"))
-    # pynput appear to be faster than the keyboard package
-    # they both freeze ipython when input() is used a python command
+    """
+    compare to these two alternatives:
+    1. import keyboard; keyboard.add_hotkey("ctrl+f9", lambda: print("hello"))
+    2. import pynput; pynput.keyboard.GlobalHotKeys({"<ctrl>+<f9>": lambda: print("hello")})
+    * all methods freeze ipython when input() is used a python command
+    * all methods causes issues in ubuntu
+    * pynput appear to be faster than the keyboard package, so I used it vs keyboard
+    """
     from pynput import keyboard
 
     LEFT_COMBINATION = {keyboard.Key.ctrl_l, keyboard.Key.f9}

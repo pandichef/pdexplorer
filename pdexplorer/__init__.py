@@ -411,3 +411,9 @@ try:
     hotkey_ctrl_f9(run_active_python_script)
 except:
     pass
+
+
+# from pynput import keyboard
+
+# listener = keyboard.GlobalHotKeys({"<ctrl>+h": run_active_python_script})
+# listener.start()
