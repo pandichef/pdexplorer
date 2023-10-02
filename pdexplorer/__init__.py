@@ -391,3 +391,6 @@ import keyboard
 
 keyboard.add_hotkey("ctrl+f9", run_active_python_script)
 # print(time() - t0)
+
+from .browse import browse_off
+

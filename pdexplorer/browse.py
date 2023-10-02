@@ -25,6 +25,8 @@ turned_on = False
 
 def browse():
     global turned_on
+    global browse_notify_event
+    global browse_thread
     if not turned_on:
         # global browse_thread
         # global browse_notify_event
@@ -39,6 +41,15 @@ def browse():
         browse_thread.daemon = True  # prevent console from blocking
         browse_thread.start()
         turned_on = True
+    else:
+        print("Already turned on.")
+
+
+def browse_off():
+    global turned_on
+    browse_notify_event.set()
+    browse_thread.join()
+    turned_on = False
 
 
 # atexit.register doesn't work to clean up the thread... but this does: #
