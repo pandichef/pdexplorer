@@ -1,4 +1,4 @@
-from ..srecode import srecode
+from ..plus.srecode import srecode
 from .._quietly import quietly
 from ..webuse import webuse
 from ..keep import keep

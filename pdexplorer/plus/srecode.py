@@ -7,8 +7,8 @@ import re
 import numpy as np
 import pandas as pd
 from typing import Optional
-from ._dataset import current
-from ._print import _print
+from .._dataset import current
+from .._print import _print
 from pandas.api.types import is_integer_dtype, is_float_dtype
 
 # def pcut(self, step_size: float = None, bin_count: int = None,

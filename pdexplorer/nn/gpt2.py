@@ -14,6 +14,6 @@ def gpt2(newvarname: str):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         current._df["gpt2"] = current._df[newvarname].apply(
-            lambda x: generator(x)[0]["generated_text"]
+            lambda x: generator(x)[0]["generated_text"]  # type: ignore
         )
     _print(current.df)

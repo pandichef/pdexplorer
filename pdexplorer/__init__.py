@@ -30,7 +30,7 @@ from .keep import keep
 
 from .finance.mtgyield import mtgyield
 from .finance.mtgprice import mtgprice
-from .srecode import srecode
+from .plus.srecode import srecode
 from .shortcuts.profile import profile
 from .doedit import doedit as doed
 from .doedit import doedit as doedi
