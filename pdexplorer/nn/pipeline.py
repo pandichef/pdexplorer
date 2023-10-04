@@ -14,6 +14,7 @@ def pipeline(
     # num_labels=5,
     # run_in_sample=False,
 ):
+    """Run pipeline on every row; deprecated"""
     _ = parse(commandarg, "varlist")
     assert len(_["varlist"].split()) == 1
     # yvar = _["varlist"].split()[0]

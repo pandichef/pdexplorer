@@ -1,11 +1,32 @@
 import os
 import pytest
 import sys
+import pandas as pd
 from ..webuse import webuse
 from ..use import use
 from .._dataset import current
-from ..nn.finetune import finetune
+
+# from ..nn.finetune import finetune
+from ..fine_tuning.fthuggingface import fthuggingface, fthuggingface_old
 from ..nn.pipeline import pipeline
+
+
+@pytest.mark.slow
+def test_finetune1():
+    from .fixtures import yelp_reviews
+
+    y0 = pd.DataFrame.from_records(yelp_reviews)
+    y0["split"] = "train"
+    y1 = pd.DataFrame.from_records(yelp_reviews)
+    y1["split"] = "test"
+
+    yelp_reviews_df = pd.concat([y0, y1], axis=0)
+
+    use(yelp_reviews_df)
+    fthuggingface("label text", num_examples=100)
+
+    # cleanup #
+    os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
 
 # @pytest.mark.skip
@@ -27,7 +48,7 @@ def test_finetune2():
     # )
 
     use(os.path.join(os.path.dirname(__file__), "yelp_mini.dta"))  # fixture
-    finetune("label text", num_examples=100)
+    fthuggingface_old("label text", num_examples=100)
     pipeline("text")
     import numpy as np
 

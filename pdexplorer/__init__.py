@@ -370,7 +370,8 @@ except:
 from .nn.gpt2 import gpt2
 from .export import export
 
-from .nn.finetune import finetune
+# from .nn.finetune import finetune
+from .fine_tuning.fthuggingface import fthuggingface
 from .nn.pipeline import pipeline
 
 from .data.thegraph.utils import (
@@ -419,3 +420,5 @@ except:
 # listener.start()
 
 from .fine_tuning.ftopenai import ftopenai, askgpt
+from .fine_tuning.fthuggingface import fthuggingface, askhuggingface
+

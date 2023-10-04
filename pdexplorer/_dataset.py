@@ -58,7 +58,9 @@ class Dataset:
         self.dtale_browser = None  # type DtaleData
         self.has_preserved = False
         self.active_python_script: Optional[str] = None  # see doedit
-        self.last_openai_ftjob_id = None
+        self.last_openai_ftjob_id: Optional[str] = None
+        self.last_huggingface_ftmodel_dir: Optional[str] = None
+        # self.last_huggingface_tokenizer = None
 
     # @property
     def clear(self):

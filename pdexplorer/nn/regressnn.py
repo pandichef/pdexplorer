@@ -1,3 +1,4 @@
+# JUST A DEMO OF HOW LINEAR REGRESSION WORKS WITH NN #
 from .._search import search_iterable
 from .._dataset import current
 from .._get_custom_attributes import _get_custom_attributes
