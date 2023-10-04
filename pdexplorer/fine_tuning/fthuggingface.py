@@ -56,84 +56,86 @@ def fthuggingface(
     assert len(_["varlist"].split()) == 2
     yvar = _["varlist"].split()[0]  # assumed to be "label"
     rename(f"{yvar} label")
-    xvar = _["varlist"].split()[1]
-    # https://huggingface.co/docs/transformers/training#train-with-pytorch-trainer
-    import datasets
-    import torch
-    import numpy as np
-    import evaluate
-    from datasets import load_dataset
-    import transformers
-    from transformers import (
-        pipeline,
-        AutoTokenizer,
-        TrainingArguments,
-        Trainer,
-    )
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    _AutoModel = getattr(transformers, task_map[task])
-
-    dataset = datasets.DatasetDict()
-    dataset["train"] = current.get_huggingface_dataset(split="train")
-    dataset["test"] = current.get_huggingface_dataset(split="test")
-
-    # tokenize the fine-tuning dataset #
-    def tokenize_function(examples):
-        return tokenizer(examples[xvar], padding="max_length", truncation=True)
-
-    tokenized_datasets = dataset.map(tokenize_function, batched=True,)
-
-    # sample from fine-tuning dataset #
-    small_train_dataset = (
-        tokenized_datasets["train"]
-        # .shuffle(seed=42)
-        # .select(range(min(num_examples, len(current.df.query('split=="train"')))))
-    )
-    small_eval_dataset = (
-        tokenized_datasets["test"]
-        # .shuffle(seed=42)
-        # .select(range(min(num_examples, len(current.df.query('split=="test"')))))
-    )
-
-    # load model for specific application #
-    # e.g., distilbert-base-uncased loaded for text classification with 5 stars #
-    if task in ["text-classification"]:
-        model = _AutoModel.from_pretrained(
-            model_name, num_labels=current.df["label"].nunique()
-        )
-    else:
-        model = _AutoModel.from_pretrained(model_name)
-
-    # train the model
-    def compute_metrics(eval_pred):
-        logits, labels = eval_pred
-        predictions = np.argmax(logits, axis=-1)
-        return evaluate.load("accuracy").compute(
-            predictions=predictions, references=labels
+    try:
+        xvar = _["varlist"].split()[1]
+        # https://huggingface.co/docs/transformers/training#train-with-pytorch-trainer
+        import datasets
+        import torch
+        import numpy as np
+        import evaluate
+        from datasets import load_dataset
+        import transformers
+        from transformers import (
+            pipeline,
+            AutoTokenizer,
+            TrainingArguments,
+            Trainer,
         )
 
-    trainer = Trainer(
-        model=model,
-        args=TrainingArguments(
-            output_dir=output_dir,
-            evaluation_strategy="epoch",
-            no_cuda=not torch.cuda.is_available(),
-            # no_cuda=True,
-            report_to="none"
-            # per_device_train_batch_size=8,
-            # per_gpu_eval_batch_size=8,
-        ),
-        train_dataset=small_train_dataset,
-        eval_dataset=small_eval_dataset,
-        compute_metrics=compute_metrics,
-    )
-    trainer.train()
-    trainer.save_model()  # saved to output_dir
-    _print(f"Saved model to ./{output_dir}")
-    torch.cuda.empty_cache()
-    current.last_huggingface_ftmodel_dir = output_dir
-    rename(f"label {yvar}")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        _AutoModel = getattr(transformers, task_map[task])
+
+        dataset = datasets.DatasetDict()
+        dataset["train"] = current.get_huggingface_dataset(split="train")
+        dataset["test"] = current.get_huggingface_dataset(split="test")
+
+        # tokenize the fine-tuning dataset #
+        def tokenize_function(examples):
+            return tokenizer(examples[xvar], padding="max_length", truncation=True)
+
+        tokenized_datasets = dataset.map(tokenize_function, batched=True,)
+
+        # sample from fine-tuning dataset #
+        small_train_dataset = (
+            tokenized_datasets["train"]
+            # .shuffle(seed=42)
+            # .select(range(min(num_examples, len(current.df.query('split=="train"')))))
+        )
+        small_eval_dataset = (
+            tokenized_datasets["test"]
+            # .shuffle(seed=42)
+            # .select(range(min(num_examples, len(current.df.query('split=="test"')))))
+        )
+
+        # load model for specific application #
+        # e.g., distilbert-base-uncased loaded for text classification with 5 stars #
+        if task in ["text-classification", "sentiment-analysis"]:
+            model = _AutoModel.from_pretrained(
+                model_name, num_labels=current.df["label"].nunique()
+            )
+        else:
+            model = _AutoModel.from_pretrained(model_name)
+
+        # train the model
+        def compute_metrics(eval_pred):
+            logits, labels = eval_pred
+            predictions = np.argmax(logits, axis=-1)
+            return evaluate.load("accuracy").compute(
+                predictions=predictions, references=labels
+            )
+
+        trainer = Trainer(
+            model=model,
+            args=TrainingArguments(
+                output_dir=output_dir,
+                evaluation_strategy="epoch",
+                no_cuda=not torch.cuda.is_available(),
+                # no_cuda=True,
+                report_to="none"
+                # per_device_train_batch_size=8,
+                # per_gpu_eval_batch_size=8,
+            ),
+            train_dataset=small_train_dataset,
+            eval_dataset=small_eval_dataset,
+            compute_metrics=compute_metrics,
+        )
+        trainer.train()
+        trainer.save_model()  # saved to output_dir
+        _print(f"Saved model to ./{output_dir}")
+        torch.cuda.empty_cache()
+        current.last_huggingface_ftmodel_dir = output_dir
+    finally:
+        rename(f"label {yvar}")
 
 
 def askhuggingface(prompt, task="text-classification"):

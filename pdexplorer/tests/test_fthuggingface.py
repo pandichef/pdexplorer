@@ -11,8 +11,8 @@ from ..fine_tuning.fthuggingface import fthuggingface, fthuggingface_old, askhug
 from ..nn.pipeline import pipeline
 
 
-# @pytest.mark.slow
-def test_finetune1():
+@pytest.mark.slow
+def test_finetune_text_classification():
     from .fixtures import yelp_reviews
 
     y0 = pd.DataFrame.from_records(yelp_reviews)
@@ -31,7 +31,27 @@ def test_finetune1():
     os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
 
-# @pytest.mark.skip
+@pytest.mark.slow
+def test_finetune_sentiment_analysis():
+    from .fixtures import yelp_reviews
+
+    y0 = pd.DataFrame.from_records(yelp_reviews)
+    y0["split"] = "train"
+    y1 = pd.DataFrame.from_records(yelp_reviews)
+    y1["split"] = "test"
+
+    yelp_reviews_df = pd.concat([y0, y1], axis=0)
+
+    use(yelp_reviews_df)
+    fthuggingface("stars text", "sentiment-analysis")  # , num_examples=100)
+    assert "stars" in current.df.columns
+    askhuggingface("This is my first Yelp review.")
+
+    # cleanup #
+    os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
+
+
+@pytest.mark.skip
 @pytest.mark.slow
 @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_finetune2():

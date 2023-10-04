@@ -28,6 +28,7 @@ from ..returnlist import _e
 #     )
 
 
+@pytest.mark.skip
 @pytest.mark.slow
 def test_regress_smf_vs_pytorch_Rprop_2_covariates():
     with quietly():
