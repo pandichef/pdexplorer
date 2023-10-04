@@ -7,11 +7,11 @@ from ..use import use
 from .._dataset import current
 
 # from ..nn.finetune import finetune
-from ..fine_tuning.fthuggingface import fthuggingface, fthuggingface_old
+from ..fine_tuning.fthuggingface import fthuggingface, fthuggingface_old, askhuggingface
 from ..nn.pipeline import pipeline
 
 
-@pytest.mark.slow
+# @pytest.mark.slow
 def test_finetune1():
     from .fixtures import yelp_reviews
 
@@ -23,7 +23,9 @@ def test_finetune1():
     yelp_reviews_df = pd.concat([y0, y1], axis=0)
 
     use(yelp_reviews_df)
-    fthuggingface("label text", num_examples=100)
+    fthuggingface("stars text")  # , num_examples=100)
+    assert "stars" in current.df.columns
+    askhuggingface("This is my first Yelp review.")
 
     # cleanup #
     os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
