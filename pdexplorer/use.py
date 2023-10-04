@@ -1,7 +1,7 @@
 from typing import Tuple, Dict
 
 # import statsmodels.api as sm
-from ._dataset import current
+from ._dataset import current, Dataset
 
 # import requests
 from urllib.parse import urljoin
@@ -26,9 +26,9 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
     # elif file_path.startswith("http"):
     #     return pd.read_html(file_path)[html_index], current.METADATA_DEFAULT
     elif os.path.isdir(file_path):
-        import datasets
+        import datasets  # huggingface
 
-        return datasets.load_from_disk(file_path).to_pandas(), current.METADATA_DEFAULT
+        return datasets.load_from_disk(file_path).to_pandas(), current.METADATA_DEFAULT  # type: ignore
     else:
         file_extension = os.path.splitext(file_path)[1]
         if file_extension == ".dta":
@@ -43,6 +43,9 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
             return pd.read_csv(file_path), current.METADATA_DEFAULT
         elif file_extension in [".xlsx", ".xls"]:
             return pd.read_csv(file_path), current.METADATA_DEFAULT
+        # elif file_extension in [".pkl"]:
+        #     obj: Dataset = pd.read_pickle(file_path)
+        #     return pd.read_csv(file_path), obj.metadata
         else:
             raise TypeError("Invalid file path.")
             # return pd.DataFrame(), {}
@@ -50,10 +53,21 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
 
 # def use(file_path=None, preserve_=True, html_index=0) -> None:
 def use(file_path=None, preserve_=False) -> None:
+    # global current
+
     if preserve_:
         preserve()
 
-    # current.df, current.metadata = _use(file_path=file_path, html_index=html_index)
-    current.df, current.metadata = _use(file_path=file_path)
+    if isinstance(file_path, str) and os.path.splitext(file_path)[1] == ".pkl":
+        import pickle
+
+        with open(file_path, "rb") as file:
+            # Deserialize and load the object from the file
+            _current = pickle.load(file)
+        current.df = _current.df
+        current.metadata = _current.metadata
+        current.last_openai_ftjob_id = _current.last_openai_ftjob_id
+    else:
+        current.df, current.metadata = _use(file_path=file_path)
 
     _print(current.df)

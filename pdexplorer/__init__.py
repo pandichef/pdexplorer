@@ -417,3 +417,5 @@ except:
 
 # listener = keyboard.GlobalHotKeys({"<ctrl>+h": run_active_python_script})
 # listener.start()
+
+from .fine_tuning.ftopenai import ftopenai, askgpt

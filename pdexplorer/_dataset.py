@@ -27,22 +27,12 @@ class Dataset:
 
     def __init__(self) -> None:
         # self.dtale_browser: DtaleData | None = None
-        self.dtale_browser = None  # type DtaleData
-        self.quietly = False
-        self.has_preserved = False
-        self.active_python_script: Optional[str] = None  # see doedit
-        self.stored_results = {
-            "r": {},  # results from general commands
-            "e": {},  # results from estimation commands
-            "s": {},  # results from parsing commands
-            "n": {},  # commands that do not store in r(), e(), or s()
-            "c": {},  # contains the values of system parameters and settings
-        }
         self._clear_data()
         self._clear_settings()
         self._clear_results()
-        # self.within_by_context_manager = False
+        # context manager variables #
         self.byvar: str | None = None
+        self.quietly = False
 
     def _clear_data(self, include_preserved=True):
         self._df: pd.DataFrame = pd.DataFrame()
@@ -53,12 +43,22 @@ class Dataset:
             self.has_preserved = False
 
     def _clear_results(self):
+        self.stored_results = {
+            "r": {},  # results from general commands
+            "e": {},  # results from estimation commands
+            "s": {},  # results from parsing commands
+            "n": {},  # commands that do not store in r(), e(), or s()
+            "c": {},  # contains the values of system parameters and settings
+        }
         self.methods: dict = {}  # See statsmodel old documentation
         self.properties: dict = {}  # See statsmodel old documentation
 
     def _clear_settings(self):
         # self.quietly = False
-        pass
+        self.dtale_browser = None  # type DtaleData
+        self.has_preserved = False
+        self.active_python_script: Optional[str] = None  # see doedit
+        self.last_openai_ftjob_id = None
 
     # @property
     def clear(self):
@@ -225,7 +225,14 @@ class Dataset:
         return dl
 
 
-current = Dataset()  # https://www.stata.com/stata16/multiple-datasets-in-memory/
+current = Dataset()
+
+# def clearall_global():
+#     global current
+#     current = Dataset()
+
+
+# current = Dataset()  # https://www.stata.com/stata16/multiple-datasets-in-memory/
 # current = default  # https://www.stata.com/stata16/multiple-datasets-in-memory/
 # df = current._df
 # print(current._df)

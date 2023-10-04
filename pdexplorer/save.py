@@ -34,6 +34,16 @@ def save(file_path=None, use_variable_labels=False):
                 version=118,
             )
         elif file_extension == ".csv":
-            current.df.rename(columns=column_labels).to_csv(file_path)
+            # current.df.rename(columns=column_labels).to_csv(file_path)
+            current.df.to_csv(file_path)
         elif file_extension in [".xlsx", ".xls"]:
-            current.df.rename(columns=column_labels).to_excel(file_path)
+            # current.df.rename(columns=column_labels).to_excel(file_path)
+            current.df.to_excel(file_path)
+        elif file_extension in [".pkl"]:
+            import pickle
+
+            with open(file_path, "wb") as file:
+                # Serialize and save the object to the file
+                pickle.dump(current, file)
+        else:
+            print("Didn't save file.  Something went wrong.")

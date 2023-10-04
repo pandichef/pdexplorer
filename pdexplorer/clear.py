@@ -1,8 +1,7 @@
-import pandas as pd
-from ._dataset import current
+from ._dataset import current, Dataset
 
 
-def clear(include_preserved=True):
+def clear():
     current.clear()
 
 
