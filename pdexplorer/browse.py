@@ -83,14 +83,14 @@ def display_dataframe(notify_event, num_rows=200):
         sleep(1)
 
 
-turned_on = False
+# turned_on = False
 
 
 def browse(num_rows=200):
-    global turned_on
+    # global turned_on
     global browse_notify_event
     global browse_thread
-    if not turned_on:
+    if not current.browse_turned_on:
         # global browse_thread
         # global browse_notify_event
         # # Create an Event to notify the display thread of changes #
@@ -102,7 +102,7 @@ def browse(num_rows=200):
             target=display_dataframe, args=(browse_notify_event, num_rows,)
         )
         browse_thread.daemon = True  # prevent console from blocking
-        turned_on = True
+        current.browse_turned_on = True
         browse_thread.start()
     else:
         print("Already turned on.")
@@ -117,10 +117,10 @@ def browse(num_rows=200):
 
 
 def browse_off():
-    global turned_on
+    # global turned_on
     browse_notify_event.set()
     browse_thread.join()
-    turned_on = False
+    current.browse_turned_on = False
     import os
 
     os.remove("updated_df.html")

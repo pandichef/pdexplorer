@@ -60,6 +60,7 @@ class Dataset:
         self.active_python_script: Optional[str] = None  # see doedit
         self.last_openai_ftjob_id: Optional[str] = None
         self.last_huggingface_ftmodel_dir: Optional[str] = None
+        self.browse_turned_on = False
         # self.last_huggingface_tokenizer = None
 
     # @property
