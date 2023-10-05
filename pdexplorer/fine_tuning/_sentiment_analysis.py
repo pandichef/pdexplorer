@@ -11,12 +11,12 @@ from pdexplorer._commandarg import parse
 # df = pd.DataFrame.from_records(yelp_reviews)
 
 
-def _sentiment_analysis(
+def sentiment_analysis(
     # df: pd.DataFrame,
     commandarg: str,
     model_name: str = "distilbert-base-uncased",
     test_size=0.3,
-):
+) -> None:
     """
     https://huggingface.co/docs/transformers/tasks/sequence_classification
     """
@@ -88,8 +88,6 @@ def _sentiment_analysis(
     _print(f"Saved model to ./{output_dir}")
     torch.cuda.empty_cache()
     current.last_huggingface_ftmodel_dir = output_dir
-
-    return ds
 
 
 # print(_sentiment_analysis("stars text"))

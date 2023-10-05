@@ -21,15 +21,16 @@ from ..nn.pipeline import pipeline
 #     return pd.concat([y0, y1], axis=0)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.slow
 def test_finetune_fill_mask():
     from .fixtures import eli5
 
-    eli_df = df_maker(eli5)
-    use(eli_df)
+    df = pd.DataFrame.from_records(eli5)
+    # eli_df = df_maker(eli5)
+    use(df)
     fthuggingface("text", "fill-mask")  # , num_examples=100)
-    assert "stars" in current.df.columns
+    assert "text" in current.df.columns
     askhuggingface("This is my first Yelp review.")
     os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
