@@ -143,7 +143,7 @@ setup(
         "statsmodels",  # Econometrics
         "scikit-learn",  # Machine Learning (excluding neural networks)
         "torch",  # PyTorch for Neural networks
-        "transformers",
+        "transformers[torch]",
         "evaluate",  # hf tests failed to pass without this
         # "accelerate"  # hf tests failed to pass without this
         "datasets",  # data from Hugging Face (associated with PyTorch)
