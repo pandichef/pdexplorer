@@ -24,6 +24,21 @@ from ..nn.pipeline import pipeline
 
 # @pytest.mark.skip
 @pytest.mark.slow
+def test_finetune_text_generation():
+    from .fixtures import eli5
+
+    df = pd.DataFrame.from_records(eli5)
+    # eli_df = df_maker(eli5)
+    use(df)
+    fthuggingface("text", "text-generation")  # , num_examples=100)
+    assert "text" in current.df.columns
+    askhuggingface("This is my first Yelp review.", "text-generation")
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
+
+
+# @pytest.mark.skip
+@pytest.mark.slow
 def test_finetune_fill_mask():
     from .fixtures import eli5
 
@@ -32,7 +47,7 @@ def test_finetune_fill_mask():
     use(df)
     fthuggingface("text", "fill-mask")  # , num_examples=100)
     assert "text" in current.df.columns
-    askhuggingface("This is my first Yelp review.")
+    askhuggingface("This is my first <mask> review.", "fill-mask")
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
     # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
@@ -48,7 +63,7 @@ def test_finetune_sentiment_analysis():
     use(df)
     fthuggingface("stars text", "sentiment-analysis")  # , num_examples=100)
     assert "stars" in current.df.columns
-    askhuggingface("This is my first Yelp review.")
+    askhuggingface("This is my first Yelp review.", "sentiment-analysis")
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
     # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
@@ -61,9 +76,9 @@ def test_finetune_text_classification():
     # yelp_reviews_df = df_maker(yelp_reviews)
     df = pd.DataFrame.from_records(yelp_reviews)
     use(df)
-    fthuggingface("stars text")
+    fthuggingface("stars text", "text-classification")
     assert "stars" in current.df.columns
-    askhuggingface("This is my first Yelp review.")
+    askhuggingface("This is my first Yelp review.", "text-classification")
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
     # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 

@@ -14,8 +14,9 @@ from pdexplorer._commandarg import parse
 def sentiment_analysis(
     # df: pd.DataFrame,
     commandarg: str,
-    model_name: str = "distilbert-base-uncased",
-    test_size=0.3,
+    # model_name: str = "distilbert-base-uncased",
+    model_name: str,
+    test_size: float = 0.3,
 ) -> None:
     """
     https://huggingface.co/docs/transformers/tasks/sequence_classification

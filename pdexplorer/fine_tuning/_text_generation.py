@@ -5,28 +5,21 @@ from pdexplorer._dataset import current
 from pdexplorer._commandarg import parse
 
 
-# from pdexplorer.tests.fixtures import eli5
-
-# import pandas as pd
-
-# df = pd.DataFrame.from_records(eli5)
-
-
-def fill_mask(
+def text_generation(
     # df: pd.DataFrame,
     commandarg: str,
-    # model_name: str = "distilroberta-base",
+    # model_name: str = "distilgpt2",
     model_name: str,
     test_size: float = 0.3,
     block_size: int = 128,
-):
+) -> None:
     """
-    https://huggingface.co/docs/transformers/tasks/masked_language_modeling
+    https://huggingface.co/docs/transformers/tasks/language_modeling
     """
     import torch
     import datasets
     from transformers import (
-        AutoModelForMaskedLM,
+        AutoModelForCausalLM,
         AutoTokenizer,
         DataCollatorForLanguageModeling,
         TrainingArguments,
@@ -80,11 +73,12 @@ def fill_mask(
     # This worked in a script, but not within a function call #
     tokenizer.add_special_tokens({"pad_token": "[PAD]"})
 
-    data_collator = DataCollatorForLanguageModeling(
-        tokenizer=tokenizer, mlm_probability=0.15,
-    )
+    # data_collator = DataCollatorForLanguageModeling(
+    #     tokenizer=tokenizer, mlm_probability=0.15, mlm=False
+    # )
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
-    model = AutoModelForMaskedLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         model_name, torch_dtype=torch.bfloat16 if current.use_torch_bfloat16 else "auto"
     )
     print(f"""Uses {model.get_memory_footprint()/1073741824} GB.""")
