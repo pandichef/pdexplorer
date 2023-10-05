@@ -98,7 +98,7 @@ def fill_mask(
         num_train_epochs=3,
         weight_decay=0.01,
         # push_to_hub=True,
-        no_cuda=not torch.cuda.is_available(),
+        use_cpu=not torch.cuda.is_available(),
         report_to="none",  # prevent input() #
     )
 

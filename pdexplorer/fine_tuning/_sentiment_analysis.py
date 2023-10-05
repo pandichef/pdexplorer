@@ -77,7 +77,7 @@ def sentiment_analysis(
             save_strategy="epoch",
             load_best_model_at_end=True,
             # push_to_hub=True,
-            no_cuda=not torch.cuda.is_available(),
+            use_cpu=not torch.cuda.is_available(),
             report_to="none",  # prevent input() #
         ),
         train_dataset=tokenized_ds["train"],
