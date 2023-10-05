@@ -92,12 +92,18 @@ fnc_map = {
     "fill-mask": fill_mask,
 }
 
+default_models = {
+    "sentiment-analysis": "distilbert-base-uncased",
+    "text-classification": "distilbert-base-uncased",
+    "fill-mask": "distilroberta-base",
+}
+
 
 def fthuggingface(
-    commandarg: str,  # varlist #
-    task="sentiment-analysis",
-    model_name="distilbert-base-uncased",  # BERT is an encoder only model
+    commandarg: str, task="sentiment-analysis", model_name=None  # varlist #
 ):
+    if model_name is None:
+        model_name = default_models[task]
     task_fnc = fnc_map[task]
     task_fnc(commandarg=commandarg, model_name=model_name)
 

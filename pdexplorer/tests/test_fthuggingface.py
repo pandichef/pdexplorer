@@ -1,4 +1,5 @@
 import os
+import subprocess
 import pytest
 import sys
 import pandas as pd
@@ -32,7 +33,8 @@ def test_finetune_fill_mask():
     fthuggingface("text", "fill-mask")  # , num_examples=100)
     assert "text" in current.df.columns
     askhuggingface("This is my first Yelp review.")
-    os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
 
 # @pytest.mark.skip
@@ -47,7 +49,8 @@ def test_finetune_sentiment_analysis():
     fthuggingface("stars text", "sentiment-analysis")  # , num_examples=100)
     assert "stars" in current.df.columns
     askhuggingface("This is my first Yelp review.")
-    os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
 
 # @pytest.mark.skip
@@ -61,9 +64,8 @@ def test_finetune_text_classification():
     fthuggingface("stars text")
     assert "stars" in current.df.columns
     askhuggingface("This is my first Yelp review.")
-
-    # cleanup #
-    os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
 
 
 # @pytest.mark.skip
