@@ -142,8 +142,9 @@ setup(
         "vega_datasets",  # data from Vega (which Altair is based on)
         "statsmodels",  # Econometrics
         "scikit-learn",  # Machine Learning (excluding neural networks)
+        "graphviz",  # to visualize decision trees
         "torch",  # PyTorch for Neural networks
-        "transformers[torch]",
+        "transformers[torch]",  # tests fail without [torch]
         "evaluate",  # hf tests failed to pass without this
         # "accelerate"  # hf tests failed to pass without this
         "datasets",  # data from Hugging Face (associated with PyTorch)

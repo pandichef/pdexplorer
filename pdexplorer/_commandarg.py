@@ -1,5 +1,6 @@
 import re
 from ._dataset import current
+from ._search import search_iterable
 
 
 def _clean(string_with_extra_spaces: str) -> str:
@@ -11,11 +12,12 @@ def check_syntax(_: dict, syntax: str) -> dict:
     # _ is the parsed commandarg
     updates = {}
     if syntax is not None and syntax != "" and syntax.find("varlist") > -1:
-        for name in _["anything"].split():
+        expanded_variable_names = search_iterable(current.df.columns, _["anything"])
+        for name in expanded_variable_names:
             assert (
                 name in current.df.columns
             ), f"Syntax specifies a varlist, but {name} not found in current dataset."
-        updates.update({"varlist": _["anything"]})
+        updates.update({"varlist": " ".join(expanded_variable_names)})
     else:
         pass
     return updates

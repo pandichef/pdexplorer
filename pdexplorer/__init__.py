@@ -11,6 +11,15 @@ from .regress import regress as regress
 
 from .nn.regressnn import regressnn
 from .ml.regressml import regressml
+from .ml.treeclassify import treeclassify as tree
+from .ml.treeclassify import treeclassify as treec
+from .ml.treeclassify import treeclassify as treecl
+from .ml.treeclassify import treeclassify as treecla
+from .ml.treeclassify import treeclassify as treeclas
+from .ml.treeclassify import treeclassify as treeclass
+from .ml.treeclassify import treeclassify as treeclassi
+from .ml.treeclassify import treeclassify as treeclassif
+from .ml.treeclassify import treeclassify as treeclassify
 
 from .webuse import webuse
 from .logit import logit

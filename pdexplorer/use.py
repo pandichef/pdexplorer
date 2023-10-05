@@ -32,7 +32,7 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
     else:
         file_extension = os.path.splitext(file_path)[1]
         if file_extension == ".dta":
-            _df_to_return = pd.read_stata(file_path, convert_categoricals=False)
+            _df_to_return = pd.read_stata(file_path, convert_categoricals=True)
             _metadata_to_return = {}
             with StataReader(file_path) as reader:
                 _metadata_to_return["data_label"] = reader.data_label

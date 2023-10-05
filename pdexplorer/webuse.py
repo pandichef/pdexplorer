@@ -154,9 +154,11 @@ current.metadata["data_label"] = data.DESCR
 _df_x = pd.DataFrame(data.data)
 for i, name in enumerate(data.feature_names):
     _df_x.rename(columns={{i: name}}, inplace=True)
-_df_y = pd.DataFrame(data.target).rename(columns={{0: "target"}})
-current.df = pd.concat([_df_x, _df_y], axis=1)
-        """,
+# _df_y = pd.DataFrame(data.target, ).rename(columns={{0: "target"}})
+_df_x['target'] = pd.Series(pd.Categorical.from_codes(data.target, categories=data.target_names), dtype="category")
+# data.target_names
+current.df = _df_x
+""",
         )
 
     else:
