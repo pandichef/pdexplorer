@@ -56,8 +56,11 @@ def sentiment_analysis(
         return accuracy.compute(predictions=predictions, references=labels)
 
     model = AutoModelForSequenceClassification.from_pretrained(
-        model_name, num_labels=df["label"].nunique()
+        model_name,
+        num_labels=df["label"].nunique(),
+        torch_dtype=torch.bfloat16 if current.use_torch_bfloat16 else "auto",
     )
+    print(f"""Uses {model.get_memory_footprint()/1073741824} GB.""")
 
     output_dir = f"ft-{model_name}-{str(uuid.uuid4())[:8]}"
     trainer = Trainer(

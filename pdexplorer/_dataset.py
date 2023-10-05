@@ -61,6 +61,7 @@ class Dataset:
         self.last_openai_ftjob_id: Optional[str] = None
         self.last_huggingface_ftmodel_dir: Optional[str] = None
         self.browse_turned_on = False
+        self.use_torch_bfloat16 = True
         # self.last_huggingface_tokenizer = None
 
     # @property

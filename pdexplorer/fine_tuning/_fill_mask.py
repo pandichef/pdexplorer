@@ -83,7 +83,10 @@ def fill_mask(
         tokenizer=tokenizer, mlm_probability=0.15,
     )
 
-    model = AutoModelForMaskedLM.from_pretrained(model_name)
+    model = AutoModelForMaskedLM.from_pretrained(
+        model_name, torch_dtype=torch.bfloat16 if current.use_torch_bfloat16 else "auto"
+    )
+    print(f"""Uses {model.get_memory_footprint()/1073741824} GB.""")
 
     output_dir = f"ft-{model_name}-{str(uuid.uuid4())[:8]}"
 
