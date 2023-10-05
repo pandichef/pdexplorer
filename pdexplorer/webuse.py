@@ -1,25 +1,6 @@
-# import statsmodels.api as sm
-
-# from ._singleton import singleton
-
-# from ._dataset import current as _current
-
 from ._dataset import current
-
-# import pdexplorer.dataset
-
-# current = pdexplorer.dataset.current
-
-# current = _current
-
-# print(id(_current))
-# print(id(current))
-
-
 import requests
 from urllib.parse import urljoin
-
-# import pyreadstat
 import tempfile
 import os
 from pandas.io.stata import StataReader
@@ -29,10 +10,41 @@ from .use import use
 from .save import save
 from ._print import _print
 from ._quietly import quietly
-from .clear import clear
+from .clear import clear, clearall
+import functools
 
 
-def _webuse_stata(name, baseurl="https://www.stata-press.com/data/r11/"):
+def cache_file_fetch(webuse_func):
+    @functools.wraps(webuse_func)
+    def decorator(use_local=False):
+        # print('use_local: ', use_local)
+
+        def wrapper(name, *args, **kwargs):
+            if use_local:
+
+                def get_local(name, *args, **kwargs):
+                    source = webuse_func.__name__.split("_")[-1]
+                    try:
+                        with quietly():
+                            use(f"{str(name).replace('/','_')}__{source}.dta")
+                        # use(f"{str(name).replace('/','_')}__.dta")
+                    except FileNotFoundError:
+                        print("File not found locally.  Retrieving from server.")
+                        webuse_func(name, *args, **kwargs)
+                        save(f"{str(name).replace('/','_')}__{source}.dta")
+                        # save(f"{str(name).replace('/','_')}__.dta")
+
+                get_local(name, *args, **kwargs)
+            else:
+                webuse_func(name, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+@cache_file_fetch
+def _webuse_stata(name="auto", baseurl="https://www.stata-press.com/data/r11/"):
     # For whatever reason, NamedTemporaryFile wasn't working
     # Note that statsmodels itself has an implementation of webuse, but it doesn't grab the metadata
     url_to_datafile = urljoin(baseurl, name + ".dta")
@@ -64,106 +76,102 @@ def _webuse_stata(name, baseurl="https://www.stata-press.com/data/r11/"):
         raise Exception("Data not found.")
 
 
-# def webuse(name=None, source="stata"):
+@cache_file_fetch
+def _webuse_vega(name="cars"):
+    clear()
+    from vega_datasets import data
+
+    current.df = eval(f"data.{name}()")
+
+
+@cache_file_fetch
+def _webuse_seaborn(name="tips"):
+    clear()
+    import seaborn as sns
+
+    current.df = eval(f"sns.load_dataset('{name}')")
+
+
+@cache_file_fetch
+def _webuse_rdataset(name="AirPassengers"):
+    clear()
+    import statsmodels.api as sm
+
+    name_split = str(name).split("__")
+    if len(name_split) == 1:
+        name_split.append("datasets")  # This is the default in Rdatasets
+    current.df = eval(
+        f"sm.datasets.get_rdataset('{name_split[0]}', '{name_split[1]}').data"
+    )
+
+
+@cache_file_fetch
+def _webuse_statsmodels(name="longley"):
+    clear()
+    import statsmodels.api as sm
+
+    current.df = eval(f"sm.datasets.{name}.load_pandas().data")
+
+
+@cache_file_fetch
+def _webuse_huggingface(name="imdb"):
+    clear()
+    from datasets import load_dataset_builder
+    from datasets import load_dataset
+
+    ds_builder = load_dataset_builder(name)
+    current.metadata["data_label"] = ds_builder.info.description
+    dataset = load_dataset(name)
+    _df_all_splits = pd.DataFrame()
+    for split_name, split_data in dataset.data.items():
+        _df_this_split = split_data.to_pandas()
+        _df_this_split["split"] = split_name
+        _df_all_splits = pd.concat([_df_all_splits, _df_this_split], ignore_index=False)
+    current.df = _df_all_splits
+    current.metadata["data_label"] = name
+
+
+@cache_file_fetch
+def _webuse_sklearn(name="iris"):
+    clear()
+    exec(f"from sklearn.datasets import load_{name}")
+    data = eval(f"load_{name}()")
+    current.metadata["data_label"] = data.DESCR
+    _df_x = pd.DataFrame(data.data)
+    for i, name in enumerate(data.feature_names):
+        _df_x.rename(columns={i: name}, inplace=True)
+    _df_x["target"] = pd.Series(
+        pd.Categorical.from_codes(data.target, categories=data.target_names),
+        dtype="category",
+    )
+    print(_df_x)
+    current.df = _df_x
+
+
 def webuse(name, source="stata", preserve_=False, use_local=False, base_path=""):
     if preserve_:
         preserve()
 
-    def _fetch_with_cache(source, _exec):
-        if source.startswith("http"):
-            source = source.split("/")[-1].split(".")[0]
-
-        if use_local:
-            try:
-                with quietly():
-                    # datasets sometimes uses forward slashes
-                    use(f"{str(name).replace('/','_')}__{source}.dta")
-            except FileNotFoundError:
-                print("File not found locally.  Retrieving from server.")
-                exec(_exec)
-                save(f"{str(name).replace('/','_')}__{source}.dta")
-        else:
-            exec(_exec)
-
-    if isinstance(name, int) and source.startswith("http"):
-        # why use requests.get first:
-        #  https://www.linkedin.com/pulse/solution-http-error-403-forbidden-when-using-ya-yasmine-wen
-        _fetch_with_cache(
-            source,
-            _exec=f"clear(); import requests; current.df = pd.read_html(requests.get('{source}').text)[{name}]",
-        )
-    elif source == "stata":
-        _fetch_with_cache(source, _exec="_webuse_stata(name=name)")
+    if source == "stata":
+        _webuse_stata(use_local)(name=name)
     elif source == "vega":
-        _fetch_with_cache(
-            source,
-            _exec=f"clear(); from vega_datasets import data; current.df = data.{name}()",
-        )
+        _webuse_vega(use_local)(name=name)
     elif source == "seaborn":
-        _fetch_with_cache(
-            source,
-            _exec=f"clear(); import seaborn as sns; current.df = sns.load_dataset('{name}')",
-        )
+        _webuse_seaborn(use_local)(name=name)
     elif (
         source == "rdatasets"
     ):  # https://www.statsmodels.org/devel/datasets/index.html#using-datasets-from-r
-        name_split = str(name).split("__")
-        if len(name_split) == 1:
-            name_split.append("datasets")  # This is the default in Rdatasets
-        _fetch_with_cache(
-            source,
-            _exec=f"clear(); import statsmodels.api as sm; current.df = sm.datasets.get_rdataset('{name_split[0]}', '{name_split[1]}').data",
-        )
+        _webuse_rdataset(use_local)(name=name)
     elif (
         source == "statsmodels"
     ):  # https://www.statsmodels.org/devel/datasets/index.html#available-datasets
-        _fetch_with_cache(
-            source,
-            _exec=f"clear(); import statsmodels.api as sm; current.df = sm.datasets.{name}.load_pandas().data",
-        )
+        _webuse_statsmodels(use_local)(name=name)
     elif source == "datasets":  # hugging face
-        _fetch_with_cache(
-            source,
-            _exec=f"""
-clear()
-from datasets import load_dataset_builder
-from datasets import load_dataset
-
-ds_builder = load_dataset_builder('{name}')
-current.metadata["data_label"] = ds_builder.info.description
-dataset = load_dataset('{name}')  # get all splits
-_df_all_splits = pd.DataFrame()
-for split_name, split_data in dataset.data.items():
-    _df_this_split = split_data.to_pandas()
-    _df_this_split["split"] = split_name
-    _df_all_splits = pd.concat(
-        [_df_all_splits, _df_this_split], ignore_index=False
-    )
-current.df = _df_all_splits
-current.metadata['data_label'] = '{name}'
-""",
-        )
+        _webuse_huggingface(use_local)(name=name)
     elif source == "sklearn":
-        _fetch_with_cache(
-            source,
-            _exec=f"""
-clear()
-from sklearn.datasets import load_{name}
-data = load_{name}()
-current.metadata["data_label"] = data.DESCR
-_df_x = pd.DataFrame(data.data)
-for i, name in enumerate(data.feature_names):
-    _df_x.rename(columns={{i: name}}, inplace=True)
-# _df_y = pd.DataFrame(data.target, ).rename(columns={{0: "target"}})
-_df_x['target'] = pd.Series(pd.Categorical.from_codes(data.target, categories=data.target_names), dtype="category")
-# data.target_names
-current.df = _df_x
-""",
-        )
-
+        _webuse_sklearn(use_local)(name=name)
     else:
         raise Exception("Source not found.")
 
     _print("(" + current.metadata["data_label"] + ")")
     _print(current.df)
-    # print("--------")

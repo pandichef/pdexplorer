@@ -90,26 +90,25 @@ class Dataset:
 
     @df.setter
     def df(self, value: pd.DataFrame):
-        if self.metadata["variable_labels"]:
-            self._df = value
-        else:
-            # print("setter")
-            column_mapping = {}
-            for col in value.columns:
-                if isinstance(col, str):  # type error without this
-                    column_mapping[col] = (
-                        col.replace(" ", "")
-                        .replace("(", "")
-                        .replace(")", "")
-                        .replace(",", "")
-                        .lower()
-                    )  # Stata default is to remove spaces
-                else:
-                    column_mapping[col] = col
-            self._df = value.rename(columns=column_mapping)
-            self.metadata["variable_labels"] = {
-                value: key for key, value in column_mapping.items()
-            }
+        # if self.metadata["variable_labels"]:
+        #     self._df = value
+        # else:
+        column_mapping = {}
+        for col in value.columns:
+            if isinstance(col, str):  # type error without this
+                column_mapping[col] = (
+                    col.replace(" ", "")
+                    .replace("(", "")
+                    .replace(")", "")
+                    .replace(",", "")
+                    .lower()
+                )  # Stata default is to remove spaces
+            else:
+                column_mapping[col] = col
+        self._df = value.rename(columns=column_mapping)
+        self.metadata["variable_labels"] = {
+            value: key for key, value in column_mapping.items()
+        }
 
     @property
     def df_preserved(self):
