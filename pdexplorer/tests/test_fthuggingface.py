@@ -23,8 +23,8 @@ from ..nn.pipeline import pipeline
 
 
 # @pytest.mark.skip
+# @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 @pytest.mark.slow
-@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_finetune_text_generation():
     from .fixtures import eli5
 
