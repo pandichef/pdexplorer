@@ -11,6 +11,30 @@ def hotkey_ctrl_f9(fnc):
     * all methods causes issues in ubuntu
     * pynput appear to be faster than the keyboard package, so I used it vs keyboard
     """
+    # from pynput import keyboard
+
+    # LEFT_COMBINATION = {keyboard.Key.ctrl_l, keyboard.Key.f9}
+    # RIGHT_COMBINATION = {keyboard.Key.ctrl_r, keyboard.Key.f9}
+
+    # key_set = set()
+
+    # def on_press(key):
+    #     if key in LEFT_COMBINATION.union(RIGHT_COMBINATION):
+    #         key_set.add(key)
+    #         if all(k in key_set for k in LEFT_COMBINATION) or all(
+    #             k in key_set for k in RIGHT_COMBINATION
+    #         ):
+    #             fnc()
+
+    # def on_release(key):
+    #     try:
+    #         key_set.remove(key)
+    #     except KeyError:
+    #         pass
+
+    # # ...or, in a non-blocking fashion:
+    # listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+    # listener.start()
     from pynput import keyboard
 
     LEFT_COMBINATION = {keyboard.Key.ctrl_l, keyboard.Key.f9}
@@ -21,17 +45,17 @@ def hotkey_ctrl_f9(fnc):
     def on_press(key):
         if key in LEFT_COMBINATION.union(RIGHT_COMBINATION):
             key_set.add(key)
-            if all(k in key_set for k in LEFT_COMBINATION) or all(
-                k in key_set for k in RIGHT_COMBINATION
+
+            if LEFT_COMBINATION.issubset(key_set) or RIGHT_COMBINATION.issubset(
+                key_set
             ):
                 fnc()
+                key_set.clear()  # Clear the set after calling fnc()
 
     def on_release(key):
-        try:
-            key_set.remove(key)
-        except KeyError:
-            pass
+        key_set.discard(
+            key
+        )  # Remove the key without raising an exception if it doesn't exist
 
-    # ...or, in a non-blocking fashion:
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()

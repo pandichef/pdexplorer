@@ -60,7 +60,7 @@ class FineTuningJobHelper:
         return openai.Model.delete(model_name)
 
 
-def ftopenai(model="gpt-3.5-turbo"):
+def ftgpt(model="gpt-3.5-turbo"):
     """
     1. creates a training file for OpenAI Fine-tuning API
     2. Upload a training file; https://platform.openai.com/docs/guides/fine-tuning/upload-a-training-file

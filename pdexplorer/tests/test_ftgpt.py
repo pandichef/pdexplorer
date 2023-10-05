@@ -1,5 +1,5 @@
 import pandas as pd
-from ..fine_tuning.ftopenai import (
+from ..fine_tuning.ftgpt import (
     _convert_tabular_format_to_openai_format,
     _write_records_to_stringio,
 )
