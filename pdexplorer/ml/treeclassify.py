@@ -20,6 +20,14 @@ graphviz_html = """
 def treeclassify(
     commandarg: str, max_depth=None, show_graphviz=False, use_regressor=False
 ):
+    """
+    Ref: https://scikit-learn.org/stable/modules/tree.html
+    
+    It's challenging to get graphviz to work on Windows.  The comment here from Jyotsna_b helped:
+    https://stackoverflow.com/questions/35064304/runtimeerror-make-sure-the-graphviz-executables-are-on-your-systems-path-aft
+  
+    """
+
     from sklearn import tree
 
     _ = parse(commandarg, "varlist")
