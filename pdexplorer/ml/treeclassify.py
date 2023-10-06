@@ -27,14 +27,12 @@ def treeclassify(
     https://stackoverflow.com/questions/35064304/runtimeerror-make-sure-the-graphviz-executables-are-on-your-systems-path-aft
   
     """
-
     from sklearn import tree
 
     _ = parse(commandarg, "varlist")
     varlist_as_list = _["varlist"].split()
     yvar = varlist_as_list[0]
     xvars = varlist_as_list[1:]
-    # xvars = search_iterable(current.df.columns, " ".join(xvars))
     X = current.df.dropna()[xvars].values
     y = current.df.dropna()[yvar].values
     _DecisionTree = (
@@ -45,8 +43,6 @@ def treeclassify(
     if show_graphviz:
         import graphviz
         from .._webbrowser import webbrowser_open
-
-        # import subprocess
 
         dot_data = tree.export_graphviz(
             decision_tree,
