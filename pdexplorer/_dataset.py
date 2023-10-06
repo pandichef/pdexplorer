@@ -1,3 +1,4 @@
+import io
 import pandas as pd
 from copy import copy
 from typing import Optional
@@ -63,6 +64,7 @@ class Dataset:
         self.browse_turned_on = False
         self.use_torch_bfloat16 = True
         # self.last_huggingface_tokenizer = None
+        self.captured_output = io.StringIO()
 
     # @property
     def clear(self):

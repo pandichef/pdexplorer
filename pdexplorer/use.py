@@ -52,7 +52,7 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
 
 
 # def use(file_path=None, preserve_=True, html_index=0) -> None:
-def use(file_path=None, preserve_=False) -> None:
+def use(file_path=None, preserve_=False, suppress_print=False) -> None:
     # global current
 
     if preserve_:
@@ -70,4 +70,5 @@ def use(file_path=None, preserve_=False) -> None:
     else:
         current.df, current.metadata = _use(file_path=file_path)
 
-    _print(current.df)
+    if not suppress_print:
+        _print(current.df)

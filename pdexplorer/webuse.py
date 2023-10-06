@@ -25,14 +25,14 @@ def cache_file_fetch(webuse_func):
                 def get_local(name, *args, **kwargs):
                     source = webuse_func.__name__.split("_")[-1]
                     try:
-                        with quietly():
-                            use(f"{str(name).replace('/','_')}__{source}.dta")
-                        # use(f"{str(name).replace('/','_')}__.dta")
+                        use(
+                            f"{str(name).replace('/','_')}__{source}.dta",
+                            suppress_print=True,
+                        )
                     except FileNotFoundError:
                         print("File not found locally.  Retrieving from server.")
                         webuse_func(name, *args, **kwargs)
                         save(f"{str(name).replace('/','_')}__{source}.dta")
-                        # save(f"{str(name).replace('/','_')}__.dta")
 
                 get_local(name, *args, **kwargs)
             else:
@@ -60,7 +60,7 @@ def _webuse_stata(name="auto", baseurl="https://www.stata-press.com/data/r11/"):
             temp_file.write(response.content)
         # singleton.df, singleton.metadata = pyreadstat.read_dta(temp_file_name)
         with StataReader(temp_file_name) as reader:
-            reader.read
+            # reader.read
             current.metadata["data_label"] = reader.data_label
             current.metadata["variable_labels"] = reader.variable_labels()
             if name == "auto":
@@ -70,6 +70,7 @@ def _webuse_stata(name="auto", baseurl="https://www.stata-press.com/data/r11/"):
                 current.metadata["value_labels"] = _dct
             else:
                 current.metadata["value_labels"] = reader.value_labels()
+        # print(current.captured_output)
         current.df = pd.read_stata(temp_file_name, convert_categoricals=False)
         os.remove(temp_file_name)
     else:
@@ -144,7 +145,7 @@ def _webuse_sklearn(name="iris"):
         pd.Categorical.from_codes(data.target, categories=data.target_names),
         dtype="category",
     )
-    print(_df_x)
+    # print(_df_x)
     current.df = _df_x
 
 
