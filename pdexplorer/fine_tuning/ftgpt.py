@@ -2,8 +2,10 @@ import time
 import os
 import io
 import json
+import pandas as pd
 from .._dataset import current
 from .._commandarg import parse
+from .._print import _print
 
 
 def _convert_tabular_format_to_openai_format(df) -> list:
@@ -61,6 +63,24 @@ class FineTuningJobHelper:
 
         model_name = self.retrieve().to_dict()["fine_tuned_model"]
         return openai.Model.delete(model_name)
+
+    def list_jobs(self):
+        import openai
+
+        jobs = pd.DataFrame(openai.FineTuningJob.list()["data"])  # type: ignore
+        jobs["created_at"] = pd.to_datetime(jobs["created_at"], unit="s")
+        jobs["finished_at"] = pd.to_datetime(jobs["finished_at"], unit="s")
+        jobs = jobs.sort_values("created_at", ascending=False)
+        return jobs
+
+    def list_models(self):
+        import openai
+
+        models = pd.DataFrame(openai.Model.list()["data"])  # type: ignore
+        models = models[models["id"].str.contains("personal")]
+        models.reset_index(inplace=True, drop=True)
+        models["created"] = pd.to_datetime(models["created"], unit="s")
+        return models
 
 
 def ftgpt(
