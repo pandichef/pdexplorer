@@ -1,17 +1,17 @@
-from ._dataset import current
-import requests
-from urllib.parse import urljoin
-import tempfile
 import os
-from pandas.io.stata import StataReader
+import functools
+import tempfile
+from urllib.parse import urljoin
+import requests
 import pandas as pd
+from pandas.io.stata import StataReader
+from ._dataset import current
 from .preserve import preserve
 from .use import use
 from .save import save
 from ._print import _print
 from ._quietly import quietly
 from .clear import clear, clearall
-import functools
 
 
 def cache_file_fetch(webuse_func):
@@ -32,7 +32,11 @@ def cache_file_fetch(webuse_func):
                     except FileNotFoundError:
                         print("File not found locally.  Retrieving from server.")
                         webuse_func(name, *args, **kwargs)
-                        save(f"{str(name).replace('/','_')}__{source}.dta")
+                        file_path = f"{str(name).replace('/','_')}__{source}.dta"
+                        save(file_path)
+                        # print(current.df.foreign)
+                        # use(file_path)
+                        print(f"Saving to {file_path}.")
 
                 get_local(name, *args, **kwargs)
             else:
@@ -43,8 +47,18 @@ def cache_file_fetch(webuse_func):
     return decorator
 
 
+def make_metadata_value_labels(df):
+    metadata_value_labels = {}
+    for catcol in df.select_dtypes(include=["category"]).columns:
+        this_label = dict(zip(df[catcol].cat.codes, df[catcol].astype(str)))
+        metadata_value_labels.update({catcol: this_label})
+    return metadata_value_labels
+
+
 @cache_file_fetch
-def _webuse_stata(name="auto", baseurl="https://www.stata-press.com/data/r11/"):
+def _webuse_stata(
+    name="auto", baseurl="https://www.stata-press.com/data/r11/",
+):
     # For whatever reason, NamedTemporaryFile wasn't working
     # Note that statsmodels itself has an implementation of webuse, but it doesn't grab the metadata
     url_to_datafile = urljoin(baseurl, name + ".dta")
@@ -60,18 +74,15 @@ def _webuse_stata(name="auto", baseurl="https://www.stata-press.com/data/r11/"):
             temp_file.write(response.content)
         # singleton.df, singleton.metadata = pyreadstat.read_dta(temp_file_name)
         with StataReader(temp_file_name) as reader:
-            # reader.read
             current.metadata["data_label"] = reader.data_label
             current.metadata["variable_labels"] = reader.variable_labels()
-            if name == "auto":
-                _dct = reader.value_labels()
-                _dct["foreign"] = _dct["origin"]
-                del _dct["origin"]
-                current.metadata["value_labels"] = _dct
-            else:
-                current.metadata["value_labels"] = reader.value_labels()
-        # print(current.captured_output)
-        current.df = pd.read_stata(temp_file_name, convert_categoricals=False)
+            current.df = reader.read(convert_categoricals=True)
+        # reader.value_labels() doesn't work correctly because Stata #
+        # uses a value_label name whereas pandas does not #
+
+        current.metadata["value_labels"] = make_metadata_value_labels(current.df)
+
+        # current.df = pd.read_stata(temp_file_name, convert_categoricals=True)
         os.remove(temp_file_name)
     else:
         raise Exception("Data not found.")
@@ -83,6 +94,7 @@ def _webuse_vega(name="cars"):
     from vega_datasets import data
 
     current.df = eval(f"data.{name}()")
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 @cache_file_fetch
@@ -91,6 +103,7 @@ def _webuse_seaborn(name="tips"):
     import seaborn as sns
 
     current.df = eval(f"sns.load_dataset('{name}')")
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 @cache_file_fetch
@@ -104,6 +117,7 @@ def _webuse_rdataset(name="AirPassengers"):
     current.df = eval(
         f"sm.datasets.get_rdataset('{name_split[0]}', '{name_split[1]}').data"
     )
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 @cache_file_fetch
@@ -112,6 +126,7 @@ def _webuse_statsmodels(name="longley"):
     import statsmodels.api as sm
 
     current.df = eval(f"sm.datasets.{name}.load_pandas().data")
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 @cache_file_fetch
@@ -130,6 +145,7 @@ def _webuse_huggingface(name="imdb"):
         _df_all_splits = pd.concat([_df_all_splits, _df_this_split], ignore_index=False)
     current.df = _df_all_splits
     current.metadata["data_label"] = name
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 @cache_file_fetch
@@ -145,8 +161,8 @@ def _webuse_sklearn(name="iris"):
         pd.Categorical.from_codes(data.target, categories=data.target_names),
         dtype="category",
     )
-    # print(_df_x)
     current.df = _df_x
+    current.metadata["value_labels"] = make_metadata_value_labels(current.df)
 
 
 def webuse(name, source="stata", preserve_=False, use_local=False, base_path=""):
@@ -159,15 +175,16 @@ def webuse(name, source="stata", preserve_=False, use_local=False, base_path="")
         _webuse_vega(use_local)(name=name)
     elif source == "seaborn":
         _webuse_seaborn(use_local)(name=name)
-    elif (
-        source == "rdatasets"
-    ):  # https://www.statsmodels.org/devel/datasets/index.html#using-datasets-from-r
+    elif source in [
+        "rdataset",
+        "rdatasets",
+    ]:  # https://www.statsmodels.org/devel/datasets/index.html#using-datasets-from-r
         _webuse_rdataset(use_local)(name=name)
     elif (
         source == "statsmodels"
     ):  # https://www.statsmodels.org/devel/datasets/index.html#available-datasets
         _webuse_statsmodels(use_local)(name=name)
-    elif source == "datasets":  # hugging face
+    elif source in ["datasets", "huggingface"]:  # hugging face
         _webuse_huggingface(use_local)(name=name)
     elif source == "sklearn":
         _webuse_sklearn(use_local)(name=name)

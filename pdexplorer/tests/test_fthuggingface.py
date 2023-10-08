@@ -84,16 +84,3 @@ def test_finetune_text_classification():
     assert "stars" in current.df.columns
     askhuggingface("This is my first Yelp review.", "text-classification")
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
-    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")
-
-
-# @pytest.mark.skip
-# @pytest.mark.slow
-# @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
-# def test_finetune2():
-#     use(os.path.join(os.path.dirname(__file__), "yelp_mini.dta"))  # fixture
-#     fthuggingface_old("label text", num_examples=100)
-#     pipeline("text")
-#     import numpy as np
-
-#     assert np.corrcoef(current.df.label, current.df._finetuned)[0][1] > 0.50

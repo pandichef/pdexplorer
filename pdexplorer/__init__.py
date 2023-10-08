@@ -22,6 +22,7 @@ from .ml.treeclassify import treeclassify as treeclassif
 from .ml.treeclassify import treeclassify as treeclassify
 
 from .webuse import webuse
+from .sysuse import sysuse
 from .logit import logit
 from .drop import drop
 
@@ -430,3 +431,4 @@ except:
 
 from .fine_tuning.ftgpt import ftgpt, askgpt
 from .fine_tuning.fthuggingface import fthuggingface, askhuggingface
+from .predict import predict

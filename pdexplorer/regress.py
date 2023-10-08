@@ -12,6 +12,7 @@ raw_syntax = """varlist [if] [in] [aw fw iw pw] [,		///
 ]"""
 # https://www.stata.com/manuals13/psyntax.pdf
 
+import pandas as pd
 from ._search import search_iterable
 from ._dataset import current
 from ._get_custom_attributes import _get_custom_attributes
@@ -24,28 +25,27 @@ from typing import Union
 
 
 def regress(commandarg: str):
-    # ) -> Union[RegressionResultsWrapper, LinearRegression, None]:
     """
     Stata docs: https://www.stata.com/manuals/rregress.pdf
     Returns: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html
     """
+    # assert False, current.df
     syntax = " ".join(raw_syntax.replace("///", "").split())
     _ = parse(commandarg, syntax)
-    # print(_)
     varlist = _["varlist"]
 
-    # if True:
     import statsmodels.formula.api as smf
+    import statsmodels.api as sm
 
-    df = current.df
+    # df = current.df
     patsy_formula = _patsify(varlist)
-    # print(patsy_formula)
-    model = smf.ols(patsy_formula, data=df, missing="drop")
+    if _["if"]:
+        model = smf.ols(patsy_formula, data=current.df.query(_["if"]), missing="drop")
+    else:
+        model = smf.ols(patsy_formula, data=current.df, missing="drop")
     results = model.fit()
     _print(results.summary())
     current.methods, current.properties = _get_custom_attributes(results)
-    # print(results)
-    # print(current.properties)
     current.stored_results["e"] = {}
     current.stored_results["e"] = {
         "scalars": {
@@ -59,6 +59,15 @@ def regress(commandarg: str):
             "ll": results.llf,
         }
     }
+
+    def predict_fnc(newvar: str) -> None:
+        X = current.df[_["varlist"].split()[1:]]
+        predictions_narray = results.predict(sm.add_constant(X))
+        current.df[newvar] = pd.Series(predictions_narray)
+
+    current.predict_fnc = predict_fnc
+
+    # results.predict(sm.add_constant(df[_["varlist"].split()[1:]]))
     return results
 
 

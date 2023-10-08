@@ -1,7 +1,7 @@
 import io
 import pandas as pd
 from copy import copy
-from typing import Optional
+from typing import Optional, Callable
 from ._search import search_iterable
 
 
@@ -51,6 +51,7 @@ class Dataset:
             "n": {},  # commands that do not store in r(), e(), or s()
             "c": {},  # contains the values of system parameters and settings
         }
+        self.predict_fnc: Optional[Callable[[str], None]] = None
         self.methods: dict = {}  # See statsmodel old documentation
         self.properties: dict = {}  # See statsmodel old documentation
 
