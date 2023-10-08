@@ -1,30 +1,20 @@
-from ._dataset import current
-
-# https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Table_Pandas.py
-# https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Matplotlib_Browser_Paned.py
-# import PySimpleGUI as sg
+from http.server import HTTPServer, SimpleHTTPRequestHandler, ThreadingHTTPServer
+import io
+from contextlib import redirect_stdout
 import threading
+import sys
 from time import time, sleep
 import webbrowser
 import numpy as np
 import pandas as pd
+from ._dataset import current
 
 
 def make_html(df, num_rows=200, title=""):
-    # s = df.head(num_rows).style
-    # return (
-    #     '<html><head><meta http-equiv="refresh" content="1"></head><body>'
-    #     + s._repr_html_()
-    #     + "</body></html>"
-    # )
-    # return (
-    #     '<meta http-equiv="refresh" content="1" >'
-    #     + df.head(num_rows).to_html(justify="center")
-    #     + f"<br>Displaying {min(num_rows,len(df))}  of {len(df)}"
-    # )
+    # <meta http-equiv="refresh" content="1">
     result = """
 <html>
-<head><meta http-equiv="refresh" content="1">
+<head>
 <style>
 
     h2 {
@@ -54,75 +44,113 @@ def make_html(df, num_rows=200, title=""):
     """
     result += f"<h2>{' '.join(title.split()[:10])}</h2>"
     result += df.head(num_rows).to_html(classes="wide", escape=False, index=False)
-    result += """
-</body>
-</html>
+    result += """<script>
+    let storedTableHTML = '';
+
+    function checkForChanges() {
+        fetch('http://localhost:8000/updated_df.html')
+            .then(response => response.text())
+            .then(newTableHTML => {
+                const dataTable = document.getElementById('data-table');
+                if (storedTableHTML !== '' && newTableHTML !== storedTableHTML) {
+                    // Content has changed, refresh the page
+                    location.reload();
+                } else {
+                    // Update stored table HTML with the new data
+                    storedTableHTML = newTableHTML;
+                    // Replace the table content with the new HTML
+                    dataTable.innerHTML = newTableHTML;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    // Check for changes every 1 seconds (adjust the interval as needed)
+    setInterval(checkForChanges, 1000);
+</script></body></html>
 """
     return result
 
 
-def display_dataframe(notify_event, num_rows=200):
+def save_html_file(notify_event, num_rows=200):
     """Function to display the DataFrame when changes occur"""
     previous_df = current.df.copy()
     first_run = True
     while not notify_event.is_set():  # Check the event flag
         current_df = current.df.copy()
         if not current_df.equals(previous_df) or first_run:
-            # print("DataFrame has changed:")
-            # print(current_df)
-            # assert turned_on, "oh no"
-
             t0 = time()
             with open("updated_df.html", "w") as f:
                 f.write(make_html(current_df, num_rows, current.metadata["data_label"]))
             print(f"Saved to file ({time()-t0} ms)")
-            # print("df changed")
-            # print(f"first run is {first_run}")
             previous_df = current_df.copy()
             first_run = False
         sleep(1)
 
 
-# turned_on = False
+# stop_server = False
+
+
+def serve_html_file(notify_event):
+    # global stop_server
+    # stop_server = False
+
+    class SilentRequestHandler(SimpleHTTPRequestHandler):
+        def log_message(self, format, *args):
+            pass  # Suppress log messages
+
+    httpd = ThreadingHTTPServer(("localhost", 8000), SilentRequestHandler)
+
+    try:
+        while True:
+            if notify_event.is_set():
+                break  # Exit the loop if the event is set
+            httpd.handle_request()
+    except KeyboardInterrupt:
+        pass
+
+    httpd.server_close()
+    print("Server stopped gracefully.")
 
 
 def browse(num_rows=200):
-    # global turned_on
-    global browse_notify_event
-    global browse_thread
+    global notify_event
+    global save_thread
+    global serve_thread
     if not current.browse_turned_on:
-        # global browse_thread
-        # global browse_notify_event
         # # Create an Event to notify the display thread of changes #
-        browse_notify_event = threading.Event()
-
-        # Create a separate thread to display the DataFrame when changes occur #
-        # browse_thread = threading.Thread(target=display_dataframe, args=(browse_notify_event,))
-        browse_thread = threading.Thread(
-            target=display_dataframe, args=(browse_notify_event, num_rows,)
+        notify_event = threading.Event()
+        # Create a save_thread to save the DataFrame when changes occur #
+        save_thread = threading.Thread(
+            target=save_html_file, args=(notify_event, num_rows,)
         )
-        browse_thread.daemon = True  # prevent console from blocking
+        save_thread.daemon = True  # prevent console from blocking
         current.browse_turned_on = True
-        browse_thread.start()
+        save_thread.start()
+        # Create a serve_thread to create a light weight web server #
+        # serve_notify_event = threading.Event()
+        serve_thread = threading.Thread(target=serve_html_file, args=(notify_event,))
+        serve_thread.daemon = True  # prevent console from blocking
+        serve_thread.start()
     else:
         print("Already turned on.")
     from ._webbrowser import webbrowser_open
 
-    # import os
-
-    # full_path = os.path.join(os.getcwd(), "updated_df.html")
-
-    webbrowser_open("updated_df.html")
-    # webbrowser.open("updated_df.html")we
+    webbrowser_open("http://localhost:8000/updated_df.html", join_full_path=False)
 
 
 def browse_off():
-    # global turned_on
-    browse_notify_event.set()
-    browse_thread.join()
+    # global stop_server
+    notify_event.set()
+    save_thread.join()
+    serve_thread.join()
     current.browse_turned_on = False
+    # stop_server = True
     import os
 
+    sleep(1)
     os.remove("updated_df.html")
 
 
