@@ -146,6 +146,7 @@ setup(
         "torch",  # PyTorch for Neural networks
         "transformers[torch]",  # tests fail without [torch]
         "evaluate",  # hf tests failed to pass without this
+        "openai",  # for ftgpt
         # "accelerate"  # hf tests failed to pass without this
         "datasets",  # data from Hugging Face (associated with PyTorch)
         "ydata-profiling",  # for cf command

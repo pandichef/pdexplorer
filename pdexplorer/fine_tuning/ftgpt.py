@@ -1,6 +1,9 @@
+import time
+import os
 import io
 import json
 from .._dataset import current
+from .._commandarg import parse
 
 
 def _convert_tabular_format_to_openai_format(df) -> list:
@@ -60,55 +63,83 @@ class FineTuningJobHelper:
         return openai.Model.delete(model_name)
 
 
-def ftgpt(model="gpt-3.5-turbo"):
+def ftgpt(
+    commandarg: str, model_name: str = "gpt-3.5-turbo", nonblocking=True
+) -> FineTuningJobHelper:
     """
     1. creates a training file for OpenAI Fine-tuning API
     2. Upload a training file; https://platform.openai.com/docs/guides/fine-tuning/upload-a-training-file
     3. Create a fine-tuned model; https://platform.openai.com/docs/guides/fine-tuning/create-a-fine-tuned-model
 
     """
-    from time import sleep
-    import os
     import openai
 
     openai.api_key = os.getenv("OPENAI_API_KEY")
-    # openai.File.create(file=open("mydata.jsonl", "rb"), purpose="fine-tune")
 
-    records = _convert_tabular_format_to_openai_format(current.df)
+    _ = parse(commandarg, "varlist")
+    assert len(_["varlist"].split()) == 3
+    assistant_var = _["varlist"].split()[0]
+    user_var = _["varlist"].split()[1]
+    system_var = _["varlist"].split()[2]
+
+    df = current.df.rename(
+        columns={assistant_var: "assistant", user_var: "user", system_var: "system"}
+    )
+
+    records = _convert_tabular_format_to_openai_format(df)
     stringio_object = _write_records_to_stringio(records)
     openai_file_object = openai.File.create(file=stringio_object, purpose="fine-tune")
     openai_file_id = openai_file_object.to_dict()["id"]  # type: ignore
     openai_ftjob_object = openai.FineTuningJob.create(
-        training_file=openai_file_id, model=model
+        training_file=openai_file_id, model=model_name
     )
     openai_ftjob_id = openai_ftjob_object.to_dict()["id"]  # type: ignore
     ftjob_helper = FineTuningJobHelper(openai_ftjob_id)
     current.last_openai_ftjob_id = openai_ftjob_id
-    sleep(15)  # wait some time for file validation
-    error_value = ftjob_helper.retrieve().to_dict()["error"]
-    assert error_value is None, str(error_value)
+
+    if not nonblocking:
+        while ftjob_helper.retrieve().to_dict()["status"] in [
+            "validating_files",
+            "running",
+        ]:
+            time.sleep(10)
+            print("Waiting for fine-tuning to complete...")
+
+        print("Fine-tuning complete!")
+        final_status = ftjob_helper.retrieve().to_dict()["status"]
+        print(f"Final status: {final_status}")
+
     return ftjob_helper
 
 
 def askgpt(user_content="Hello!", system_content="You are a helpful assistant."):
     import openai
+    from openai.error import ServiceUnavailableError
 
-    ftjob_helper = FineTuningJobHelper(current.last_openai_ftjob_id)  # type: ignore
-    try:
-        model_name = ftjob_helper.retrieve().to_dict()["fine_tuned_model"]
-        print(f"(Using fine tuned model {current.last_openai_ftjob_id}.)")
-        print()
-    except Exception as e:
-        model_name = "gpt-3.5-turbo-0613"
-        print(f"(Fine tuned model not found.  Using base model {model_name} instead.)")
-        print()
+    while True:
+        try:
+            ftjob_helper = FineTuningJobHelper(current.last_openai_ftjob_id)  # type: ignore
+            try:
+                model_name = ftjob_helper.retrieve().to_dict()["fine_tuned_model"]
+                print(f"(Using fine tuned model {current.last_openai_ftjob_id}.)")
+                print()
+            except Exception as e:
+                model_name = "gpt-3.5-turbo-0613"
+                print(
+                    f"(Fine tuned model not found.  Using base model {model_name} instead.)"
+                )
+                print()
 
-    completion = openai.ChatCompletion.create(
-        model=model_name,
-        messages=[
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": user_content},
-        ],
-    )
+            completion = openai.ChatCompletion.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_content},
+                    {"role": "user", "content": user_content},
+                ],
+            )
+            break
+        except ServiceUnavailableError as e:
+            pass
+            time.sleep(10)
 
     print(completion.choices[0].message["content"])  # type: ignore

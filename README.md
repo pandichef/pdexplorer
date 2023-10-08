@@ -85,11 +85,45 @@ results = regress('mpg weight foreign', library='pytorch')
 
 Here, `results` is a [torch.nn.Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html) object from the [PyTorch](https://pytorch.org/) package.
 
-## My Story
+<!-- ## My Story
 
 I used Stata for 7 years for both data exploration and programming. After that, I used Python/pandas for 3 years and
 found that pandas is just too verbose and "explicit" for rapid data exploration. So I started working on this project
-on September 3, 2023.
+on September 3, 2023. -->
+
+## LLM Fine Tuning Examples
+
+### [Sentiment Analysis using HuggingFace](https://huggingface.co/docs/transformers/tasks/sequence_classification)
+
+```python
+from pdexplorer import *
+from pdexplorer.tests.fixtures import yelp_reviews
+df = pd.DataFrame.from_records(yelp_reviews)
+use(df) # load examples into pdexplorer
+fthuggingface("stars text", task="sentiment-analysis", model_name="distilbert-base-uncased") # slow
+askhuggingface("I absolutely loved Burgerosity!", task="sentiment-analysis")
+```
+
+### [Next Word Prediction using HuggingFace](https://huggingface.co/docs/transformers/tasks/language_modeling)
+
+```python
+from pdexplorer import *
+from pdexplorer.tests.fixtures import eli5
+df = pd.DataFrame.from_records(eli5)
+use(df) # load examples into pdexplorer
+fthuggingface("text", task="text-generation", model_name="distilgpt2") # slow
+askhuggingface("A poem about Mickey Mouse in iambic pentameter:\n", task="text-generation")
+```
+
+### [Next Word Prediction using OpenAI (gpt-3.5-turbo)](https://platform.openai.com/docs/guides/fine-tuning/)
+
+```python
+from pdexplorer import *
+from pdexplorer.tests.test_ftgpt import df
+use(df)
+ftgpt("assistant user system") # slow; requires OPENAI_API_KEY environment variable
+askgpt("A poem about Mickey Mouse in iambic pentameter:\n")
+```
 
 ## Why not use Stata instead of pandas?
 
@@ -118,6 +152,7 @@ comparison purposes.
 - There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
   `pdexplorer` is just the Python data stack.
 - The API for producing charts is based on [Altair](https://altair-viz.github.io/), not Stata.
+- `pdexplorer` adds commands for machine learning (using sklearn, PyTorch, and huggingface)
 
 ## Syntax summary
 
