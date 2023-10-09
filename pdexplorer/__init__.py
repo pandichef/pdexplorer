@@ -432,3 +432,7 @@ except:
 from .fine_tuning.ftgpt import ftgpt, askgpt
 from .fine_tuning.fthuggingface import fthuggingface, askhuggingface
 from .predict import predict
+
+import warnings
+
+warnings.filterwarnings("ignore")

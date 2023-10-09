@@ -97,8 +97,8 @@ def _chart(
     **kwargs
 ):
     """
-    xvars: If True, the "v1 v2 v3" is mapped as "y x1 x2"
-    layered: If True, all charts are layered onto a single grid
+    yX: If True, the "v1 v2 v3" is mapped as "y x1 x2"
+    stacked: If False, all charts are layered onto a single grid
     """
     _kwargs_list = (
         _get_kwargs_list(commandarg, yX=yX, use_labels=use_labels) if commandarg else []
@@ -107,7 +107,6 @@ def _chart(
     if len(_kwargs_list) == 0:
         return mark_method(*args, **kwargs)
     if len(_kwargs_list) == 1:
-        # print("asdfasdfasfd")
         return mark_method(*args, **kwargs).encode(**_kwargs_list[0])
     else:
         if not stacked:
