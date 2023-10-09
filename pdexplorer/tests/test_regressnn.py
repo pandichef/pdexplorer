@@ -6,7 +6,7 @@ from .._quietly import quietly
 
 from ..regress import regress
 from ..nn.regressnn import regressnn
-from ..returnlist import _e
+
 
 # def test_regress_smf_vs_pytorch_Rprop():
 #     with quietly():

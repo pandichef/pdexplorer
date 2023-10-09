@@ -99,15 +99,15 @@ from ._print_horizontal_line import print_horizontal_line
 from .cf import cf
 from .returnlist import (
     returnlist,
-    _r,
+    r_,
     ereturnlist,
-    _e,
+    e_,
     sreturnlist,
-    _s,
+    s_,
     nreturnlist,
-    _n,
+    n_,
     creturnlist,
-    _c,
+    c_,
 )
 
 

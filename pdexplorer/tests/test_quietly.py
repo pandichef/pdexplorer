@@ -6,7 +6,6 @@ from ..webuse import webuse
 from .._dataset import current
 from .._quietly import quietly, quietly_decorator
 from ..regress import regress
-from ..returnlist import _e
 
 
 def rprint():

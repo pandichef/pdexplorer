@@ -15,7 +15,7 @@ def returnlist(return_type: Literal["r", "e", "s", "n", "c"] = "r") -> None:
             print(shift + "_e('" + k + "') =  " + str(v))
 
 
-def _r(name, return_type: Literal["r", "e", "s", "n", "c"] = "r"):
+def r_(name, return_type: Literal["r", "e", "s", "n", "c"] = "r"):
     flattened_dict = {}
     for key, value in current.stored_results["e"].items():
         flattened_dict.update(value)
@@ -28,8 +28,8 @@ def ereturnlist() -> None:
     returnlist("e")
 
 
-def _e(name):
-    return _r(name, "e")
+def e_(name):
+    return r_(name, "e")
 
 
 ###############################################
@@ -38,8 +38,8 @@ def sreturnlist() -> None:
     returnlist("s")
 
 
-def _s(name):
-    return _r(name, "s")
+def s_(name):
+    return r_(name, "s")
 
 
 ###############################################
@@ -48,8 +48,8 @@ def nreturnlist() -> None:
     returnlist("n")
 
 
-def _n(name):
-    return _r(name, "n")
+def n_(name):
+    return r_(name, "n")
 
 
 ###############################################
@@ -58,5 +58,5 @@ def creturnlist() -> None:
     returnlist("c")
 
 
-def _c(name):
-    return _r(name, "c")
+def c_(name):
+    return r_(name, "c")
