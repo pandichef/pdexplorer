@@ -148,7 +148,7 @@ def askhuggingface(prompt, task="text-classification"):
     )
 
     _AutoModel = getattr(transformers, task_map[task]["auto_model_class"])
-    base_model_name = "-".join(current.last_huggingface_ftmodel_dir.split("-")[1:-1])  # type: ignore
+    base_model_name = "-".join(current.last_huggingface_ftmodel_dir.split("-")[1:-1]).replace("_", "/")  # type: ignore
     tokenizer = AutoTokenizer.from_pretrained(base_model_name)
     model = _AutoModel.from_pretrained(current.last_huggingface_ftmodel_dir)
     fine_tuned_text_classification_pipeline = pipeline(

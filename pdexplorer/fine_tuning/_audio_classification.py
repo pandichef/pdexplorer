@@ -67,7 +67,7 @@ def audio_classification(
         model_name, num_labels=df["label"].nunique()
     )
 
-    output_dir = f"ft-{model_name}-{str(uuid.uuid4())[:8]}"
+    output_dir = f"ft-{model_name.replace('/','_')}-{str(uuid.uuid4())[:8]}"
     training_args = TrainingArguments(
         output_dir=output_dir,
         evaluation_strategy="epoch",
