@@ -144,8 +144,11 @@ setup(
         "scikit-learn",  # Machine Learning (excluding neural networks)
         "graphviz",  # to visualize decision trees
         "torch",  # PyTorch for Neural networks
+        "huggingface_hub",  # for logging into huggingface
         "transformers[torch]",  # tests fail without [torch]
         "evaluate",  # hf tests failed to pass without this
+        # "soundfile",  # huggingface audio classification
+        # "librosa",  # huggingface audio classification
         "openai",  # for ftgpt
         # "accelerate"  # hf tests failed to pass without this
         "datasets",  # data from Hugging Face (associated with PyTorch)

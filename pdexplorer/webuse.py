@@ -57,7 +57,7 @@ def make_metadata_value_labels(df):
 
 @cache_file_fetch
 def _webuse_stata(
-    name="auto", baseurl="https://www.stata-press.com/data/r11/",
+    name="auto", baseurl="https://www.stata-press.com/data/r18/",
 ):
     # For whatever reason, NamedTemporaryFile wasn't working
     # Note that statsmodels itself has an implementation of webuse, but it doesn't grab the metadata
