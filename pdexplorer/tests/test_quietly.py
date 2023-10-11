@@ -12,6 +12,7 @@ def rprint():
     print("rprinted")
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_quietly_hard():
     with quietly(hard=True) as captured_output:
         webuse("auto", use_local=True)
@@ -22,6 +23,7 @@ def test_quietly_hard():
     assert s2.startswith("(1978 Automobile Data)") and s2.endswith("rprinted\n")
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_quietly_soft():
     with quietly(hard=False) as captured_output:
         webuse("auto", use_local=True)
@@ -44,12 +46,14 @@ def fnc_to_wrap_soft():
     rprint()
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_quietly_decorator_hard():
     fnc_to_wrap_hard()
     s2 = current.captured_output.getvalue()
     assert s2.startswith("(1978 Automobile Data)") and s2.endswith("rprinted\n")
 
 
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_quietly_decorator_soft():
     fnc_to_wrap_soft()
     s2 = current.captured_output.getvalue()
