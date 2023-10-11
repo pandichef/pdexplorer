@@ -145,16 +145,29 @@ def askhuggingface(prompt, task="text-classification"):
     from transformers import (
         pipeline,
         AutoTokenizer,
+        AutoFeatureExtractor,  # for audio-classification
     )
 
     _AutoModel = getattr(transformers, task_map[task]["auto_model_class"])
     base_model_name = "-".join(current.last_huggingface_ftmodel_dir.split("-")[1:-1]).replace("_", "/")  # type: ignore
-    tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+
     model = _AutoModel.from_pretrained(current.last_huggingface_ftmodel_dir)
-    fine_tuned_text_classification_pipeline = pipeline(
-        task, model=model, tokenizer=tokenizer,
-    )
-    print(fine_tuned_text_classification_pipeline(prompt)[0])  # type: ignore
+    pipeline_kwargs = {
+        "task": task,
+        "model": model,
+    }
+
+    if task == "audio-classification":
+        feature_extractor = AutoFeatureExtractor.from_pretrained(base_model_name)
+        pipeline_kwargs.update({"feature_extractor": feature_extractor})
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+        pipeline_kwargs.update({"tokenizer": tokenizer})
+
+    fine_tuned_text_classification_pipeline = pipeline(**pipeline_kwargs)
+    result = fine_tuned_text_classification_pipeline(prompt)
+    # print()  # type: ignore
+    return result
 
 
 ##################################################
