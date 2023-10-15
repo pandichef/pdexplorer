@@ -93,7 +93,8 @@ def fill_mask(
 
     training_args = TrainingArguments(
         output_dir=output_dir,
-        evaluation_strategy="epoch",
+        # evaluation_strategy="epoch",
+        save_strategy="no",
         learning_rate=2e-5,
         num_train_epochs=3,
         weight_decay=0.01,

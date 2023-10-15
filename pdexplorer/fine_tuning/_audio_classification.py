@@ -70,8 +70,8 @@ def audio_classification(
     output_dir = f"ft-{model_name.replace('/','_')}-{str(uuid.uuid4())[:8]}"
     training_args = TrainingArguments(
         output_dir=output_dir,
-        evaluation_strategy="epoch",
-        save_strategy="epoch",
+        # evaluation_strategy="epoch",
+        save_strategy="no",
         learning_rate=3e-5,
         per_device_train_batch_size=32,
         gradient_accumulation_steps=4,
@@ -83,7 +83,8 @@ def audio_classification(
         metric_for_best_model="accuracy",
         # push_to_hub=True,
         use_cpu=not torch.cuda.is_available(),
-        report_to="none",  # prevent input() #
+        # prevent input() #
+        report_to="none",  # type: ignore
     )
 
     trainer = Trainer(
