@@ -147,6 +147,7 @@ setup(
         "huggingface_hub",  # for logging into huggingface
         "transformers[torch]",  # tests fail without [torch]
         "evaluate",  # hf tests failed to pass without this
+        "sacrebleu",  # see https://huggingface.co/docs/transformers/tasks/translation
         # "soundfile",  # huggingface audio classification
         # "librosa",  # huggingface audio classification
         "openai",  # for ftgpt

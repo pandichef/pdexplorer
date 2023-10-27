@@ -30,7 +30,7 @@ def audio_classification(
     )
 
     _ = parse(commandarg, "varlist")
-    assert len(_["varlist"].split()) == 2  # label and text columns only #
+    assert len(_["varlist"].split()) == 2  # label and audio file column only #
     label_var = _["varlist"].split()[0]  # assumed to be "label" #
     audio_var = _["varlist"].split()[1]  # assumed to be "audio" #
 

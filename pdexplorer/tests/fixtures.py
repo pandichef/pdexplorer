@@ -101,3 +101,53 @@ eli5 = [  # https://huggingface.co/docs/transformers/tasks/masked_language_model
     },
 ]
 
+books = [
+    {
+        "en": "Madame Raquin, feeling the catastrophe near at hand, watched them with piercing, fixed eyes.",
+        "fr": "Mme Raquin, sentant que le dénouement était proche, les regardait avec des yeux fixes et aigus.",
+    },
+    {
+        "en": "Therese and Laurent, all at once, burst into sobs.",
+        "fr": "Et brusquement Thérèse et Laurent éclatèrent en sanglots.",
+    },
+    {
+        "en": "A supreme crisis undid them, cast them into the arms of one another, as weak as children.",
+        "fr": "Une crise suprême les brisa, les jeta dans les bras l'un de l'autre, faibles comme des enfants.",
+    },
+    {
+        "en": "It seemed to them as if something tender and sweet had awakened in their breasts.",
+        "fr": "Il leur sembla que quelque chose de doux et d'attendri s'éveillait dans leur poitrine.",
+    },
+    {
+        "en": "They wept, without uttering a word, thinking of the vile life they had led, and would still lead, if they were cowardly enough to live.",
+        "fr": "Ils pleurèrent, sans parler, songeante la vie de boue qu'ils avaient menée et qu'ils mèneraient encore, s'ils étaient assez lâches pour vivre.",
+    },
+    {
+        "en": "Then, at the recollection of the past, they felt so fatigued and disgusted with themselves, that they experienced a huge desire for repose, for nothingness.",
+        "fr": "Alors, au souvenir du passé, ils se sentirent tellement las et écoeurés d'eux-mêmes, qu'ils éprouvèrent un besoin immense de repos, de néant.",
+    },
+    {
+        "en": "They exchanged a final look, a look of thankfulness, in presence of the knife and glass of poison.",
+        "fr": "Ils échangèrent un dernier regard, un regard de remerciement, en face du couteau et du verre de poison.",
+    },
+    {
+        "en": "Therese took the glass, half emptied it, and handed it to Laurent who drank off the remainder of the contents at one draught.",
+        "fr": "Thérèse prit le verre, le vida à moitié et le tendit à Laurent qui l'acheva d'un trait.",
+    },
+    {
+        "en": "The result was like lightning. The couple fell one atop of the other, struck down, finding consolation, at last, in death.",
+        "fr": "Ce fut un éclair, Ils tombèrent l'un sur l'autre, foudroyés, trouvant enfin une consolation dans la mort.",
+    },
+    {
+        "en": "The mouth of the young woman rested on the scar that the teeth of Camille had left on the neck of her husband.",
+        "fr": "La bouche de la jeune femme alla heurter, sur le cou de son mari, la cicatrice qu'avaient laissée les dents de Camille.",
+    },
+    {
+        "en": "The corpses lay all night, spread out contorted, on the dining-room floor, lit up by the yellow gleams from the lamp, which the shade cast upon them.",
+        "fr": "Les cadavres restèrent toute la nuit sur le carreau de la salle et manger, tordus, vautrés, éclairés de lueurs jaunâtres par les clartés de la lampe que l'abat-jour jetait sur eux.",
+    },
+    {
+        "en": "And for nearly twelve hours, in fact until the following day at about noon, Madame Raquin, rigid and mute, contemplated them at her feet, overwhelming them with her heavy gaze, and unable to sufficiently gorge her eyes with the hideous sight.",
+        "fr": "Et, pendant près de douze heures, jusqu'au lendemain vers midi, Mme Raquin, roide et muette, les contempla à ses pieds, ne pouvant se rassasier les yeux, les écrasant de regards lourds.",
+    },
+]

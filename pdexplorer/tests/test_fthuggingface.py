@@ -84,3 +84,23 @@ def test_finetune_text_classification():
     assert "stars" in current.df.columns
     askhuggingface("This is my first Yelp review.", "text-classification")
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+
+
+# @pytest.mark.skip
+@pytest.mark.slow
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
+def test_finetune_translation():
+    from .fixtures import books
+
+    # yelp_reviews_df = df_maker(yelp_reviews)
+    df = pd.DataFrame.from_records(books)
+    use(df)
+    fthuggingface("fr en", "translation")
+    # assert "stars" in current.df.columns
+    text = "translate English to French: Legumes share resources with nitrogen-fixing bacteria."
+    french_text = askhuggingface(text, "translation")[0]["translation_text"]
+    assert (
+        french_text
+        == "Legumes partagent les ressources avec les bactéries fixatrices de azote."
+    )
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
