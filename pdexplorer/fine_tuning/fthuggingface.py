@@ -92,7 +92,12 @@ def fthuggingface(
     fine_tuner_function(commandarg=commandarg, model_name=model_name)
 
 
-def askhuggingface(prompt, task="text-classification"):
+def askhuggingface(
+    prompt,
+    task="text-classification",
+    source_lang="en",  # for translation only #
+    target_lang="fr",  # for translation only #
+):
     import transformers
     from transformers import (
         pipeline,
@@ -117,6 +122,13 @@ def askhuggingface(prompt, task="text-classification"):
         pipeline_kwargs.update({"tokenizer": tokenizer})
 
     fine_tuned_text_classification_pipeline = pipeline(**pipeline_kwargs)
+
+    if task == "translation":
+        from ._translation import iso_639_1
+
+        prefix = f"translate {iso_639_1[source_lang]} to {iso_639_1[target_lang]}: "
+        prompt = prefix + prompt
+
     result = fine_tuned_text_classification_pipeline(prompt)
     # print()  # type: ignore
     return result

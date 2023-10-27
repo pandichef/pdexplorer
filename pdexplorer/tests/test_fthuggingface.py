@@ -97,7 +97,7 @@ def test_finetune_translation():
     use(df)
     fthuggingface("fr en", "translation")
     # assert "stars" in current.df.columns
-    text = "translate English to French: Legumes share resources with nitrogen-fixing bacteria."
+    text = "Legumes share resources with nitrogen-fixing bacteria."
     french_text = askhuggingface(text, "translation")[0]["translation_text"]
     assert (
         french_text
