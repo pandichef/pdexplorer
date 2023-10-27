@@ -62,6 +62,10 @@ iso_639_1 = {
     "ka": "Georgian",
     "tl": "Tagalog",
     "he": "Hebrew",
+    "he-": "Hebrew",
+    # "he-BI": "Biblical Hebrew",
+    "en-GB": "English (United Kingdom)",
+    "es-PR": "Spanish (Puerto Rico)",
 }
 
 
@@ -70,8 +74,8 @@ def translation(
     commandarg: str,
     # model_name: str = "distilgpt2",
     model_name: str,
-    source_lang: str = "en",
-    target_lang: str = "fr",
+    # source_lang: str = "en",
+    # target_lang: str = "fr",
     test_size: float = 0.3,
     # block_size: int = 128,
 ) -> None:
@@ -91,21 +95,18 @@ def translation(
 
     _ = parse(commandarg, "varlist")  # must be a varlist
     assert len(_["varlist"].split()) == 2  # label and audio file column only #
-    target_lang_var = _["varlist"].split()[0]  # assumed to be "label" #
-    source_lang_var = _["varlist"].split()[1]  # assumed to be "audio" #
+    target_lang = _["varlist"].split()[0]  # assumed to be "label" #
+    source_lang = _["varlist"].split()[1]  # assumed to be "audio" #
     df = current.df.copy()
     # df = current.df.rename(columns={en_var: "en", fr_var: "fr"})
     columns_to_drop = list(df.columns)
-    columns_to_drop.remove(target_lang_var)
-    columns_to_drop.remove(source_lang_var)
+    columns_to_drop.remove(target_lang)
+    columns_to_drop.remove(source_lang)
     df = df.drop(columns_to_drop, axis=1)
     df = df.reset_index()
     df = df.rename(columns={"index": "id"})
     df["translation"] = df.apply(
-        lambda row: {
-            source_lang_var: row[source_lang_var],
-            target_lang_var: row[target_lang_var],
-        },
+        lambda row: {source_lang: row[source_lang], target_lang: row[target_lang],},
         axis=1,
     )
     ds = datasets.Dataset.from_pandas(df)

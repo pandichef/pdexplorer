@@ -104,3 +104,23 @@ def test_finetune_translation():
         == "Legumes partagent les ressources avec les bactéries fixatrices de azote."
     )
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+
+
+# @pytest.mark.skip
+@pytest.mark.slow
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
+def test_finetune_translation_hebrew():
+    from .fixtures import niv
+
+    # yelp_reviews_df = df_maker(yelp_reviews)
+    df = pd.DataFrame.from_records(niv)
+    use(df)
+    fthuggingface("he en", "translation")
+    # assert "stars" in current.df.columns
+    text = "And there was evening, and there was morning—the third day."
+    hebrew_text = askhuggingface(
+        text, "translation", source_lang="en", target_lang="he"
+    )[0]["translation_text"]
+    # Note: t5-small can't handle Hebrew apparently
+    assert hebrew_text == "Und es gab Abend, und es gab Morgen – der dritte Tag."
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
