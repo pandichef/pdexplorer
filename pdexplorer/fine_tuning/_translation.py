@@ -6,14 +6,76 @@ from pdexplorer._dataset import current
 from pdexplorer._commandarg import parse
 
 
+iso_639_1 = {
+    "en": "English",
+    "es": "Spanish",
+    "zh": "Chinese",
+    "hi": "Hindi",
+    "ar": "Arabic",
+    "bn": "Bengali",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "ja": "Japanese",
+    "pa": "Punjabi",
+    "de": "German",
+    "jv": "Javanese",
+    "id": "Indonesian",
+    "te": "Telugu",
+    "vi": "Vietnamese",
+    "ko": "Korean",
+    "fr": "French",
+    "mr": "Marathi",
+    "tr": "Turkish",
+    "ta": "Tamil",
+    "ur": "Urdu",
+    "it": "Italian",
+    "th": "Thai",
+    "gu": "Gujarati",
+    "fa": "Persian",
+    "pl": "Polish",
+    "uk": "Ukrainian",
+    "ro": "Romanian",
+    "nl": "Dutch",
+    "kk": "Kazakh",
+    "ml": "Malayalam",
+    "yue": "Cantonese",
+    "sv": "Swedish",
+    "sr": "Serbian",
+    "hu": "Hungarian",
+    "ne": "Nepali",
+    "ka": "Georgian",
+    "tl": "Tagalog",
+    "th": "Thai",
+    "gu": "Gujarati",
+    "fa": "Persian",
+    "pl": "Polish",
+    "uk": "Ukrainian",
+    "ro": "Romanian",
+    "nl": "Dutch",
+    "kk": "Kazakh",
+    "ml": "Malayalam",
+    "yue": "Cantonese",
+    "sv": "Swedish",
+    "sr": "Serbian",
+    "hu": "Hungarian",
+    "ne": "Nepali",
+    "ka": "Georgian",
+    "tl": "Tagalog",
+    "he": "Hebrew",
+}
+
+
 def translation(
     # df: pd.DataFrame,
     commandarg: str,
     # model_name: str = "distilgpt2",
     model_name: str,
+    source_lang: str = "en",
+    target_lang: str = "fr",
     test_size: float = 0.3,
-    block_size: int = 128,
+    # block_size: int = 128,
 ) -> None:
+    """https://www.science.co.il/language/Codes.php"""
     import torch
     from datasets import load_dataset
     from transformers import AutoTokenizer
@@ -29,27 +91,29 @@ def translation(
 
     _ = parse(commandarg, "varlist")  # must be a varlist
     assert len(_["varlist"].split()) == 2  # label and audio file column only #
-    fr_var = _["varlist"].split()[0]  # assumed to be "label" #
-    en_var = _["varlist"].split()[1]  # assumed to be "audio" #
-    df = current.df.rename(columns={en_var: "en", fr_var: "fr"})
+    target_lang_var = _["varlist"].split()[0]  # assumed to be "label" #
+    source_lang_var = _["varlist"].split()[1]  # assumed to be "audio" #
+    df = current.df.copy()
+    # df = current.df.rename(columns={en_var: "en", fr_var: "fr"})
     columns_to_drop = list(df.columns)
-    columns_to_drop.remove("en")
-    columns_to_drop.remove("fr")
+    columns_to_drop.remove(target_lang_var)
+    columns_to_drop.remove(source_lang_var)
     df = df.drop(columns_to_drop, axis=1)
     df = df.reset_index()
     df = df.rename(columns={"index": "id"})
-    df["translation"] = df.apply(lambda row: {"en": row["en"], "fr": row["fr"]}, axis=1)
+    df["translation"] = df.apply(
+        lambda row: {
+            source_lang_var: row[source_lang_var],
+            target_lang_var: row[target_lang_var],
+        },
+        axis=1,
+    )
     ds = datasets.Dataset.from_pandas(df)
 
-    # books = load_dataset("opus_books", "en-fr")
-    # books = books["train"].train_test_split(test_size=0.2)
     ds = ds.train_test_split(test_size=test_size)
 
-    # model_name = "t5-small"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-    source_lang = "en"
-    target_lang = "fr"
-    prefix = "translate English to French: "
+    prefix = f"translate {iso_639_1[source_lang]} to {iso_639_1[target_lang]}: "
 
     def preprocess_function(examples):
         inputs = [prefix + example[source_lang] for example in examples["translation"]]
