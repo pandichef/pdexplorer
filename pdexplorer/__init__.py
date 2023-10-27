@@ -10,6 +10,7 @@ from .regress import regress as regres
 from .regress import regress as regress
 
 from .nn.regressnn import regressnn
+from .nn.easytorch import easytorch
 from .ml.regressml import regressml
 from .ml.treeclassify import treeclassify as tree
 from .ml.treeclassify import treeclassify as treec

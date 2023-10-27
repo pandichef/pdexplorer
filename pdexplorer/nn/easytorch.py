@@ -7,11 +7,19 @@ from .._print import _print
 from typing import Union
 
 
-def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
+def easytorch(
+    varlist: str,
+    nn_model,  # e.g., torch.nn.Linear
+    nn_criterion,  # e.g., torch.nn.MSELoss
+    nn_optimizer,  # e.g., torch.optim.Rprop
+    use_dataloader=False,
+    # hyperparameters
+    epochs: int = 100,
+    learningRate: float = 0.01,
+):
     if not use_dataloader:
         import numpy as np
         import torch
-        from torch.autograd import Variable
 
         varlist_as_list = varlist.split()
         yvar = varlist_as_list[0]
@@ -23,14 +31,13 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
         y = torch.tensor(y_train).to(torch.float32)
         inputDim = X.shape[1]  # takes variable 'x'
         outputDim = 1  # takes variable 'y'
-        learningRate = 0.01
-        epochs = epochs
-        model = torch.nn.Linear(inputDim, outputDim)
+
+        model = nn_model(inputDim, outputDim)
         ##### For GPU #######
         if torch.cuda.is_available():
             model.cuda()
-        criterion = torch.nn.MSELoss()
-        optimizer = torch.optim.Rprop(model.parameters(), lr=learningRate)
+        criterion = nn_criterion()
+        optimizer = nn_optimizer(model.parameters(), lr=learningRate)
 
         for epoch in range(epochs):
             # Converting inputs and labels to Variable
@@ -60,7 +67,6 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
     else:
         # same as above, but using the dataloader
         import torch
-        from torch.autograd import Variable
 
         ds = current.get_pytorch_dataset(varlist)
         dl = current.get_pytorch_dataloader(varlist)
@@ -69,12 +75,12 @@ def regressnn(varlist: str, use_dataloader=False, epochs: int = 100):
         learningRate = 0.01
         epochs = epochs
 
-        model = torch.nn.Linear(inputDim, outputDim)
+        model = nn_model(inputDim, outputDim)
         ##### For GPU #######
         if torch.cuda.is_available():
             model.cuda()
-        criterion = torch.nn.MSELoss()
-        optimizer = torch.optim.Rprop(model.parameters(), lr=learningRate)
+        criterion = nn_criterion()
+        optimizer = nn_optimizer(model.parameters(), lr=learningRate)
         for epoch in range(epochs):
             for X, y in dl:
                 # print(X.shape)

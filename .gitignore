@@ -147,3 +147,4 @@ output_dir/
 pool_page.json
 * copy*.py
 ft-*/
+out/

@@ -4,17 +4,31 @@ from ..webuse import webuse
 from .._dataset import current
 from .._quietly import quietly
 from ..regress import regress
-from ..nn.regressnn import regressnn
+
+# from ..nn.regressnn import regressnn
+from ..nn.easytorch import easytorch
 
 # @pytest.mark.skip
 @pytest.mark.slow
 def test_regress_smf_vs_pytorch_Rprop_2_covariates():
+    import torch
+
+    nn_model = torch.nn.Linear
+    nn_criterion = torch.nn.MSELoss
+    nn_optimizer = torch.optim.Rprop
+
     with quietly():
         webuse("Duncan__carData", "rdatasets", use_local=True)
     # with quietly():
     results = regress("income education prestige")
     with quietly():
-        model = regressnn("income education prestige", use_dataloader=True,)
+        model = easytorch(
+            "income education prestige",
+            nn_model=nn_model,
+            nn_criterion=nn_criterion,
+            nn_optimizer=nn_optimizer,
+            use_dataloader=True,
+        )
     abs_tol = 0.5
     assert isclose(
         results.params["Intercept"],  # type:ignore
