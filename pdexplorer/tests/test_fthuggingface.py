@@ -7,6 +7,8 @@ from ..webuse import webuse
 from ..use import use
 from .._dataset import current
 
+# note: peft and trl might cause these tests to fail #
+
 # from ..nn.finetune import finetune
 # from ..fine_tuning.fthuggingface import fthuggingface, fthuggingface_old, askhuggingface
 from ..fine_tuning.fthuggingface import fthuggingface, askhuggingface
@@ -124,3 +126,27 @@ def test_finetune_translation_hebrew():
     # Note: t5-small can't handle Hebrew apparently
     assert hebrew_text == "Und es gab Abend, und es gab Morgen – der dritte Tag."
     subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
+def test_finetune_text_generation_for_translation():
+    from .fixtures import niv
+
+    df = pd.DataFrame.from_records(niv)
+    prefix = "translate English to Hebrew: "
+    df["text"] = prefix + df.en + "\n\n" + "Result: " + df.he
+    use(df)
+    fthuggingface("text", "text-generation", model_name="gpt2")
+    assert "text" in current.df.columns
+    result = askhuggingface(
+        prefix + "In the beginning God created the heavens and the earth.\n\nResult: ",
+        "text-generation",
+    )
+    # Note: gpt2 can't handle Hebrew apparently
+    assert (
+        result[0]["generated_text"]
+        == "translate English to Hebrew: In the beginning God created the heavens and the earth.\n\nResult: اءشمع لا فذن تفبي شقاحة �"
+    )
+    subprocess.run(f"rm -rf {current.last_huggingface_ftmodel_dir}", shell=True)
+    # os.system(f"rm -rf {current.last_huggingface_ftmodel_dir}")

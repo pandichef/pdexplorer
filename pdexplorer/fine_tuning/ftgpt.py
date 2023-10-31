@@ -105,6 +105,7 @@ def ftgpt(
     df = current.df.rename(
         columns={assistant_var: "assistant", user_var: "user", system_var: "system"}
     )
+    df = df[["assistant", "user", "system"]]
 
     records = _convert_tabular_format_to_openai_format(df)
     stringio_object = _write_records_to_stringio(records)
@@ -125,7 +126,7 @@ def ftgpt(
             time.sleep(10)
             print("Waiting for fine-tuning to complete...")
 
-        print("Fine-tuning complete!")
+        print("Job halted (i.e., completed or queued)!")
         final_status = ftjob_helper.retrieve().to_dict()["status"]
         print(f"Final status: {final_status}")
 
@@ -150,6 +151,10 @@ def askgpt(user_content="Hello!", system_content="You are a helpful assistant.")
                 )
                 print()
 
+            if not model_name:
+                final_status = ftjob_helper.retrieve().to_dict()["status"]
+                raise Exception(f"Model not found; Current job status: {final_status}")
+
             completion = openai.ChatCompletion.create(
                 model=model_name,
                 messages=[
@@ -162,4 +167,5 @@ def askgpt(user_content="Hello!", system_content="You are a helpful assistant.")
             pass
             time.sleep(10)
 
-    print(completion.choices[0].message["content"])  # type: ignore
+    return completion.choices[0].message["content"]
+    # print(completion.choices[0].message["content"])  # type: ignore
