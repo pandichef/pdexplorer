@@ -1,7 +1,5 @@
 # Produces a DataFrame containing a full translation of the Hebrew Bible
 # https://www.tanach.us/Pages/About.html
-# https://my-bible-study.appspot.com/
-# https://www.biblesupersearch.com/bible-downloads/ (json format)
 # import pyperclip
 import json
 import xmltodict
@@ -102,6 +100,7 @@ he = pd.DataFrame.from_records(records)
 #     pyperclip.copy(verse_text)
 # he.to_pickle("tanakh.pkl")
 ############################################
+# https://www.biblesupersearch.com/bible-downloads/ (json format)
 with open("net.json", "r", encoding="utf-8") as f:
     netbible_text = f.read()
 
@@ -129,6 +128,7 @@ en["book_name"] = en["book_name"].apply(book_name_map)
 en = en.rename(columns={"text": "en"})
 en = en.drop("book", axis=1)
 ############################################
+# Hebrew with vowels only i.e., no cantillation
 with open("wlc.json", "r", encoding="utf-8") as f:
     netbible_text = f.read()
 records = json.loads(netbible_text)["verses"]
