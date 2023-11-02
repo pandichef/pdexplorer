@@ -88,11 +88,11 @@ for book in books:
                     "book_name": book,
                     "chapter": chapter_number,
                     "verse": verse_number,
-                    "he": verse_text,
+                    "he2": verse_text,
                 }
             )
 
-he = pd.DataFrame.from_records(records)
+he2 = pd.DataFrame.from_records(records)
 # try:
 #     " ".join(verse_item["w"])
 # except:
@@ -132,20 +132,44 @@ en = en.drop("book", axis=1)
 with open("wlc.json", "r", encoding="utf-8") as f:
     netbible_text = f.read()
 records = json.loads(netbible_text)["verses"]
-he2 = pd.DataFrame.from_records(records)
-he2["book_name"] = he2["book_name"].apply(book_name_map)
-he2 = he2.rename(columns={"text": "he2"})
-he2 = he2.drop("book", axis=1)
+he1 = pd.DataFrame.from_records(records)
+he1["book_name"] = he1["book_name"].apply(book_name_map)
+he1 = he1.rename(columns={"text": "he1"})
+he1 = he1.drop("book", axis=1)
 ############################################
 # merges
-merged = en.merge(
-    he,
+merged0 = en.merge(
+    he2,
     on=["book_name", "chapter", "verse"],
     # indicator=True,
     how="inner",
     validate="one_to_one",  # The standard vlookup style merge
 )
-merged["system"] = "translate English to Biblical Hebrew with Cantillation"
+merged0["system"] = "translate English to Biblical Hebrew with Cantillation"
+
+merged1 = he1.merge(
+    he2,
+    on=["book_name", "chapter", "verse"],
+    # indicator=True,
+    how="inner",
+    validate="one_to_one",  # The standard vlookup style merge
+)
+merged1[
+    "system"
+] = "add cantillation marks to a Hebrew sentence that is already marked with vowels"
+merged1["he1"] = merged1["he1"].apply(lambda x: x.replace(" ׀", ""))  # Remove
+merged1["he1"] = merged1["he1"].apply(
+    lambda x: x.replace("׃", ".")
+)  # Interpret ׃ as a period.
+merged1["he1"] = merged1["he1"].apply(
+    lambda x: x.replace("׃", ".")
+)  # Interpret ׃ as a period.
+merged1["he1"] = merged1["he1"].apply(lambda x: x.replace("־", " "))  # Remove maqqaf
+
+
+# use(merged1)
+# keep('if book_name=="Esther" and chapter==8 and verse==9')
+# tmp123 = current.df.iloc[0].he1
 
 # merged = merged.rename(columns={"_merge": "_merge0"})
 # merged = merged.merge(
