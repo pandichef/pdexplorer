@@ -56,7 +56,8 @@ from .lis import lis as li
 from .lis import lis as lis
 
 from .clear import clear
-from .clear import clearall
+
+# from .clear import clearall
 from .use import use
 
 # from .keepin import keepin
@@ -438,3 +439,81 @@ from .sample import sample
 import warnings
 
 warnings.filterwarnings("ignore")
+
+
+def _do_interactive(save_as="working.do"):
+    # cases: end, noargs, python:, else
+    saved_command_list = []
+    from rich.console import Console
+
+    console = Console()
+    console.rule("stata (type end to exit)")
+    while True:
+        try:
+            user_input = input(". ")
+            # print()
+            user_input_split = user_input.split()
+            if user_input in ["end", "quit"]:
+                with open(save_as, "w") as file:
+                    for item in saved_command_list:
+                        file.write(f"{item}\n")
+                console.rule(f"saved {save_as}")
+                break
+            else:
+                if len(user_input_split) == 1:
+                    corrected_command = user_input_split[0] + "()"
+                    exec(corrected_command)
+                    print()
+                    saved_command_list.append(user_input)
+                else:
+                    exec(user_input)
+        except (SyntaxError, NameError):
+            # user_input_split = user_input.split()
+            commandname = user_input_split[0]
+            commandargs = " ".join(user_input_split[1:])
+            # Basic transformation: add quotes around the command
+            corrected_command = f"{commandname}('{commandargs}')"
+            # print(corrected_command)
+            try:
+                exec(corrected_command)
+                print()
+                saved_command_list.append(user_input)
+            except Exception as e:
+                print("Error in transformed command:", e)
+        except Exception as e:
+            # print("An error occurred:", type(e).__name__)
+            print("An error occurred:", e)
+
+
+def _do_execute(filename="working.do"):
+    with open(filename, "r") as f:
+        file_contents = f.read()
+    commands = file_contents.split("\n")
+    commands = [item for item in commands if item != ""]
+
+    for user_input in commands:
+        print(f"\n. {user_input}\n")
+        try:
+            user_input_split = user_input.split()
+            if len(user_input_split) == 1:
+                corrected_command = user_input_split[0] + "()"
+                exec(corrected_command)
+            else:
+                exec(user_input)
+        except (SyntaxError, NameError):
+            commandname = user_input_split[0]
+            commandargs = " ".join(user_input_split[1:])
+            corrected_command = f"{commandname}('{commandargs}')"
+            try:
+                exec(corrected_command)
+            except Exception as e:
+                print("Error in transformed command:", e)
+        except Exception as e:
+            print("An error occurred:", e)
+
+
+def do(filename=None):
+    if filename:
+        _do_execute(filename)
+    else:
+        _do_interactive()
