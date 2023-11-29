@@ -4,6 +4,7 @@
 import json
 import xmltodict
 import pandas as pd
+import re
 
 books = [
     "Genesis",
@@ -154,17 +155,79 @@ merged1 = he1.merge(
     how="inner",
     validate="one_to_one",  # The standard vlookup style merge
 )
+# Remove paseq #
+merged1["he1"] = merged1["he1"].apply(lambda x: x.replace(" ׀", ""))
+# Interpret ׃ as a period #
+merged1["he1"] = merged1["he1"].apply(lambda x: x.replace("׃", "."))
+# Remove maqqaf #
+merged1["he1"] = merged1["he1"].apply(lambda x: x.replace("־", " "))
+
+
+def extract_qeri(text):
+    # Remove the options with 'כ'
+    text = re.sub(r"\[[^\]]* כ\]", "", text)
+
+    # Replace the 'ק' options by removing the parentheses, 'ק', and preceding space
+    text = re.sub(r"\(\s*([^\)]*)\sק\)", r"\1", text)
+
+    text = text.replace("  ", " ")
+    return text
+
+
+merged1["he1"] = merged1["he1"].apply(extract_qeri)
+
+
+# Remove פ at end of string #
+merged1["he1"] = merged1["he1"].apply(
+    lambda text: re.sub(f'{re.escape(" פ")}$', "", text)
+)
+
+# Remove פ at end of string #
+merged1["he1"] = merged1["he1"].apply(
+    lambda text: re.sub(f'{re.escape("  ס")}$', "", text)
+)
+
+
+# import pandas as pd
+
+# Sample dataframe with two text columns
+# df = pd.DataFrame(
+#     {
+#         "group": ["A", "A", "B", "B"],
+#         "text1": ["Hello", "World", "Goodbye", "Earth"],
+#         "text2": ["How", "Are", "You", "Today"],
+#     }
+# )
+
+# Group by 'group' column and merge the text rows for each text column
+# merged1 = (
+#     merged1.groupby("chapter").agg({"he1": " ".join, "he2": " ".join}).reset_index()
+# )
+
+# merged1['he1_count'] = merged1['he1'].str.split().str.len()
+# merged1['he2_count'] = merged1['he2'].str.split().str.len()
+
+# Create a range index from 0 to the length of the DataFrame - 1
+index_range = pd.RangeIndex(start=0, stop=len(merged1))
+
+# Assign group numbers by dividing the index by 20 and taking the floor
+merged1["group"] = index_range // 20
+
+merged1 = merged1.groupby("group").agg({"he1": " ".join, "he2": " ".join}).reset_index()
+merged1["he1_count"] = merged1["he1"].str.split().str.len()
+merged1["he2_count"] = merged1["he2"].str.split().str.len()
+
 merged1[
     "system"
-] = "add cantillation marks to a Hebrew sentence that is already marked with vowels"
-merged1["he1"] = merged1["he1"].apply(lambda x: x.replace(" ׀", ""))  # Remove
-merged1["he1"] = merged1["he1"].apply(
-    lambda x: x.replace("׃", ".")
-)  # Interpret ׃ as a period.
-merged1["he1"] = merged1["he1"].apply(
-    lambda x: x.replace("׃", ".")
-)  # Interpret ׃ as a period.
-merged1["he1"] = merged1["he1"].apply(lambda x: x.replace("־", " "))  # Remove maqqaf
+] = "add cantillation marks to Hebrew text that is already marked with vowels"
+
+
+# print(merged_df)
+
+# text = "[אֲכָלָנוּ כ] (אֲכָלַנִי ק) [הֲמָמָנוּ כ] (הֲמָמַנִי ק) נְבוּכַדְרֶאצַּר מֶלֶךְ בָּבֶל [הִצִּיגָנוּ כ] (הִצִּיגַנִי ק) כְּלִי רִיק [בְּלָעָנוּ כ] (בְּלָעַנִי ק) כַּתַּנִּין מִלָּא כְרֵשֹׂו מֵעֲדָנָי [הֱדִיחָנוּ כ] (הֱדִיחָנִי. ק)"
+
+
+# print(text)
 
 
 # use(merged1)
