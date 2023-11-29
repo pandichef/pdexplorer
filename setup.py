@@ -132,6 +132,7 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
+        "rich",
         "requests",
         # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
         "pandas",

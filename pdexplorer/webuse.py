@@ -11,7 +11,7 @@ from .use import use
 from .save import save
 from ._print import _print
 from ._quietly import quietly
-from .clear import clear, clearall
+from .clear import clear  # , clearall
 
 
 def cache_file_fetch(webuse_func):
