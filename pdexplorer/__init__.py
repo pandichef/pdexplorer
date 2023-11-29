@@ -442,6 +442,16 @@ warnings.filterwarnings("ignore")
 
 
 def _do_interactive(save_as="working.do"):
+    def _exec_without_exit(command):
+        try:
+            exec(command)
+            print()
+        except Exception as e:
+            # print("'"+type(e).__name__)
+            RED = "\033[31m"
+            RESET = "\033[0m"
+            print(RED + type(e).__name__ + RESET + ": " + str(e) + "\n")
+
     # cases: end, noargs, python:, else
     saved_command_list = []
     from rich.console import Console
@@ -451,41 +461,42 @@ def _do_interactive(save_as="working.do"):
     while True:
         user_input = input(". ")
         user_input_split = user_input.split()
-        if user_input_split[0] == "list":  # since list is a keyword in Python
-            user_input_split[0] = "lis"
-        if user_input in ["end", "quit"]:
-            with open(save_as, "w") as file:
-                for item in saved_command_list:
-                    file.write(f"{item}\n")
-            console.rule(f"saved {save_as}")
-            break
-        elif user_input_split[0] == "python:":
-            exec(" ".join(user_input_split[1:]))
-            print()
-            saved_command_list.append(user_input)
-        elif len(user_input_split) == 1:
-            corrected_command = user_input_split[0] + "()"
-            exec(corrected_command)
-            print()
-            saved_command_list.append(user_input)
-        else:
-            # exec(user_input)
-            # except (SyntaxError, NameError):
-            # user_input_split = user_input.split()
-            commandname = user_input_split[0]
-            commandargs = " ".join(user_input_split[1:])
-            # Basic transformation: add quotes around the command
-            corrected_command = f"{commandname}('{commandargs}')"
-            # print(corrected_command)
-            # try:
-            exec(corrected_command)
-            print()
-            saved_command_list.append(user_input)
+        if user_input_split:
+            if user_input_split[0] == "list":  # since list is a keyword in Python
+                user_input_split[0] = "lis"
+            if user_input in ["end", "quit"]:
+                with open(save_as, "w") as file:
+                    for item in saved_command_list:
+                        file.write(f"{item}\n")
+                console.rule(f"saved {save_as}")
+                break
+            elif user_input_split[0] == "python:":
+                _exec_without_exit(" ".join(user_input_split[1:]))
+                # print()
+                saved_command_list.append(user_input)
+            elif len(user_input_split) == 1:
+                corrected_command = user_input_split[0] + "()"
+                _exec_without_exit(corrected_command)
+                # print()
+                saved_command_list.append(user_input)
+            else:
+                # exec(user_input)
+                # except (SyntaxError, NameError):
+                # user_input_split = user_input.split()
+                commandname = user_input_split[0]
+                commandargs = " ".join(user_input_split[1:])
+                # Basic transformation: add quotes around the command
+                corrected_command = f"{commandname}('{commandargs}')"
+                # print(corrected_command)
+                try:
+                    exec(corrected_command)
+                    print()
+                    saved_command_list.append(user_input)
+                except Exception as e:
+                    print("Error in transformed command:", e)
             # except Exception as e:
-            #     print("Error in transformed command:", e)
-        # except Exception as e:
-        #     # print("An error occurred:", type(e).__name__)
-        #     print("An error occurred:", e)
+            #     # print("An error occurred:", type(e).__name__)
+            #     print("An error occurred:", e)
 
 
 def _do_execute(filename="working.do"):
@@ -498,27 +509,28 @@ def _do_execute(filename="working.do"):
         print(f"\n. {user_input}")
         # try:
         user_input_split = user_input.split()
-        if user_input_split[0] == "list":  # since list is a keyword in Python
-            user_input_split[0] = "lis"
-        if user_input_split[0] == "python:":
-            exec(" ".join(user_input_split[1:]))
-            # print()
-        elif len(user_input_split) == 1:
-            corrected_command = user_input_split[0] + "()"
-            exec(corrected_command)
-        # else:
-        #     exec(user_input)
-        # except (SyntaxError, NameError):
-        else:
-            commandname = user_input_split[0]
-            commandargs = " ".join(user_input_split[1:])
-            corrected_command = f"{commandname}('{commandargs}')"
-            # try:
-            exec(corrected_command)
+        if user_input_split:
+            if user_input_split[0] == "list":  # since list is a keyword in Python
+                user_input_split[0] = "lis"
+            if user_input_split[0] == "python:":
+                exec(" ".join(user_input_split[1:]))
+                # print()
+            elif len(user_input_split) == 1:
+                corrected_command = user_input_split[0] + "()"
+                exec(corrected_command)
+            # else:
+            #     exec(user_input)
+            # except (SyntaxError, NameError):
+            else:
+                commandname = user_input_split[0]
+                commandargs = " ".join(user_input_split[1:])
+                corrected_command = f"{commandname}('{commandargs}')"
+                # try:
+                exec(corrected_command)
+                # except Exception as e:
+                #     print("Error in transformed command:", e)
             # except Exception as e:
-            #     print("Error in transformed command:", e)
-        # except Exception as e:
-        #     print("An error occurred:", e)
+            #     print("An error occurred:", e)
 
 
 def do(filename=None):
