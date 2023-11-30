@@ -3,8 +3,10 @@ from ._search import search_iterable
 from ._dataset import current
 import pandas as pd
 from ._print import _print
+from ._by import byable
 
 
+@byable
 def tabulate(varlist):
     _varlist = varlist.split()
     if len(_varlist) == 1:

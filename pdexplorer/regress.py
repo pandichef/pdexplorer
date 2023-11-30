@@ -22,8 +22,10 @@ from ._commandarg import parse
 
 # from statsmodels.regression.linear_model import RegressionResultsWrapper
 from typing import Union
+from ._by import byable
 
 
+@byable
 def regress(commandarg: str):
     """
     Stata docs: https://www.stata.com/manuals/rregress.pdf
