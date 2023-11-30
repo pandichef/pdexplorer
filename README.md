@@ -13,7 +13,7 @@ pip install pdexplorer
 
 ## Usage
 
-`pdexplorer` can be run in two modes:
+`pdexplorer` can be run in three modes:
 
 1\. Stata-like Emulation
 
@@ -50,6 +50,18 @@ do('working.do')
 
 Under the hoods, the Stata emulator translates pure Stata commands into their Pythonic equivalents.
 For example, `reg mpg price` becomes `reg('mpg price')`.
+
+3\. Inline Stata  
+For example,
+
+```python
+from pdexplorer import do, current
+do(inline="""
+webuse auto
+reg mpg price
+""") # Launches a Stata emulator that can run normal Stata commands
+print(current.df) # access DataFrame object in Python
+```
 
 The rest of this documentation shows examples using Stata-like emulation, but these commands can all be run using pure Stata emulation as well.
 
