@@ -1,5 +1,7 @@
-> "...succinctness is power... we take the trouble to develop high-level languages...
-> so that we can say (and more importantly, think) in 10 lines of a high-level language what would require 1000 lines of machine language... -[Paul Graham, Succinctness is Power](http://www.paulgraham.com/power.html)
+<!-- > "...succinctness is power... we take the trouble to develop high-level languages...
+> so that we can say (and more importantly, think) in 10 lines of a high-level language what would require 1000 lines of machine language... -[Paul Graham, Succinctness is Power](http://www.paulgraham.com/power.html) -->
+
+**pdexplorer** is a Stata emulator for Python/pandas.
 
 ## Installation
 
@@ -9,15 +11,68 @@
 pip install pdexplorer
 ```
 
-Then import the `pdexplorer` commands with
+## Usage
+
+`pdexplorer` can be run in two modes:
+
+1\. Stata-like Emulation
 
 ```python
 from pdexplorer import *
 ```
 
-## pdexplorer
+This import adds Stata-like commands into the Python namespace. For example,
 
-**pdexplorer** is a Stata emulator for Python/pandas. In contrast to raw Python/pandas, Stata syntax achieves succinctness by:
+```python
+webuse('auto')
+reg('mpg price')
+```
+
+2\. Pure Stata Emulation
+
+```python
+from pdexplorer import do
+do() # Launches a Stata emulator that can run normal Stata commands
+```
+
+Now you can run regular Stata commands e.g.,
+
+```stata
+webuse auto
+reg mpg price
+```
+
+`do()` also supports running the contents of do-file e.g.,
+
+```python
+do('working.do')
+```
+
+Under the hoods, the Stata emulator translates pure Stata commands into their Pythonic equivalents.
+For example, `reg mpg price` becomes `reg('mpg price')`.
+
+The rest of this documentation shows examples using Stata-like emulation, but these commands can all be run using pure Stata emulation as well.
+
+## How `pdexplorer` differs from Stata
+
+<!-- - Commands are implemented as Python functions and hence require at least one set of parentheses -->
+
+- `pdexplorer` uses Python libraries under the hood. (The result of a command reflects the output of those libraries and may differ slightly from equivalent Stata output.)
+- There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
+  `pdexplorer` is just the Python data stack.
+- The API for producing charts is based on [Altair](https://altair-viz.github.io/), not Stata.
+- `pdexplorer` adds commands for machine learning (using sklearn, PyTorch, and huggingface)
+
+## Philosophy
+
+Stata is great for its conciseness and readability. But Python/pandas is free and easier to integrate with other applications. For example, you can build a web server in Python, but not Stata; You can run Python in AWS SageMmaker, but not Stata.
+
+`pdexplorer` enables Stata to be easily integrated into the Python ecosystem.
+
+<!-- Additionally, even for devout Stata users, there is utility in being able to run Stata commands through a Python stack for
+comparison purposes. -->
+
+In contrast to raw Python/pandas, Stata syntax achieves succinctness by:
 
 - Using spaces and commas rather than parentheses, brackets, curly braces, and quotes (where possible)
 - Specifying a set of concise commands on the "current" dataset rather than cluttering the namespace with multiple datasets
@@ -35,7 +90,7 @@ from pdexplorer import *
 
 ```python
 webuse('auto')
-browse()
+li() # List the contents of the data
 ```
 
 See https://www.stata.com/manuals/dwebuse.pdf
@@ -125,15 +180,7 @@ ftgpt("assistant user system") # slow; requires OPENAI_API_KEY environment varia
 askgpt("A poem about Mickey Mouse in iambic pentameter:\n")
 ```
 
-## Why not use Stata instead of pandas?
-
-Stata is great, but Python/pandas is free and easier to integrate with other applications. For example, you can
-build a web server in Python, but not Stata; You can run Python in AWS SageMmaker, but not Stata.
-
-Additionally, even for devout Stata users, there is utility in being able to run Stata commands through a Python stack for
-comparison purposes.
-
-## How `pdexplorer` fulfills the [Zen of Python](https://peps.python.org/pep-0020/) (relative to pandas)
+<!-- ## How `pdexplorer` fulfills the [Zen of Python](https://peps.python.org/pep-0020/) (relative to pandas)
 
 | YES                                                                   | NO                                                        |
 | --------------------------------------------------------------------- | --------------------------------------------------------- |
@@ -143,23 +190,14 @@ comparison purposes.
 | Readability counts.                                                   |
 | Although practicality beats purity.                                   |
 | There should be one-- and preferably only one --obvious way to do it. |
-| Now is better than never.                                             |
-
-## How `pdexplorer` differs from Stata
-
-- Commands are implemented as Python functions and hence require at least one set of parentheses
-- `pdexplorer` uses Python libraries under the hood. (The result of a command reflects the output of those libraries. See above.)
-- There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
-  `pdexplorer` is just the Python data stack.
-- The API for producing charts is based on [Altair](https://altair-viz.github.io/), not Stata.
-- `pdexplorer` adds commands for machine learning (using sklearn, PyTorch, and huggingface)
+| Now is better than never.                                             | -->
 
 ## Syntax summary
 
 With few exceptions, the basic Stata language syntax (as documented [here](https://www.stata.com/manuals/u11.pdf)) is
 
 ```stata
-[by varlist:] command [varlist] [=exp] [if exp] [in range] [weight] [, options]
+[by varlist:] command [subcommand] [varlist] [=exp] [if exp] [in range] [weight] [, options]
 ```
 
 where square brackets distinguish optional qualifiers and options from required ones. In this diagram,
@@ -177,7 +215,7 @@ In pdexplorer, this gets translated to
 
 ```python
 with by('varlist'):
-    command("[varlist] [=exp] [if exp] [in range] [weight] [, options]", *args, **kwargs)
+    command("[subcommand] [varlist] [=exp] [if exp] [in range] [weight] [, options]", *args, **kwargs)
 ```
 
 where `*args`, and `**kwargs` represent additional arguments that are available in a `pdexplorer` command but

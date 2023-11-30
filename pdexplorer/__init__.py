@@ -90,7 +90,11 @@ from .save import save
 from .preserve import preserve
 from .merge import merge
 from .restore import restore
-from ._quietly import quietly
+from ._quietly import quietly as qui
+from ._quietly import quietly as quie
+from ._quietly import quietly as quiet
+from ._quietly import quietly as quietl
+from ._quietly import quietly as quietly
 from .collapse import collapse
 from .egen import egen
 from .reshape import reshapelong, reshapewide
@@ -440,18 +444,70 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+##############################################################################
+##############################################################################
+##############################################################################
+# STATA INTERACTIVE
+def _exec_without_exit(command):
+    try:
+        exec(command)
+        print()
+    except Exception as e:
+        RED = "\033[31m"
+        RESET = "\033[0m"
+        print(RED + type(e).__name__ + RESET + ": " + str(e) + "\n")
+
+
+def _make_python_context(stata_context: str) -> str:
+    stata_context_split = stata_context.split()
+    if len(stata_context_split) == 2:
+        context_name, context_arg = stata_context.split()
+        return f'with {context_name}("{context_arg}"):\n    '
+    elif len(stata_context_split) == 1:
+        context_name = stata_context_split[0]
+        return f"with {context_name}():\n    "
+    else:
+        return ""
+
+
+def _extract_stata_context(user_input_plus_context: str) -> tuple:
+    if user_input_plus_context.find(":") > -1:
+        context, user_input = user_input_plus_context.split(":")
+    else:
+        context = ""
+        user_input = user_input_plus_context
+    return context, user_input
+
+
+def _make_python_instruction(user_input_plus_context: str) -> str:
+    context, user_input = _extract_stata_context(user_input_plus_context)
+    # if user_input_plus_context.find(":") > -1:
+    #     context, user_input = user_input_plus_context.split(":")
+    # else:
+    #     context = ""
+    #     user_input = user_input_plus_context
+    user_input_split = user_input.split()
+    if user_input_split:
+        if user_input_split[0] == "list":  # since list is a keyword in Python
+            user_input_split[0] = "lis"
+        if user_input_split[0] == "python:":
+            python_instruction = " ".join(user_input_split[1:])
+            # _exec_without_exit(python_instruction)
+        elif len(user_input_split) == 1:
+            python_instruction = user_input_split[0] + "()"
+            # _exec_without_exit(python_instruction)
+        else:
+            commandname = user_input_split[0]
+            commandargs = " ".join(user_input_split[1:])
+            python_instruction = (
+                _make_python_context(context) + f"{commandname}('{commandargs}')"
+            )
+        return python_instruction
+    else:
+        return ""
+
 
 def _do_interactive(save_as="working.do"):
-    def _exec_without_exit(command):
-        try:
-            exec(command)
-            print()
-        except Exception as e:
-            # print("'"+type(e).__name__)
-            RED = "\033[31m"
-            RESET = "\033[0m"
-            print(RED + type(e).__name__ + RESET + ": " + str(e) + "\n")
-
     # cases: end, noargs, python:, else
     saved_command_list = []
     from rich.console import Console
@@ -459,45 +515,42 @@ def _do_interactive(save_as="working.do"):
     console = Console()
     console.rule("stata (type end to exit)")
     while True:
-        user_input = input(". ")
-        user_input_split = user_input.split()
-        if user_input_split:
-            if user_input_split[0] == "list":  # since list is a keyword in Python
-                user_input_split[0] = "lis"
-            if user_input in ["end", "quit"]:
-                with open(save_as, "w") as file:
-                    for item in saved_command_list:
-                        file.write(f"{item}\n")
-                console.rule(f"saved {save_as}")
-                break
-            elif user_input_split[0] == "python:":
-                _exec_without_exit(" ".join(user_input_split[1:]))
-                # print()
-                saved_command_list.append(user_input)
-            elif len(user_input_split) == 1:
-                corrected_command = user_input_split[0] + "()"
-                _exec_without_exit(corrected_command)
-                # print()
-                saved_command_list.append(user_input)
-            else:
-                # exec(user_input)
-                # except (SyntaxError, NameError):
-                # user_input_split = user_input.split()
-                commandname = user_input_split[0]
-                commandargs = " ".join(user_input_split[1:])
-                # Basic transformation: add quotes around the command
-                corrected_command = f"{commandname}('{commandargs}')"
-                # print(corrected_command)
-                _exec_without_exit(corrected_command)
-                saved_command_list.append(user_input)
-                # try:
-                #     exec(corrected_command)
-                #     print()
-                # except Exception as e:
-                #     print("Error in transformed command:", e)
-            # except Exception as e:
-            #     # print("An error occurred:", type(e).__name__)
-            #     print("An error occurred:", e)
+        user_input_plus_context = input(". ")
+        if user_input_plus_context in ["end", "quit"]:
+            with open(save_as, "w") as file:
+                for item in saved_command_list:
+                    file.write(f"{item}\n")
+            console.rule(f"saved {save_as}")
+            break
+        # run commands
+        # if user_input_plus_context.find(":") > -1:
+        #     context, user_input = user_input_plus_context.split(":")
+        # else:
+        #     context = ""
+        #     user_input = user_input_plus_context
+        # user_input_split = user_input.split()
+        # if user_input_split:
+        #     if user_input_split[0] == "list":  # since list is a keyword in Python
+        #         user_input_split[0] = "lis"
+        #     if user_input_split[0] == "python:":
+        #         python_instruction = " ".join(user_input_split[1:])
+        #         # _exec_without_exit(python_instruction)
+        #     elif len(user_input_split) == 1:
+        #         python_instruction = user_input_split[0] + "()"
+        #         # _exec_without_exit(python_instruction)
+        #     else:
+        #         commandname = user_input_split[0]
+        #         commandargs = " ".join(user_input_split[1:])
+        #         python_instruction = (
+        #             _make_context(context) + f"{commandname}('{commandargs}')"
+        #         )
+        #         # _exec_without_exit(python_instruction)
+        #     # save commands
+        #     _exec_without_exit(python_instruction)
+        #     saved_command_list.append(user_input_plus_context)
+        python_instruction = _make_python_instruction(user_input_plus_context)
+        _exec_without_exit(python_instruction)
+        saved_command_list.append(user_input_plus_context)
 
 
 def _do_execute(filename="working.do"):
@@ -506,32 +559,35 @@ def _do_execute(filename="working.do"):
     commands = file_contents.split("\n")
     commands = [item for item in commands if item != ""]
 
-    for user_input in commands:
-        print(f"\n. {user_input}")
-        # try:
-        user_input_split = user_input.split()
-        if user_input_split:
-            if user_input_split[0] == "list":  # since list is a keyword in Python
-                user_input_split[0] = "lis"
-            if user_input_split[0] == "python:":
-                exec(" ".join(user_input_split[1:]))
-                # print()
-            elif len(user_input_split) == 1:
-                corrected_command = user_input_split[0] + "()"
-                exec(corrected_command)
-            # else:
-            #     exec(user_input)
-            # except (SyntaxError, NameError):
-            else:
-                commandname = user_input_split[0]
-                commandargs = " ".join(user_input_split[1:])
-                corrected_command = f"{commandname}('{commandargs}')"
-                # try:
-                exec(corrected_command)
-                # except Exception as e:
-                #     print("Error in transformed command:", e)
-            # except Exception as e:
-            #     print("An error occurred:", e)
+    for user_input_plus_context in commands:
+        print(f"\n. {user_input_plus_context}")
+        # run commands
+        # if user_input_plus_context.find(":") > -1:
+        #     context, user_input = user_input_plus_context.split(":")
+        # else:
+        #     context = ""
+        #     user_input = user_input_plus_context
+        # user_input_split = user_input.split()
+        # if user_input_split:
+        #     if user_input_split[0] == "list":  # since list is a keyword in Python
+        #         user_input_split[0] = "lis"
+        #     if user_input_split[0] == "python:":
+        #         python_instruction = " ".join(user_input_split[1:])
+        #         # exec(python_instruction)
+        #         # print()
+        #     elif len(user_input_split) == 1:
+        #         python_instruction = user_input_split[0] + "()"
+        #         # exec(python_instruction)
+        #     else:
+        #         commandname = user_input_split[0]
+        #         commandargs = " ".join(user_input_split[1:])
+        #         python_instruction = (
+        #             _make_context(context) + f"{commandname}('{commandargs}')"
+        #         )
+        #         # exec(python_instruction)
+        #     exec(python_instruction)
+        python_instruction = _make_python_instruction(user_input_plus_context)
+        exec(python_instruction)
 
 
 def do(filename=None):
