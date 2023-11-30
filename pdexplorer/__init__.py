@@ -563,9 +563,12 @@ def _do_interactive(save_as="working.do"):
         saved_command_list_py.append(python_instruction)
 
 
-def _do_execute(filename="working.do"):
-    with open(filename, "r") as f:
-        file_contents = f.read()
+def _do_execute(filename="working.do", inline=None):
+    if inline:
+        file_contents = inline
+    else:
+        with open(filename, "r") as f:
+            file_contents = f.read()
     commands = file_contents.split("\n")
     commands = [item for item in commands if item != ""]
 
@@ -600,8 +603,10 @@ def _do_execute(filename="working.do"):
         exec(python_instruction)
 
 
-def do(filename=None):
-    if filename:
-        _do_execute(filename)
+def do(filename=None, inline=None):
+    if inline:
+        _do_execute(inline=inline)
+    elif filename:
+        _do_execute(filename=filename)
     else:
         _do_interactive()
