@@ -488,12 +488,13 @@ def _do_interactive(save_as="working.do"):
                 # Basic transformation: add quotes around the command
                 corrected_command = f"{commandname}('{commandargs}')"
                 # print(corrected_command)
-                try:
-                    exec(corrected_command)
-                    print()
-                    saved_command_list.append(user_input)
-                except Exception as e:
-                    print("Error in transformed command:", e)
+                _exec_without_exit(corrected_command)
+                saved_command_list.append(user_input)
+                # try:
+                #     exec(corrected_command)
+                #     print()
+                # except Exception as e:
+                #     print("Error in transformed command:", e)
             # except Exception as e:
             #     # print("An error occurred:", type(e).__name__)
             #     print("An error occurred:", e)
