@@ -473,6 +473,8 @@ def _make_python_context(stata_context: str) -> str:
 def _extract_stata_context(user_input_plus_context: str) -> tuple:
     if user_input_plus_context.find(":") > -1:
         context, user_input = user_input_plus_context.split(":")
+        if context == "python":  # "python:" doesn't signify python context
+            context, user_input = "", user_input_plus_context
     else:
         context = ""
         user_input = user_input_plus_context
@@ -555,6 +557,7 @@ def _do_interactive(save_as="working.do"):
         #     _exec_without_exit(python_instruction)
         #     saved_command_list.append(user_input_plus_context)
         python_instruction = _make_python_instruction(user_input_plus_context)
+        # print(python_instruction)
         _exec_without_exit(python_instruction)
         saved_command_list.append(user_input_plus_context)
         saved_command_list_py.append(python_instruction)
