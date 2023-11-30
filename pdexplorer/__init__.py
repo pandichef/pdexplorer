@@ -510,6 +510,7 @@ def _make_python_instruction(user_input_plus_context: str) -> str:
 def _do_interactive(save_as="working.do"):
     # cases: end, noargs, python:, else
     saved_command_list = []
+    saved_command_list_py = []
     from rich.console import Console
 
     console = Console()
@@ -517,10 +518,15 @@ def _do_interactive(save_as="working.do"):
     while True:
         user_input_plus_context = input(". ")
         if user_input_plus_context in ["end", "quit"]:
-            with open(save_as, "w") as file:
+            do_file = save_as.split(".")[0] + ".do"
+            py_file = save_as.split(".")[0] + ".py"
+            with open(do_file, "w") as file:
                 for item in saved_command_list:
                     file.write(f"{item}\n")
-            console.rule(f"saved {save_as}")
+            with open(py_file, "w") as file:
+                for item in saved_command_list_py:
+                    file.write(f"{item}\n")
+            console.rule(f"saved {do_file}/{py_file}")
             break
         # run commands
         # if user_input_plus_context.find(":") > -1:
@@ -551,6 +557,7 @@ def _do_interactive(save_as="working.do"):
         python_instruction = _make_python_instruction(user_input_plus_context)
         _exec_without_exit(python_instruction)
         saved_command_list.append(user_input_plus_context)
+        saved_command_list_py.append(python_instruction)
 
 
 def _do_execute(filename="working.do"):
