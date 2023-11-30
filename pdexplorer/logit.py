@@ -22,5 +22,6 @@ def logit(varlist: str):
     current.methods, current.properties = _get_custom_attributes(results)
 
     # todo: results and predict command (see regress for examples)
+    print("(post-estimation not yet supported)")
 
     return results
