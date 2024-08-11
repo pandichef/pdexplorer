@@ -12,7 +12,7 @@ def summarize(commandarg="") -> None:
     #     raise WithinByContextManager
 
     parsed = parse(commandarg)
-    print(parsed)
+    # print(parsed)
     varlist = parsed["anything"]
     assert not parsed["weight"], "Full commandarg not yet supported"
 
