@@ -72,8 +72,9 @@ The rest of this documentation shows examples using Stata-like emulation, but th
 - `pdexplorer` uses Python libraries under the hood. (The result of a command reflects the output of those libraries and may differ slightly from equivalent Stata output.)
 - There is no support for [mata](https://www.stata.com/features/overview/introduction-to-mata/). Under the hood,
   `pdexplorer` is just the Python data stack.
-- The API for producing charts is based on [Altair](https://altair-viz.github.io/), not Stata.
-- `pdexplorer` adds commands for machine learning (using sklearn, PyTorch, and huggingface)
+
+<!-- - The API for producing charts is based on [Altair](https://altair-viz.github.io/), not Stata.
+- `pdexplorer` adds commands for machine learning (using sklearn, PyTorch, and huggingface) -->
 
 ## Philosophy
 
@@ -93,7 +94,7 @@ In contrast to raw Python/pandas, Stata syntax achieves succinctness by:
 - Allowing for namespace abbreviations for both commands and variable names
 - Employing two types of column names: Variable name are concise and used for programming. Variable labels are verbose
   and used for presentation.
-- Packages are imported lazily e.g., `import torch` is loaded only when it's first used by a command. This ensures that
+- Packages are imported lazily e.g., `import statsmodels` is loaded only when it's first used by a command. This ensures that
   `from pdexplorer import *` runs quickly.
 
 ## Examples
@@ -136,7 +137,7 @@ results = regress('mpg weight foreign')
 
 Here, `results` is a [RegressionResultsWrapper](https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.html) object from the [statsmodels](https://www.statsmodels.org/) package.
 
-Similarly,
+<!-- Similarly,
 
 ```python
 results = regress('mpg weight foreign', library='scikit-learn')
@@ -150,7 +151,7 @@ Finally,
 results = regress('mpg weight foreign', library='pytorch')
 ```
 
-Here, `results` is a [torch.nn.Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html) object from the [PyTorch](https://pytorch.org/) package.
+Here, `results` is a [torch.nn.Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html) object from the [PyTorch](https://pytorch.org/) package. -->
 
 <!-- ## My Story
 
@@ -211,26 +212,30 @@ becomes
 labeldata("label")
 ```
 
+<!--
 ## Module Dependencies
 
 | File location        | Description                                                                        | Dependencies     |
 | -------------------- | ---------------------------------------------------------------------------------- | ---------------- |
-| `/*.py`              | commands that are native to Stata related to data wrangling or statistics          | `pandas`         |
+| `/*.py`              | commands that are native to Stata related to data wrangling or statistics          | `statsmodels`    |
 | `/_altair_mapper.py` | commands that are native to Altair for charting                                    | `altair`         |
 | `shortcuts/*.py`     | shortcut commands related to data wrangling, statistics, or charting               | all of the above |
 | `finance/*.py`       | commands that are specific to financial applications                               | all of the above |
 | `ml/*.py`            | commands that use machine learning techniques (and are outside the scope of Stata) | `scikit-learn`   |
 | `nn/*.py`            | commands that use neutral networks (primarily built using PyTorch)                 | `PyTorch`        |
 | `data/*.py`          | python scripts that collect data from various sources                              | Data suppliers   |
-| `experimental/*.py`  | commands that are current under development and not yet stable                     | N/A              |
+| `not_in_stata/`      | Random stuff that doesn't exist in Stata                                           | N/A              |
+ -->
 
 ## Command Dependencies
 
-| `pdexplorer` command | package dependency                                                                                                                                                         |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cf                   | [ydata-profiling](https://github.com/ydataai/ydata-profiling) or [sweetviz](https://github.com/fbdesignpro/sweetviz)                                                       |
-| browse               | [dtale](https://github.com/man-group/dtale)                                                                                                                                |
-| regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) |
+| `pdexplorer` command | package dependency                                                                                                   |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| cf                   | [ydata-profiling](https://github.com/ydataai/ydata-profiling) or [sweetviz](https://github.com/fbdesignpro/sweetviz) |
+| browse               | [xlwings](https://github.com/xlwings/xlwings)                                                                        |
+| regress              | [statsmodels](https://github.com/statsmodels/statsmodels)                                                            |
+
+<!-- | regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) | -->
 
 ## References
 
