@@ -14,6 +14,17 @@ def _print(obj):
         # current.captured_output = new_captured_output
         current.captured_output.write(str(obj) + "\n")
 
+    # todo: move this to a better place
+    if current.xlwings_workbook:
+        from pywintypes import com_error
+
+        try:
+            sheet = current.xlwings_workbook.sheets["Sheet1"]
+            sheet.clear()
+            sheet.range("A1").value = current.df
+        except com_error:
+            pass
+
 
 # def _print(obj):
 #     """Modified print statement using global settings"""

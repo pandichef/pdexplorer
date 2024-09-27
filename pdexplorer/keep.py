@@ -60,5 +60,6 @@ def keep(commandarg: str) -> None:
     else:
         raise Exception("drop: Missing Arguments")
 
-    current._df.reset_index(inplace=True, drop=True)
+    # current._df.reset_index(inplace=True, drop=True)
+    print("TODD: fix keep is deleting variable labels")
     _print(current._df)

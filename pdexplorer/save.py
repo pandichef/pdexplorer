@@ -24,6 +24,11 @@ def save(file_path=None, use_variable_labels=False):
         file_extension = os.path.splitext(file_path)[1]
         if file_extension == ".dta":
             current_df_copy = current.df.copy()
+            # fixed error:
+            # has a maximum value of infinity which is outside the range supported by Stata.
+            import numpy as np
+
+            current_df_copy.replace([np.inf, -np.inf], np.nan, inplace=True)
             for catcol in current_df_copy.select_dtypes(
                 include=["category"]
             ).columns.tolist():
@@ -32,7 +37,7 @@ def save(file_path=None, use_variable_labels=False):
                 file_path,
                 data_label=current.metadata["data_label"],
                 variable_labels=current.metadata["variable_labels"],
-                value_labels=current.metadata["value_labels"],
+                # value_labels=current.metadata["value_labels"],
                 write_index=False,
                 version=118,
             )
@@ -46,5 +51,22 @@ def save(file_path=None, use_variable_labels=False):
             with open(file_path, "wb") as file:
                 # Serialize and save the object to the file
                 pickle.dump(current, file)
+        elif file_extension in [".parquet"]:
+            import json
+            from copy import copy
+            import pyarrow as pa
+            import pyarrow.parquet as pq
+
+            custom_metadata = current.metadata
+            table = pa.Table.from_pandas(current.df)
+
+            new_metadata = copy(table.schema.metadata)
+            encoded_custom_metadata = json.dumps(custom_metadata).encode("utf-8")
+            new_metadata.update({b"custom": encoded_custom_metadata})
+
+            table = table.replace_schema_metadata(new_metadata)
+
+            pq.write_table(table, file_path)
+
         else:
             print("Didn't save file.  Something went wrong.")

@@ -22,7 +22,15 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
     if not isinstance(file_path, pd.DataFrame) and not file_path:
         return pd.read_clipboard(), current.METADATA_DEFAULT
     elif not isinstance(file_path, str):  # i.e., it's a DataFrame
-        return file_path.copy(), current.METADATA_DEFAULT
+        import copy
+
+        df = file_path
+        if hasattr(df, "metadata"):
+            new_metadata = copy.copy(current.METADATA_DEFAULT)
+            new_metadata.update(df.metadata)
+            return df.copy(), new_metadata
+        else:
+            return df.copy(), current.METADATA_DEFAULT
     # elif file_path.startswith("http"):
     #     return pd.read_html(file_path)[html_index], current.METADATA_DEFAULT
     elif os.path.isdir(file_path):
@@ -43,6 +51,18 @@ def _use(file_path=None) -> Tuple[pd.DataFrame, Dict]:
             return pd.read_csv(file_path), current.METADATA_DEFAULT
         elif file_extension in [".xlsx", ".xls"]:
             return pd.read_csv(file_path), current.METADATA_DEFAULT
+        elif file_extension in [".parquet"]:
+            import json
+            import pyarrow.parquet as pq
+            import copy
+
+            table = pq.read_table(file_path)
+            custom_metadata = json.loads(
+                table.schema.metadata[b"custom"].decode("utf-8")
+            )
+            new_metadata = copy.copy(current.METADATA_DEFAULT)
+            new_metadata.update(custom_metadata)
+            return table.to_pandas(), new_metadata
         # elif file_extension in [".pkl"]:
         #     obj: Dataset = pd.read_pickle(file_path)
         #     return pd.read_csv(file_path), obj.metadata

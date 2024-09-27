@@ -132,16 +132,19 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
+        "markdown2==2.5.0",
+        "pyarrow==13.0.0",
         "rich",
         "requests",
         # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
-        "pandas",
+        # "numpy==1.21.6",
+        "pandas==1.3.5",
         "scipy",  # see mtgyield()
-        # "seaborn",  # Use Altair instead
+        "seaborn",  # Use Altair instead
         "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
         "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
         "vega_datasets",  # data from Vega (which Altair is based on)
-        "statsmodels",  # Econometrics
+        "statsmodels==0.14.0",  # Econometrics
         "scikit-learn",  # Machine Learning (excluding neural networks)
         "graphviz",  # to visualize decision trees
         "torch",  # PyTorch for Neural networks
@@ -151,7 +154,7 @@ setup(
         "sacrebleu",  # see https://huggingface.co/docs/transformers/tasks/translation
         # "soundfile",  # huggingface audio classification
         # "librosa",  # huggingface audio classification
-        "openai",  # for ftgpt
+        "openai==1.3.7",  # for ftgpt
         # "accelerate"  # hf tests failed to pass without this
         "datasets",  # data from Hugging Face (associated with PyTorch)
         "ydata-profiling",  # for cf command
@@ -162,6 +165,7 @@ setup(
         # "keyboard",
         "pynput",  # faster alternative to keyboard
         "selenium",  # since webbrowser.open is broken
+        "xlwings",  # allows XLS files to be edit while open
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key

@@ -22,6 +22,8 @@ from ._search import search_iterable
 # X = torch.tensor(x_train).to(torch.float32)
 # y = torch.tensor(y_train).to(torch.float32)
 
+from xlwings import Book
+
 
 class Dataset:
     METADATA_DEFAULT = {"data_label": "", "variable_labels": {}}
@@ -31,6 +33,7 @@ class Dataset:
         self._clear_data()
         self._clear_settings()
         self._clear_results()
+        self.xlwings_workbook: None | Book = None
         # context manager variables #
         self.byvar: str | None = None
         self.quietly = False

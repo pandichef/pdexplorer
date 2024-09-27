@@ -148,3 +148,8 @@ pool_page.json
 * copy*.py
 ft-*/
 out/
+pdexplorer.xlsx
+~$*.*
+working.do
+working.py
+*.py.*.tmp

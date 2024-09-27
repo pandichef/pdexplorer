@@ -166,3 +166,49 @@ def browse_off():
 # monitor = threading.Thread(target=monitor_thread)
 # monitor.daemon = True
 # monitor.start()
+
+
+# def browse(num_rows=None):
+#     if num_rows:
+#         current.df.head(num_rows).to_clipboard()
+#     else:
+#         current.df.to_clipboard()
+
+import os
+import pandas as pd
+
+
+def browse(num_rows=None, file_name="output.csv"):
+    if num_rows:
+        current.df.head(num_rows).to_csv(file_name, index=True)
+    else:
+        current.df.to_csv(file_name, index=True)
+
+    os.startfile(os.path.abspath(file_name))
+
+
+import xlwings as xw
+from pywintypes import com_error
+
+
+def browse(file_name="pdexplorer.xlsx", sheet_name="Sheet1"):
+    import xlwings as xw
+
+    if not current.xlwings_workbook:
+        current.xlwings_workbook = xw.Book(file_name)
+
+    # pid = current.xlwings_workbook.app.pid
+    # print(f"Excel process ID: {pid}")
+
+    sheet = current.xlwings_workbook.sheets[sheet_name]
+    sheet.clear()
+    sheet.range("A1").value = current.df
+
+    # current.xlwings_workbook.app.visible = True
+    try:
+        current.xlwings_workbook.app.activate(steal_focus=True)
+    except:
+        xw.apps.active.api.WindowState = -4137  # xlNormal
+        current.xlwings_workbook.app.activate(steal_focus=True)
+
+    current.xlwings_workbook.save()
