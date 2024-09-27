@@ -132,45 +132,48 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        "markdown2==2.5.0",
         "pyarrow==13.0.0",
-        "rich",
-        "requests",
+        "rich",  # pretty printing
+        "requests",  # for getting remote data
         # "pandas>=1.0.0",  # DataFrame.to_markdown added in version 1.0.0
         # "numpy==1.21.6",
         "pandas==1.3.5",
-        "scipy",  # see mtgyield()
         "seaborn",  # Use Altair instead
-        "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
-        "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
-        "vega_datasets",  # data from Vega (which Altair is based on)
         "statsmodels==0.14.0",  # Econometrics
-        "scikit-learn",  # Machine Learning (excluding neural networks)
-        "graphviz",  # to visualize decision trees
-        "torch",  # PyTorch for Neural networks
-        "huggingface_hub",  # for logging into huggingface
-        "transformers[torch]",  # tests fail without [torch]
-        "evaluate",  # hf tests failed to pass without this
-        "sacrebleu",  # see https://huggingface.co/docs/transformers/tasks/translation
         # "soundfile",  # huggingface audio classification
         # "librosa",  # huggingface audio classification
-        "openai==1.3.7",  # for ftgpt
         # "accelerate"  # hf tests failed to pass without this
-        "datasets",  # data from Hugging Face (associated with PyTorch)
         "ydata-profiling",  # for cf command
         "sweetviz",  # for cf command
-        "dtale",  # for browse command
-        "gql[all]",  # for thegraph
-        "selenium-wire",  # for thegraph
         # "keyboard",
         "pynput",  # faster alternative to keyboard
-        "selenium",  # since webbrowser.open is broken
         "xlwings",  # allows XLS files to be edit while open
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key
         # "pandas_market_calendars",  # dates for financial markets
         # "numpy-financial",  # basic financial functions
+        ###############################################
+        # DELETED SEPT 2024
+        # "dtale",  # for browse command; now uses xlwings
+        # "markdown2==2.5.0",
+        # "selenium",  # since webbrowser.open is broken
+        # "gql[all]",  # for thegraph
+        # "selenium-wire",  # for thegraph
+        # "openai==1.3.7",  # for ftgpt
+        # "sacrebleu",  # see https://huggingface.co/docs/transformers/tasks/translation
+        # "graphviz",  # to visualize decision trees
+        # "torch",  # PyTorch for Neural networks
+        # "huggingface_hub",  # for logging into huggingface
+        # "transformers[torch]",  # tests fail without [torch]
+        # "datasets",  # data from Hugging Face (associated with PyTorch)
+        # "scikit-learn",  # Machine Learning (excluding neural networks)
+        # "scipy",  # see mtgyield()
+        # "evaluate",  # huggingface tests failed to pass without this
+        # "altair",  # for all graphing (note that matplotlib, seaborn, bokeh, etc are not used)
+        # "vegafusion[embed]",  # provides the alt.Chart.transformed_data method
+        # "vega_datasets",  # data from Vega (which Altair is based on)
+        ###############################################
     ],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"

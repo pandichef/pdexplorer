@@ -222,7 +222,7 @@ from .doedit import run_active_python_script
 #     pass  # fails in github actions
 # print(time() - t0)
 
-from .browse import browse_off
+# from .browse import browse_off
 
 # keyboard.as
 

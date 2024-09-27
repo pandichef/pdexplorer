@@ -1,6 +1,6 @@
 # THIS TURNED OUT NOT TO WORK SO WELL
 # ALTAIR GRINDS TO A HALT FOR LARGE N
-import webbrowser
+# import webbrowser
 import altair as alt
 from .._dataset import current
 from .._commandarg import parse, parse_options
@@ -18,7 +18,7 @@ from .._search import search_iterable
 def _call(self):
     filename = "tmpqbxcec2k.html"
     self.save(filename)
-    from .._webbrowser import webbrowser_open
+    from ._webbrowser import webbrowser_open
 
     webbrowser_open(filename)
 
