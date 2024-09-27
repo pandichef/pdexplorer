@@ -29,10 +29,14 @@ def save(file_path=None, use_variable_labels=False):
             import numpy as np
 
             current_df_copy.replace([np.inf, -np.inf], np.nan, inplace=True)
-            for catcol in current_df_copy.select_dtypes(
-                include=["category"]
-            ).columns.tolist():
-                current_df_copy[catcol] = current_df_copy[catcol].cat.codes
+
+            # Sept 2024: Not sure why I decide to save dta files this way
+            # caused tests to fail
+            # for catcol in current_df_copy.select_dtypes(
+            #     include=["category"]
+            # ).columns.tolist():
+            #     current_df_copy[catcol] = current_df_copy[catcol].cat.codes
+
             current_df_copy.to_stata(
                 file_path,
                 data_label=current.metadata["data_label"],

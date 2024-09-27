@@ -135,7 +135,7 @@ output/
 output.*
 temporary_files/
 assets/
-archive/
+# archive/
 json_fixture.json
 * - Copy.*
 *.dta

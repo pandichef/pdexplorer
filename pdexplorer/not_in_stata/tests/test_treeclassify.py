@@ -1,9 +1,9 @@
 from ..ml.treeclassify import treeclassify
-from .._quietly import quietly
-from ..webuse import webuse
-from ..keep import keep
-from ..tabulate import tabulate
-from .._dataset import current
+from ..._quietly import quietly
+from ...webuse import webuse
+from ...keep import keep
+from ...tabulate import tabulate
+from ..._dataset import current
 
 
 def test_treeclassify_1():

@@ -1,12 +1,12 @@
 from math import isclose
 import pytest
-from ..webuse import webuse
-from .._dataset import current
-from .._quietly import quietly
+from ...webuse import webuse
+from ..._dataset import current
+from ..._quietly import quietly
 
-from ..regress import regress
+from ...regress import regress
 from ..ml.regressml import regressml
-from ..predict import predict
+from ...predict import predict
 import pandas as pd
 
 

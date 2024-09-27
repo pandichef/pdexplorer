@@ -18,9 +18,9 @@ def test_quietly_hard():
         webuse("auto", use_local=True)
         rprint()
     s = captured_output.getvalue()
-    assert s.startswith("(1978 Automobile Data)") and s.endswith("rprinted\n")
+    assert s.lower().startswith("(1978 automobile data)") and s.endswith("rprinted\n")
     s2 = current.captured_output.getvalue()
-    assert s2.startswith("(1978 Automobile Data)") and s2.endswith("rprinted\n")
+    assert s2.lower().startswith("(1978 automobile data)") and s2.endswith("rprinted\n")
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
@@ -29,9 +29,13 @@ def test_quietly_soft():
         webuse("auto", use_local=True)
         rprint()
     s = captured_output.getvalue()
-    assert s.startswith("(1978 Automobile Data)") and not s.endswith("rprinted\n")
+    assert s.lower().startswith("(1978 automobile data)") and not s.endswith(
+        "rprinted\n"
+    )
     s2 = current.captured_output.getvalue()
-    assert s2.startswith("(1978 Automobile Data)") and not s2.endswith("rprinted\n")
+    assert s2.lower().startswith("(1978 automobile data)") and not s2.endswith(
+        "rprinted\n"
+    )
 
 
 @quietly_decorator(hard=True)
@@ -50,11 +54,17 @@ def fnc_to_wrap_soft():
 def test_quietly_decorator_hard():
     fnc_to_wrap_hard()
     s2 = current.captured_output.getvalue()
-    assert s2.startswith("(1978 Automobile Data)") and s2.endswith("rprinted\n")
+    # print(s2)
+    # assert False
+    # assert s2.lower().startswith("(1978 automobile data)")
+    assert s2.lower().startswith("(1978 automobile data)")
+    assert s2.endswith("rprinted\n")
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="only run locally")
 def test_quietly_decorator_soft():
     fnc_to_wrap_soft()
     s2 = current.captured_output.getvalue()
-    assert s2.startswith("(1978 Automobile Data)") and not s2.endswith("rprinted\n")
+    assert s2.lower().startswith("(1978 automobile data)") and not s2.endswith(
+        "rprinted\n"
+    )

@@ -3,9 +3,9 @@ import subprocess
 import pytest
 import sys
 import pandas as pd
-from ..webuse import webuse
-from ..use import use
-from .._dataset import current
+from ...webuse import webuse
+from ...use import use
+from ..._dataset import current
 
 # note: peft and trl might cause these tests to fail #
 

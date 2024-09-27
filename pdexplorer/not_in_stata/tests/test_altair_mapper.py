@@ -1,9 +1,9 @@
-import pytest
+# import pytest
 import altair as alt
 from vega_datasets import data
-from ..webuse import webuse
+from ...webuse import webuse
 from .._altair_mapper import circlechart_  # type: ignore
-from .._quietly import quietly
+from ..._quietly import quietly
 
 
 def test_altair():

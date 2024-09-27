@@ -2,10 +2,10 @@ from math import isclose
 import pandas as pd
 from ..finance.mtgprice import mtgprice
 from ..finance.mtgyield import mtgyield
-from ..use import use
-from .._quietly import quietly
-from .._dataset import current
-from ..drop import drop
+from ...use import use
+from ..._quietly import quietly
+from ..._dataset import current
+from ...drop import drop
 
 loan_df = {
     "beyield": {0: 6, 1: 7},
