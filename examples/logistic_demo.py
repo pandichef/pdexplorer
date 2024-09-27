@@ -1,18 +1,13 @@
-import statsmodels.api as sm
-import numpy as np
-import pandas as pd
-from pandas import CategoricalDtype
-from pprint import pprint
+import sys
+from os.path import dirname, abspath
+
+sys.path.append(dirname(dirname(abspath(__file__))))
 
 from pdexplorer import (
     webuse,
-    regress,
     methods,
-    properties,
     describe,
-    current,
     logit,
-    # logistic2,
 )
 
 webuse("lbw")

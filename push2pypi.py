@@ -6,7 +6,7 @@ def upgrade_pypi(package_name):
     e.g., version 0.0.3 automatically becomes 0.0.4
     """
 
-    os.chdir(package_name)
+    # os.chdir(package_name)
     with open("setup.py", "r") as setup_file:
         setup_file_text = setup_file.read()
     setup_file_lines = setup_file_text.split("\n")
