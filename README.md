@@ -197,8 +197,8 @@ with by('varlist'):
     command("[subcommand] [varlist] [=exp] [if exp] [in range] [weight] [, options]", *args, **kwargs)
 ```
 
-where `*args`, and `**kwargs` represent additional arguments that are available in a `pdexplorer` command but
-not in the equivalent Stata command.
+where `*args`, and `**kwargs` represent additional arguments that might available in a `pdexplorer` command but
+not in the equivalent Stata command. (This is rarely used.)
 
 Sometimes, Stata commands are two words. In such cases, the `pdexplorer` command is a concatenation of the two words. For example,
 

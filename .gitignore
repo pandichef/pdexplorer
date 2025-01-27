@@ -153,3 +153,7 @@ pdexplorer.xlsx
 working.do
 working.py
 *.py.*.tmp
+example*.xlsm
+_template.xlsm
+make_pdexplorer_xlsm_draft.py
+tmp123.py
