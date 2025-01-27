@@ -1,4 +1,5 @@
 def make_vba_formula(file_contents, file_name):
+    # TODO: there are still many corner cases where this doesn't work
     lines = file_contents.strip().split("\n")
     for i in range(len(lines)):
         lines[i] = lines[i].replace('"', '""""')
