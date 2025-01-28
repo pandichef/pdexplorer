@@ -135,12 +135,13 @@ output/
 output.*
 temporary_files/
 assets/
-# archive/
+archive/
 json_fixture.json
 * - Copy.*
 *.dta
 *.pkl
 deleteme/
+rmme/
 wandb/
 test_trainer/
 output_dir/

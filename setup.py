@@ -214,7 +214,8 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    entry_points={"console_scripts": ["make_pdexplorer_xlsm=pdexplorer.make_pdexplorer_xlsm:main"]},  # Optional
+    # entry_points={"console_scripts": ["make_pdexplorer_xlsm=pdexplorer.make_pdexplorer_xlsm:main"]},  # Optional
+    entry_points={"console_scripts": ["insert_pdexplorer=pdexplorer.merge_pdexplorer_worksheet:insert_pdexplorer"]},  # Optional
     # List additional URLs that are relevant to your project as a dict.
     #
     # This field corresponds to the "Project-URL" metadata fields:

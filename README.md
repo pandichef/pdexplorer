@@ -242,18 +242,10 @@ labeldata("label")
 `pdexplorer` can be used with Excel's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature. For example,
 
 ```
-make_pdexplorer_xlsm my_excel_sheet.xlsm
+insert_pdexplorer my_excel_sheet.xlsm
 ```
 
-This script inserts Python code as a string with one cell per python module. (You have to manually remove the leading apostrophe in Excel to get the formulas to work due to Excel limitations.)
-
-Alternatively, you can use the `--minify` (or `-m`) option to concatenate modules as much as possible:
-
-```
-make_pdexplorer_xlsm my_excel_sheet.xlsm -m
-```
-
-Excel has a 8,192 character limit per formula, so combining all of the code into a single cell isn't possible as of January 2025.
+This script inserts a new worksheet called `_pdexplorer` which contain the core modules of `pdexplorer`.
 
 ## References
 
