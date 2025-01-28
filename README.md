@@ -239,7 +239,7 @@ labeldata("label")
 
 ## Python-In-Excel Support
 
-`pdexplorer` can be imported into MS Word's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature. For example,
+`pdexplorer` can be used with Excel's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature. For example,
 
 ```
 make_pdexplorer_xlsm my_excel_sheet.xlsm
