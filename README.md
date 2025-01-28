@@ -245,7 +245,13 @@ labeldata("label")
 make_pdexplorer_xlsm my_excel_sheet.xlsm
 ```
 
-Currently, there is no easy way to programmatically insert Python into Excel. This script inserts the Python as a string. You have to manually remove the leading apostrophe in Excel to get the formulas to work.
+Currently, there is no easy way to programmatically insert Python into Excel. This script inserts the Python as a string with one cell per python module. (You have to manually remove the leading apostrophe in Excel to get the formulas to work.)
+
+Alternatively, you can use the `--minify` (or `-m`) option to concatenate modules as much as possible (Excel has a 8,192 character limit per formula):
+
+```
+make_pdexplorer_xlsm my_excel_sheet.xlsm -m
+```
 
 ## References
 

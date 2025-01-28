@@ -148,6 +148,9 @@ setup(
         # "keyboard",
         "pynput",  # faster alternative to keyboard
         "xlwings",  # allows XLS files to be edit while open
+        # 'python-minifier',
+        'click',
+        # 'pyinstaller', # for pyminify
         # "streamlit",
         # "bardapi",
         # "openai",  # requires API Key
