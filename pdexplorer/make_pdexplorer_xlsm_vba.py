@@ -1,3 +1,9 @@
+"""
+DO NOT USE THIS FOR NOW. USE make_pdexplorer_xlsm.py INSTEAD.
+This version converts python code into VBA code and injects it into an Excel file.
+However, the syntax conversion is complicated and I never finished it.
+Use make_pdexplorer_xlsm.py instead.
+"""
 def make_vba_formula(file_contents, file_name):
     # TODO: there are still many corner cases where this doesn't work
     lines = file_contents.strip().split("\n")
@@ -20,6 +26,7 @@ def make_list_of_vba_formula2R1C1_commands(module_names):
         row_number += 1
         with open(os.path.join('pdexplorer', module_name), "r", encoding="utf-8") as f:
             lines = f.readlines()
+        # lines = remove_docstrings_as_lines(os.path.join('pdexplorer', module_name))
 
         processed_lines = []
         for line in lines:
@@ -108,9 +115,10 @@ def insert_and_run_vba(xlsm_file_path, vba_code):
 if __name__ == "__main__":
     # module_names = [
     #     "tmp123.py"] # ,"_search.py"]
-    module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
-                    "_commandarg.py","_quietly.py","_print_horizontal_line.py","preserve.py","use.py",
-                    "sort.py","_by.py","regress.py","scatter.py","histogram.py","logit.py","drop.py"]
+    module_names = ["_search.py"]
+    # module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
+    #                 "_commandarg.py","_quietly.py","_print_horizontal_line.py","preserve.py","use.py",
+    #                 "sort.py","_by.py","regress.py","scatter.py","histogram.py","logit.py","drop.py"]
     module_formulas = make_list_of_vba_formula2R1C1_commands(module_names)
     vba_code = make_vba_macro(module_formulas)
     # print(make_list_of_vba_formula2R1C1_commands(module_names))

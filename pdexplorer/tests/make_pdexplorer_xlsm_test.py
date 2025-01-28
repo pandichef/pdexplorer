@@ -1,4 +1,4 @@
-from make_pdexplorer_xlsm import make_vba_formula,  make_vba_formula2R1C1
+from ..make_pdexplorer_xlsm_vba import make_vba_formula,  make_vba_formula2R1C1
 
 
 def test_make_vba_formula_one_line():

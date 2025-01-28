@@ -154,6 +154,5 @@ working.do
 working.py
 *.py.*.tmp
 example*.xlsm
-_template.xlsm
-make_pdexplorer_xlsm_draft.py
+# _template.xlsm
 tmp123.py

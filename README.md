@@ -237,6 +237,16 @@ labeldata("label")
 
 <!-- | regress              | [statsmodels](https://github.com/statsmodels/statsmodels) or [scikit-learn](https://github.com/scikit-learn/scikit-learn) or [PyTorch](https://github.com/pytorch/pytorch) | -->
 
+## Python-In-Excel Support
+
+`pdexplorer` can be imported into MS Word's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature. For example,
+
+```
+make_pdexplorer_xlsm my_excel_sheet.xlsm
+```
+
+Currently, there is no easy way to programmatically insert Python into Excel. This script inserts the Python as a string. You have to manually remove the leading apostrophe in Excel to get the formulas to work.
+
 ## References
 
 - https://aeturrell.github.io/coding-for-economists/coming-from-stata.html
