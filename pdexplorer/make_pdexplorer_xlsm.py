@@ -21,10 +21,39 @@ file_dir = os.path.dirname(os.path.abspath(__file__))
 
 xlsm_template_file = '_pdexplorer.xlsm'
 
-module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
+required_module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
                     "_commandarg.py","_quietly.py","_print_horizontal_line.py","preserve.py","use.py",
-                    "sort.py","_by.py","regress.py","scatter.py","histogram.py","logit.py","drop.py",
-                    "order.py","keep.py"]
+                    "sort.py","_by.py"]
+
+# module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
+#                     "_commandarg.py","_quietly.py","_print_horizontal_line.py","preserve.py","use.py",
+#                     "sort.py","_by.py","regress.py","scatter.py","histogram.py","logit.py","drop.py",
+#                     "order.py","keep.py"]
+
+
+exclude = ['make_pdexplorer_xlsm.py', 'merge_pdexplorer_worksheet.py','__init__.py','browse.py']
+
+import os
+
+def list_py_files(file_dir):
+    # Get all .py files in the directory
+    py_files = [f for f in os.listdir(file_dir) if f.endswith(".py")]
+    # Sort the files: those starting with '_' come first
+    py_files.sort(key=lambda f: (not f.startswith("_"), f))
+    return py_files
+
+# Example usage
+# file_dir = "/path/to/your/directory"
+all_py_files = list_py_files(file_dir)
+
+for filename in exclude:
+    all_py_files.remove(filename)
+
+for filename in required_module_names:
+    all_py_files.remove(filename)
+
+module_names = required_module_names + all_py_files
+
 
 def make_module_contents_list(module_names, wrap_with_xl_py_formula=True):
     """
