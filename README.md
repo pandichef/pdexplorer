@@ -247,7 +247,7 @@ Usage:
 insert_pdexplorer my_excel_sheet.xlsm
 ```
 
-This script inserts a new worksheet called `_pdexplorer` which contains the core modules of `pdexplorer`.
+This script inserts (or overrides) a worksheet called `_pdexplorer` into `my_excel_sheet.xlsm` which contains the core modules of `pdexplorer`.
 
 ## References
 
