@@ -1,6 +1,7 @@
 import os
 import click
 import xlwings as xw
+import pywintypes
 
 file_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -39,7 +40,15 @@ def insert_pdexplorer(dest_file):
         dest_wb.sheets[src_sheet_name].name = temp_sheet_name
 
     # Copy the source sheet to the destination workbook
-    src_sheet.api.Copy(Before=dest_wb.sheets[0].api)
+    try:
+        src_sheet.api.Copy(Before=dest_wb.sheets[0].api)
+    except pywintypes.com_error as e:
+        src_wb.close()
+        dest_wb.close()
+        if str(e).__contains__("Excel cannot insert the sheets into the destination workbook, because it contains fewer rows and columns than the source workbook."):
+            raise Exception("Insertion failed like due to using the older .xls file format. Please save the destination file as .xlsx and try again.")
+        else:
+            raise Exception("Insertion failed for an unknown reason.  Contact administrator.")
 
     # The copied sheet will have the same name as the source sheet
     new_sheet = dest_wb.sheets[0]

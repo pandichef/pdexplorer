@@ -24,7 +24,7 @@ xlsm_template_file = '_pdexplorer.xlsm'
 module_names = ["_search.py","_dataset.py","_get_custom_attributes.py","_patsify.py","_print.py",
                     "_commandarg.py","_quietly.py","_print_horizontal_line.py","preserve.py","use.py",
                     "sort.py","_by.py","regress.py","scatter.py","histogram.py","logit.py","drop.py",
-                    "order.py"]
+                    "order.py","keep.py"]
 
 def make_module_contents_list(module_names, wrap_with_xl_py_formula=True):
     """
