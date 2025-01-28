@@ -239,13 +239,15 @@ labeldata("label")
 
 ## Python-In-Excel Support
 
-`pdexplorer` can be used with Excel's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature. For example,
+`pdexplorer` can be used with Excel's new [Python-in-Excel](https://support.microsoft.com/en-us/office/introduction-to-python-in-excel-55643c2e-ff56-4168-b1ce-9428c8308545) feature.
+
+Usage:
 
 ```
 insert_pdexplorer my_excel_sheet.xlsm
 ```
 
-This script inserts a new worksheet called `_pdexplorer` which contain the core modules of `pdexplorer`.
+This script inserts a new worksheet called `_pdexplorer` which contains the core modules of `pdexplorer`.
 
 ## References
 
